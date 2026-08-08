@@ -1,0 +1,5 @@
+C:/LivingCommonwealthEngine/Build/CMakeFiles/ALL_BUILD.dir
+C:/LivingCommonwealthEngine/Build/CMakeFiles/ZERO_CHECK.dir
+C:/LivingCommonwealthEngine/Build/_deps/spdlog/CMakeFiles/spdlog.dir
+C:/LivingCommonwealthEngine/Build/_deps/spdlog/CMakeFiles/ALL_BUILD.dir
+C:/LivingCommonwealthEngine/Build/Source/CMakeFiles/LCE.Core.dir

@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/LivingCommonwealthEngine/Build/cmake_install.cmake",
+		"C:/LivingCommonwealthEngine/Build/_deps/spdlog/cmake_install.cmake",
+		"C:/LivingCommonwealthEngine/Build/Source/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
