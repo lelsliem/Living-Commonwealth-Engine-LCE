@@ -34,7 +34,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(LCE_BUILD_TESTS
     "Build LCE test applications."
-    OFF)
+    ON)
 
 option(LCE_BUILD_SAMPLES
     "Build LCE sample applications."

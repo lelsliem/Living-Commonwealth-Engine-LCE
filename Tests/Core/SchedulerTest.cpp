@@ -55,6 +55,46 @@ namespace LCE::Tests
         scheduler.Update(
             Scheduling::Scheduler::Duration{0.5});
 
-        return executed;
+        if (!executed)
+        {
+            return false;
+        }
+
+        // Reentrancy: a callback that schedules new work must not corrupt
+        // the Update loop. The new task counts down on the next Update,
+        // never during the pass that created it.
+        Scheduling::Scheduler reentrant;
+
+        int secondRun = 0;
+
+        reentrant.Schedule(
+            Scheduling::Scheduler::Duration{1.0},
+            [&reentrant, &secondRun]()
+            {
+                reentrant.Schedule(
+                    Scheduling::Scheduler::Duration{0.0},
+                    [&secondRun]()
+                    {
+                        ++secondRun;
+                    });
+            });
+
+        reentrant.Update(
+            Scheduling::Scheduler::Duration{1.0});
+
+        if (secondRun != 0)
+        {
+            return false;   // must not fire during the same pass
+        }
+
+        reentrant.Update(
+            Scheduling::Scheduler::Duration{0.0});
+
+        if (secondRun != 1)
+        {
+            return false;   // fires on the next tick
+        }
+
+        return true;
     }
 }

@@ -1,288 +1,147 @@
-Building living worlds through simulation.
-
-One milestone at a time.
-
-The cathedral is built stone by stone. Each milestone is a complete, tested, documented layer before the next begins. We do not skip floors.
-
-=============================================================================
+═══════════════════════════════════════════════
 
 Living Commonwealth Engine (LCE)
 
 Building living worlds through simulation.
 
-=============================================================================
-
-
+═══════════════════════════════════════════════
 
 Project Roadmap
 
-
+═══════════════════════════════════════════════
 
 Status
 
-\------
+Current Version : 0.1.0-alpha
 
-Current Version : 0.2.0 - Alpha
+Current Stage   : Core Runtime (Services) — complete
 
-Current Stage   : Started
+Next Milestone  : 0.2.0 — Entity System
 
-Next Milestone  : 0.3.0 - Alpha
+═══════════════════════════════════════════════
 
+0.0.0 — Project Definition · "The Blueprint"
 
+═══════════════════════════════════════════════
 
-=========================================================================
+STATUS: COMPLETE ✅
 
-0.0.0 Project Definition
+[✓] Vision
+[✓] Philosophy
+[✓] Architecture
+[✓] Development charter established
+[✓] Decision log started
+[✓] The cathedral's blueprints are drawn.
 
-=========================================================================
+═══════════════════════════════════════════════
 
+0.0.1 — Foundation · "The First Heartbeat"
 
+═══════════════════════════════════════════════
 
-"The Blueprint"
+Goal: a modern, documented, standalone engine core.
 
+STATUS: COMPLETE ✅
 
+[✓] CMake build system (C++23, MSVC v143, static runtime)
+[✓] Zero warnings (/W4 /WX)
+[✓] Logger (spdlog hidden behind the LCE API)
+[✓] Configuration
+[✓] Version (header-only constants)
+[✓] Documentation foundation
+[✓] First successful build
 
-\[✓]• Vision
+Completion criteria met: engine initializes, engine shuts down,
+documentation complete, zero compiler warnings.
 
-\[✓]• Philosophy
+═══════════════════════════════════════════════
 
-\[✓]• Architecture
+0.1.0 — Alpha · Core Runtime (Services)
 
-\[✓]• Development charter established
+═══════════════════════════════════════════════
 
-\[✓]• The cathedral's blueprints are drawn.
+STATUS: COMPLETE ✅
 
+[✓] Event Bus
+[✓] Clock
+[✓] Scheduler
+[✓] Task System
+[✓] Configuration
+[✓] Logging
+[✓] Service Architecture (ServiceRegistry)
+[✓] Test harness — six suites, all green
 
+═══════════════════════════════════════════════
 
-=========================================================================
+0.2.0 — Entity System (NEXT)
 
-Version 0.0.1 - Foundation
+═══════════════════════════════════════════════
 
-=========================================================================
+The first stone of the simulation layer.
 
+[ ] Entity IDs
+[ ] Components
+[ ] Entity Registry
+[ ] Lifetime Management
 
+═══════════════════════════════════════════════
 
-Goal
+0.3.0 — Simulation
 
+═══════════════════════════════════════════════
 
+[ ] Memory
+[ ] Relationships
+[ ] Behaviour
+[ ] Goals
+[ ] Needs
 
-Create a modern, documented, standalone engine core.
+═══════════════════════════════════════════════
 
+0.4.0 — Platform Integration
 
+═══════════════════════════════════════════════
 
-Objectives
+[ ] Fallout 4 Platform Adapter
+[ ] CommonLibF4
+[ ] F4SE
+[ ] Serialization
+[ ] Save / Load
 
+═══════════════════════════════════════════════
 
+0.5.0 — Public Beta
 
-\[✓]• CMake Build System
+═══════════════════════════════════════════════
 
-\[✓]• C++23
+[ ] SDK
+[ ] Sample Modules
+[ ] Module Loader
+[ ] Engine Coordinator
+[ ] Discord Testing
+[ ] Performance Profiling
+[ ] Documentation Review
 
-\[✓]• Visual Studio 2022
+═══════════════════════════════════════════════
 
-\[✓]• Platform Toolset v143
+0.9.0 — Release Candidate
 
-\[✓]• Static Runtime (/MT)
+═══════════════════════════════════════════════
 
-\[✓]• Zero Warnings
+[ ] Bug Fixes
+[ ] Performance
+[ ] Polish
+[ ] API Freeze
 
-\[✓]• Logger
+═══════════════════════════════════════════════
 
-\[✓]• Configuration
+1.0.0 — Living Commonwealth Engine Release
 
-\[✓]• Version
+═══════════════════════════════════════════════
 
-\[✓]• Service Registry
-
-\[✓]• Module Loader
-
-\[✓]• Engine
-
-\[✓]• Documentation
-
-\[✓]• First Successful Build
-
-
-
-Completion Criteria
-
-
-
-• Engine initializes.
-
-• Engine shuts down.
-
-• Documentation complete.
-
-• Zero compiler warnings.
-
-
-
-=========================================================================
-
-Version 0.1.0 - Alpha
-
-=========================================================================
-
-
-
-Core Runtime
-
-
-
-\[✓]• Event Bus
-
-\[✓]• Clock
-
-\[✓]• Scheduler
-
-\[✓]• Task System
-
-\[✓]• Configuration
-
-\[✓]• Logging
-
-\[✓]• Service Architecture
-
-
-
-=========================================================================
-
-Version 0.2.0
-
-=========================================================================
-
-
-
-Entity System
-
-
-
-• Entity IDs
-
-• Components
-
-• Entity Registry
-
-• Lifetime Management
-
-
-
-=========================================================================
-
-Version 0.3.0
-
-=========================================================================
-
-
-
-Simulation
-
-
-
-• Memory
-
-• Relationships
-
-• Behaviour
-
-• Goals
-
-• Needs
-
-
-
-=========================================================================
-
-Version 0.4.0
-
-=========================================================================
-
-
-
-Platform Integration
-
-
-
-• Fallout 4 Platform
-
-• CommonLibF4
-
-• F4SE
-
-• Serialization
-
-• Save / Load
-
-
-
-=========================================================================
-
-Version 0.5.0
-
-=========================================================================
-
-
-
-Public Beta
-
-
-
-• SDK
-
-• Sample Modules
-
-• Discord Testing
-
-• Performance Profiling
-
-• Documentation Review
-
-
-
-=========================================================================
-
-Version 0.9.0
-
-=========================================================================
-
-
-
-Release Candidate
-
-
-
-• Bug Fixes
-
-• Performance
-
-• Polish
-
-• API Freeze
-
-
-
-=========================================================================
-
-Version 1.0.0
-
-=========================================================================
-
-
-
-Living Commonwealth Engine Release
-
-
-
-GitHub
-
-Nexus Mods
-
-SDK
-
-Documentation
-
-Examples
-
-MIT Licensed
-
+[ ] GitHub
+[ ] Nexus Mods
+[ ] SDK
+[ ] Documentation
+[ ] Examples
+[ ] MIT Licensed

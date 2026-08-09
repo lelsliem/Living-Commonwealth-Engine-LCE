@@ -54,8 +54,21 @@ namespace LCE::Scheduling
         using Duration = std::chrono::duration<double>;
         using Callback = std::function<void()>;
 
+        //-------------------------------------------------------------------------
+        // Advances the scheduler by delta and fires every task whose delay
+        // has elapsed.
+        //
+        // Call once per simulation tick. Due callbacks fire in scheduling
+        // order, AFTER the pass finishes: a callback that calls Schedule()
+        // has its new task count down from the next Update call. Safe no
+        // matter what a callback does.
+        //-------------------------------------------------------------------------
         void Update(Duration delta) noexcept;
 
+        //-------------------------------------------------------------------------
+        // Schedules callback to run no earlier than delay from now.
+        // Order is preserved: equal delays run in scheduling order.
+        //-------------------------------------------------------------------------
         void Schedule(
             Duration delay,
             Callback callback);

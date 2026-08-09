@@ -1,238 +1,83 @@
 ═══════════════════════════════════════════════
 
-
-
 Living Commonwealth Engine (LCE)
-
-
 
 Building living worlds through simulation.
 
+═══════════════════════════════════════════════
 
+Milestone Log
+
+One stone at a time. Each milestone is complete, tested,
+and documented before the next begins.
 
 ═══════════════════════════════════════════════
 
-
-
-Project Definition        ██████████ 100%
-
-
-
-Architecture             ██████████ 100%
-
-
-
-Documentation            ██████████ 100%
-
-
-
-Brand Identity           ██████████ 100%
-
-
-
-Coding Standards         ██████████ 100%
-
-
-
-Development Charter      ██████████ 100%
-
-
-
-Roadmap                  ██████████ 100%
-
-
-
-Decision Log             ██████████ 100%
-
-
-
-═══════════════════════════════════════════════
-
-
-
-Milestone 0.0.0
-
-
-
-PROJECT DEFINITION
-
-
+Milestone 0.0.0 — Project Definition
 
 STATUS: COMPLETE ✅
 
-
+• Vision
+• Philosophy
+• Architecture
+• Brand identity
+• Coding standards
+• Development charter
+• Roadmap
+• Decision log
 
 ═══════════════════════════════════════════════
 
+Milestone 0.0.1 — Foundation
 
+STATUS: COMPLETE ✅
 
-Foundation — 0.0.1
+• CMake build system — C++23, MSVC v143, static runtime
+• Version system (header-only constants)
+• Logging API and implementation (spdlog hidden)
+• Configuration
+• Documentation foundation
+• LCE.Core.lib produced
+• Zero compiler warnings (/W4 /WX)
 
+First heartbeat:
 
+[Info] Living Commonwealth Engine initialized.
 
-Status: BUILD SUCCESSFUL
+═══════════════════════════════════════════════
 
+Milestone 0.1.0 — Core Runtime (Services)
 
+STATUS: COMPLETE ✅
 
-We have achieved:
+Subsystem 01 — Logging ✅
+Subsystem 02 — Event Bus ✅
+Subsystem 03 — Clock ✅
+Subsystem 04 — Scheduler ✅
+Subsystem 05 — Task System ✅
+Subsystem 06 — Configuration ✅
+Subsystem 07 — Service Architecture (ServiceRegistry) ✅
 
+Version: 0.1.0-alpha.
 
+Test harness: six suites, all green. Verified from a clean
+rebuild (Build/ deleted, reconfigured, rebuilt, ran).
 
-&#x20;Project structure
-
-&#x20;Documentation foundation
-
-&#x20;Version system
-
-&#x20;Logging API
-
-&#x20;Logging implementation
-
-&#x20;LogLevel
-
-&#x20;CMake foundation
-
-&#x20;Automatic source discovery
-
-&#x20;Third-party dependency isolation
-
-&#x20;C++23/MSVC configuration
-
-&#x20;Clean configuration
-
-&#x20;Clean rebuild
-
-&#x20;LCE.Core.lib successfully produced
-
-&#x20;Core Runtime — initial functional foundation: ACHIEVED
-
-
-
-PS C:\\LivingCommonwealthEngine> .\\Build\\Bin\\Debug\\LCE.Core.Tests.exe
-
-\[info] Living Commonwealth Engine initialized.
-
-\[trace] Logging test: Trace
-
-\[debug] Logging test: Debug
-
-\[info] Logging test: Info
-
-\[warning] Logging test: Warning
-
-\[error] Logging test: Error
-
-\[critical] Logging test: Critical
+[info] Living Commonwealth Engine initialized.
+[trace] Logging test: Trace
+[debug] Logging test: Debug
+[info] Logging test: Info
+[warning] Logging test: Warning
+[error] Logging test: Error
+[critical] Logging test: Critical
 
 All LCE Core tests passed.
 
-PS C:\\LivingCommonwealthEngine>
+Design documents: Docs/Architecture/ServiceRegistry.md
+Decisions: ADR-0034 (Service Registry shape and placement)
 
+═══════════════════════════════════════════════
 
+Next: Milestone 0.2.0 — Entity System
 
-=============================================================================
-
-
-
-Milestone 0.0.1
-
-
-
-Foundation
-
-
-
-Subsystem 01
-
-
-
-Logging
-
-
-
-Status
-
-
-
-✅ Complete
-
-
-
-Objective
-
-
-
-Allow the Living Commonwealth Engine to announce its existence.
-
-
-
-Success Criteria
-
-
-
-☑ Build successfully
-
-☑ Initialise logger
-
-☑ Write first message
-
-☑ Flush logger
-
-☑ Shutdown cleanly
-
-☑ Zero compiler warnings
-
-☑ No third-party types exposed
-
-
-
-First Heartbeat
-
-
-
-\[Info] Living Commonwealth Engine initialized.
-
-
-
-=============================================================================
-
-
-
-Milestone 0.1.0
-
-
-
-Core Runtime — SERVICES
-
-
-
-STATUS: ACHIEVED ✅
-
-
-
-The service layer is complete, tested, and green. The harness runs six suites and every public method is exercised.
-
-
-
-Subsystem 01 — Logging ✅
-
-Subsystem 02 — Event Bus ✅
-
-Subsystem 03 — Clock ✅
-
-Subsystem 04 — Scheduler ✅
-
-Subsystem 05 — Task System ✅
-
-Subsystem 06 — Configuration ✅
-
-Subsystem 07 — Service Architecture (ServiceRegistry) ✅
-
-
-
-Service Architecture design: Docs/Architecture/ServiceRegistry.md
-
-
-
-=============================================================================
-
+Entity IDs · Components · Entity Registry · Lifetime Management

@@ -33,8 +33,8 @@
 // Copyright 								       //
 //      (c) 2026-present LCE Contributors				       //
 //=============================================================================//
-\# Living Commonwealth Engine (LCE)
-\*\*Building living worlds through simulation.\*\*
+# Living Commonwealth Engine (LCE)
+**Building living worlds through simulation.**
 
 The first platform is Fallout 4. The core never knows.
 
@@ -118,6 +118,8 @@ LCE is a strict layered architecture. **Dependencies point downward only.** Noth
 └─────────────────────────────────────────────┘
 ```
 
+> **Target architecture.** Built and tested so far: Foundation (Version), Services (Logging · Config · Clock), and Runtime (EventBus · Scheduler · Tasks · ServiceRegistry). The Engine Coordinator and platform adapters arrive with later milestones (0.4.0+); nothing above the services layer exists yet.
+
 ### What Core Knows
 
 - ✅ Entities, events, time, simulation
@@ -138,20 +140,15 @@ LCE is a strict layered architecture. **Dependencies point downward only.** Noth
 
 ```
 LCE/
-├── Core/               → platform-independent simulation
-│   ├── Foundation/        → Version · Utility · Detail
-│   ├── Services/          → Logger · Config · Clock · Registry
-│   ├── Runtime/            → ModuleLoader · Scheduler · EventBus
-│   └── Engine/             → Coordinator
-├── Platform/           → game adapters
-│   ├── Fallout4/          → Fallout 4 adapter
-│   ├── Skyrim/            → Skyrim adapter (future)
-│   └── Starfield/         → Starfield adapter (future)
-├── SDK/                → public API for module authors
-├── Modules/            → dynamically loaded extensions
-├── Docs/               → architecture · decisions · philosophy
-├── Tests/              → LCE-owned test harness
-└── Depends/            → spdlog · json · CommonLibF4 · F4SE
+├── Include/           → public headers
+│   ├── LCE/              → core subsystems: Config · Events · Logging · Runtime · Scheduling · Tasks · Time · Version
+│   └── Platforms/        → game adapters (Fallout 4 · Skyrim · Starfield) — placeholder, built in 0.4.0
+├── Source/            → implementation, one folder per subsystem
+├── Depends/           → third-party: spdlog (used). json, CommonLibF4, F4SE reserved for later milestones
+├── Docs/              → architecture · decisions · philosophy · milestones
+├── Tests/             → LCE-owned test harness (LCE.Core.Tests)
+├── Samples/           → sample applications (Milestone 0.5.0)
+└── Build/             → generated output, not part of the repository
 ```
 
 ---
@@ -261,6 +258,8 @@ cmake --build build --config Release
 
 ### Project Layout for Module Authors
 
+> This section describes the SDK, which ships with Milestone 0.5.0. Until then, the only consumer of LCE is the test harness.
+
 If you're writing a module that consumes LCE:
 
 1. Link against the LCE SDK library
@@ -296,6 +295,7 @@ LCE is built together. We challenge ideas, not people.
 
 ### Before You Code
 
+0. **Start here** — read the [Learning Path](Docs/LearningPath.md). It is the guided tour: what to read, what each subsystem teaches, and exercises to make it stick.
 1. Read the [Philosophy](Docs/ProjectPhilosophy.md) and the [Development Charter](Docs/DevelopmentCharter.md)
 2. Check the [Decision Log](Docs/DecisionLog.md) — your question may already be answered
 3. Ask the four questions before proposing any new class, subsystem, or dependency
