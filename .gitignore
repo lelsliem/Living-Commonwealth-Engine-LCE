@@ -2,3 +2,5 @@
 /.vs/
 *.user
 CMakeUserPresets.json
+.freebuff/
+.reasonix/

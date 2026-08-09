@@ -9,7 +9,9 @@ for the adapter's design.
 
 ## F4SE — the runtime
 
-`Depends/f4se` (ianpatt/f4se). The Fallout 4 Script Extender.
+F4SE (ianpatt/f4se). The Fallout 4 Script Extender. It was vendored in
+`Depends/` for study and removed when the adapter became a separate
+project.
 
 **What it is:** a launcher (`f4se_loader`) that starts the game with a
 patched, plugin-loading runtime. Plugins are DLLs that declare compatibility
@@ -40,7 +42,8 @@ threads, gameplay) — machinery we inherit, not something we write.
 
 ## CommonLibF4 — the modern typed API
 
-`Depends/commonlibf4` (libxse/commonlibf4). C++23, xmake build.
+CommonLibF4 (libxse/commonlibf4). C++23, xmake build. Vendored for
+study, removed with the separate-project decision.
 *"Intended to replace F4SE as a static dependency. The runtime component of
 F4SE is still required."*
 
@@ -79,6 +82,39 @@ plugin** that links LCE.Core + CommonLibF4. The adapter (and any code that
 links the GPL library) may need GPL licensing, while the engine core stays
 MIT. This is a legal decision to review before 0.4.0 — the common pattern in
 this ecosystem is an MIT core + GPL adapter, clearly separated.
+
+## Where the adapter lives — a separate project (decision)
+
+The Fallout 4 adapter is **not built inside this repository**. It is a
+separate project (its own repo) that links LCE.Core + CommonLibF4 as an
+F4SE plugin. The core repo's empty `Include/Platforms/` scaffolding was
+removed — placeholder trees for Fallout 4, Skyrim, Starfield, and a Mock
+adapter (Addresses / Hooks / Papyrus / Scaleform / Serialization) that no
+one ever filled.
+
+Why separate:
+
+1. **The license boundary becomes physical.** The adapter is GPL (it links
+   CommonLibF4); the core is MIT. A separate repo means the two licenses
+   never share a tree — the boundary is a build fact, not a discipline.
+2. **The compile-time guarantee becomes a build fact.** The core never
+   includes game headers (ADR-0023). With the adapter in another project,
+   that guarantee cannot be violated by accident — the headers are not even
+   on disk here.
+3. **Each game is a different world.** Skyrim means SKSE, Starfield means
+   SFSE — different SDKs, different communities. One adapter project per
+   game is the ecosystem pattern (F4SE and CommonLibF4 are separate
+   projects too).
+4. **The core stays the product.** This repo is the engine: MIT, no game
+   knowledge, tested by the harness. Everything game-specific — Addresses,
+   Hooks, Papyrus, Scaleform, Serialization, form translation — belongs in
+   the adapter project, which is exactly why those folders were never
+   filled here.
+
+What the core carries instead: only the *shape* of the boundary —
+`Include/LCE/Interfaces/` (`IGameAdapter`, `IWorld`, `IEntity`). That
+contract is the 0.4.0 deliverable on the core side; the adapter project
+implements it.
 
 ## How the adapter will fit (design implications)
 

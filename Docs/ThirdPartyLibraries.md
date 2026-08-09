@@ -5,10 +5,11 @@ nothing else. The core is game-agnostic, so its dependency list is
 deliberately small.
 
 **Platform adapters are a different matter.** Each game brings its own
-dependencies; no two games need the same set. Adapter dependencies live with
-their adapter's documentation and are never linked into the core
+dependencies; no two games need the same set. Adapter dependencies live
+with their adapter's **project** and are never linked into the core
 (ADR-0023 — the core never includes game headers). They are listed below
-only so the vendored code in `Depends/` is fully accounted for.
+only as a record — the Fallout 4 set was studied, then removed when the
+adapter became a separate project.
 
 ---
 
@@ -28,8 +29,10 @@ only so the vendored code in `Depends/` is fully accounted for.
 
 ## Platform adapter dependencies — not core
 
-Vendored early because the Fallout 4 adapter (0.4.0) is the first planned.
-Future adapters bring their own sets and document them with their adapter.
+The Fallout 4 set was vendored in `Depends/` for study, then removed when
+the adapter became a separate project (0.4.0). The core never links them;
+the adapter project brings its own. Future adapters bring their own sets
+and document them with their adapter.
 
 | Dependency  | What it is                              | License                             |
 |-------------|-----------------------------------------|-------------------------------------|
