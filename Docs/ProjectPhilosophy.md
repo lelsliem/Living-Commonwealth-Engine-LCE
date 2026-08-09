@@ -32,6 +32,22 @@ Instead of scripting every event, LCE simulates systems from which events natura
 
 
 
+Six Design Laws
+
+001 — Simple things should be simple. Complex things should be composed from simple things.
+
+002 — Architecture before implementation.
+
+003 — Teach through code.
+
+004 — Simulation over scripting.
+
+005 — Headers describe what. Source files describe how. Documentation describes why.
+
+006 — Own the interface, not the implementation.
+
+
+
 Project Philosophy
 
 Architecture before code

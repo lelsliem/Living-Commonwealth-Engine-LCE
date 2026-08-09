@@ -113,6 +113,10 @@ Design document: Docs/Architecture/Simulation.md
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.4.0 — Platform Integration
+Next: Milestone 0.3.1 — Simulation Polish
+
+World-fact channel test · Safety/Flee · Configuration wiring
+
+Then: Milestone 0.4.0 — Platform Integration
 
 Fallout 4 Adapter · F4SE · CommonLibF4 · Save/Load · Serialization

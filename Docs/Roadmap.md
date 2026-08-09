@@ -108,6 +108,23 @@ no quest script fired.
 
 ═══════════════════════════════════════════════
 
+0.3.1 — Simulation Polish
+
+═══════════════════════════════════════════════
+
+Agreed at the 0.3.0 review — three honest candidates that strengthen
+everything 0.4.0 leans on.
+
+[ ] World-fact channel test — prove a world fact ("the market is
+    closed") changes a decision. The adapter's only channel into the
+    mind; must be proven before the game depends on it.
+[ ] Complete the Safety need — danger awareness (a wronged/combat
+    memory) produces a Flee intent, completing all five needs.
+[ ] Wire tuning to Configuration — decay/drift rates read from the
+    Configuration service instead of hardcoded constants.
+
+═══════════════════════════════════════════════
+
 0.4.0 — Platform Integration
 
 ═══════════════════════════════════════════════
