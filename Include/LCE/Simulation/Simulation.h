@@ -50,28 +50,53 @@
 namespace LCE::Simulation
 {
     //-------------------------------------------------------------------------
+    // SimulationTuning
+    //
+    // Every tuning constant of the living world, in one place. Defaults
+    // are the 0.3.0 tuning; the 0.4.0 adapter will build this from the
+    // Configuration service. Tuning is an *input*, never global state
+    // (ADR-0014) — the tick stays a pure function of its arguments.
+    //-------------------------------------------------------------------------
+    struct SimulationTuning
+    {
+        float MemoryFadeRate = 0.2f;     // salience lost per second
+        float ForgetThreshold = 0.1f;    // forgotten below this weight
+        float DriftRate = 0.05f;         // feelings drift toward neutral
+        float GoalUrgencyRate = 0.1f;    // urgency gained per second
+        float TrustGain = 0.15f;         // a fair trade proves reliability
+        float DispositionGain = 0.1f;    // aid and company warm feelings
+        float DispositionLoss = 0.25f;   // wrongs and fights sour them
+    };
+
+    //-------------------------------------------------------------------------
     // Advances the world by deltaSeconds: decays needs, fades memory,
     // drifts relationships toward neutral, grows goal urgency, then
     // decides one Intent per mind.
     //
-    // Stateless: time is an input, never global state (ADR-0014). The
-    // adapter calls this each game tick (0.4.0); tests call it directly.
+    // Stateless: time and tuning are inputs, never global state
+    // (ADR-0014). The adapter calls this each game tick (0.4.0); tests
+    // call it directly.
     //-------------------------------------------------------------------------
     void Update(
         EntityRegistry& registry,
-        double deltaSeconds);
+        double deltaSeconds,
+        const SimulationTuning& tuning = {});
 
     //-------------------------------------------------------------------------
     // Records an experience for the entity: appends it to Memory and
     // applies its effect on Relationships (trust grows with fair trade,
     // affection with aid, distrust with wrongs).
     //
-    // This is also the channel for world facts: the adapter pushes
-    // \"the market is open today\" in as a memory event, and the core
-    // reasons over it without ever querying the world.
+    // This is also the channel for world facts: the adapter pushes a
+    // memory event with an *invalid* Other — \"the market is closed
+    // today\" is { invalid, Trade, weight }. While such a fact is
+    // remembered, interactions of that kind are unavailable to the mind;
+    // when the fact fades below the forget threshold, the market reopens.
+    // The core reasons over facts without ever querying the world.
     //-------------------------------------------------------------------------
     void Remember(
         EntityRegistry& registry,
         EntityId id,
-        const MemoryEvent& event);
+        const MemoryEvent& event,
+        const SimulationTuning& tuning = {});
 }

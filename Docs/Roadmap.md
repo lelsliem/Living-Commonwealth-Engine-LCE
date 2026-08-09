@@ -12,7 +12,7 @@ Project Roadmap
 
 Status
 
-Current Version : 0.1.0-alpha
+Current Version : 0.3.1-alpha
 
 Current Stage   : Simulation — complete
 
@@ -110,18 +110,18 @@ no quest script fired.
 
 0.3.1 — Simulation Polish
 
-═══════════════════════════════════════════════
+STATUS: COMPLETE ✅
 
 Agreed at the 0.3.0 review — three honest candidates that strengthen
-everything 0.4.0 leans on.
+everything 0.4.0 leans on. All shipped and tested.
 
-[ ] World-fact channel test — prove a world fact ("the market is
-    closed") changes a decision. The adapter's only channel into the
-    mind; must be proven before the game depends on it.
-[ ] Complete the Safety need — danger awareness (a wronged/combat
-    memory) produces a Flee intent, completing all five needs.
-[ ] Wire tuning to Configuration — decay/drift rates read from the
-    Configuration service instead of hardcoded constants.
+[✓] World-fact channel — a remembered world fact (invalid Other)
+    blocks its kind; the market reopens when the fact is forgotten.
+    The adapter's only channel into the mind, now proven by test.
+[✓] Safety need — danger awareness (a wronged/combat memory) produces
+    a Flee intent, completing all five needs.
+[✓] Tuning as input — SimulationTuning replaces hardcoded constants;
+    the Configuration wiring pattern is proven by test.
 
 ═══════════════════════════════════════════════
 

@@ -58,9 +58,8 @@ namespace LCE::Simulation
     //-------------------------------------------------------------------------
     // ActionType
     //
-    // The generic actions the core can choose. Trimmed to what Decide can
-    // produce today; Flee arrives with danger awareness, and acquiring
-    // food is expressed as MoveTo a source.
+    // The generic actions the core can choose. Acquiring food is expressed
+    // as MoveTo a source; Flee means running from a remembered threat.
     //
     // The core never names a game action — MoveTo a target the adapter
     // resolves into \"walk along the road to town\".
@@ -71,7 +70,8 @@ namespace LCE::Simulation
         Rest,
         Socialize,
         Explore,
-        Work
+        Work,
+        Flee
     };
 
     //-------------------------------------------------------------------------

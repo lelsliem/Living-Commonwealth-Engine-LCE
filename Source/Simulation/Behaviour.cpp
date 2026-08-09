@@ -132,6 +132,73 @@ namespace
 
         return best;
     }
+
+    //-------------------------------------------------------------------------
+    // IsUnavailable
+    //
+    // A world fact declares one kind of interaction unavailable *while it
+    // is remembered*. World facts have an invalid Other — nothing to meet,
+    // no one to trust — so no relationship is shaped, only a door is shut.
+    // The tick forgets facts below the threshold, which is how the market
+    // reopens: the fact fades, and trade is possible again.
+    //-------------------------------------------------------------------------
+    bool IsUnavailable(
+        const LCE::Simulation::Memory& memory,
+        LCE::Simulation::InteractionKind kind) noexcept
+    {
+        for (const auto& event : memory.Events)
+        {
+            if (!event.Other.IsValid() && event.Kind == kind)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //-------------------------------------------------------------------------
+    // FindThreat
+    //
+    // The threat: the Other of the strongest remembered wrong or fight.
+    // Returns nullopt when the entity remembers no danger.
+    //-------------------------------------------------------------------------
+    std::optional<LCE::Simulation::EntityId> FindThreat(
+        const LCE::Simulation::EntityRegistry& registry,
+        LCE::Simulation::EntityId id)
+    {
+        const auto memory = registry.GetComponent<LCE::Simulation::Memory>(id);
+
+        if (!memory)
+        {
+            return std::nullopt;
+        }
+
+        std::optional<LCE::Simulation::EntityId> threat;
+        float bestWeight = 0.0f;
+
+        for (const auto& event : memory->Events)
+        {
+            if (!event.Other.IsValid())
+            {
+                continue;   // world facts name no one
+            }
+
+            if (event.Kind != LCE::Simulation::InteractionKind::Wronged
+                && event.Kind != LCE::Simulation::InteractionKind::Combat)
+            {
+                continue;
+            }
+
+            if (event.Weight > bestWeight)
+            {
+                bestWeight = event.Weight;
+                threat = event.Other;
+            }
+        }
+
+        return threat;
+    }
 }
 
 namespace LCE::Simulation
@@ -164,7 +231,15 @@ namespace LCE::Simulation
         {
             // The farmer goes to market: hunger is urgent, memory says the
             // merchant trades, and trust favours them. No script fired.
-            if (auto target = ChooseTarget(registry, id, InteractionKind::Trade))
+            // Unless the world is shut: a remembered Trade world fact
+            // (invalid Other) blocks the trip while it lasts.
+            const auto memory = registry.GetComponent<Memory>(id);
+
+            if (memory && IsUnavailable(*memory, InteractionKind::Trade))
+            {
+                intent.Action = ActionType::Explore;   // market closed
+            }
+            else if (auto target = ChooseTarget(registry, id, InteractionKind::Trade))
             {
                 intent.Action = ActionType::MoveTo;
                 intent.Target = *target;
@@ -183,7 +258,15 @@ namespace LCE::Simulation
 
         case NeedType::Social:
         {
-            if (auto target = ChooseTarget(registry, id, InteractionKind::Social))
+            // The same world-fact rule: a remembered Social world fact
+            // means no one is gathering today.
+            const auto memory = registry.GetComponent<Memory>(id);
+
+            if (memory && IsUnavailable(*memory, InteractionKind::Social))
+            {
+                intent.Action = ActionType::Explore;
+            }
+            else if (auto target = ChooseTarget(registry, id, InteractionKind::Social))
             {
                 intent.Action = ActionType::Socialize;
                 intent.Target = *target;
@@ -201,8 +284,25 @@ namespace LCE::Simulation
             break;
 
         case NeedType::Safety:
+        {
+            // Danger awareness: the strongest remembered wrong or fight
+            // names the threat to flee. No threat in memory → no decision
+            // — you can't flee from nothing.
+            if (auto threat = FindThreat(registry, id))
+            {
+                intent.Action = ActionType::Flee;
+                intent.Target = *threat;
+                intent.Confidence += 0.2f;   // knows the danger
+            }
+            else
+            {
+                return std::nullopt;
+            }
+            break;
+        }
+
         default:
-            // No danger awareness yet — Flee arrives with a later stone.
+            // An unknown need type has no decision this tick.
             return std::nullopt;
         }
 

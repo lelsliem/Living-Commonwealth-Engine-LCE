@@ -45,24 +45,12 @@
 #include <utility>
 #include <vector>
 
-namespace
-{
-    // The tuning constants of the living world. All per-second rates.
-    constexpr float kMemoryFadeRate = 0.2f;      // salience lost per second
-    constexpr float kForgetThreshold = 0.1f;     // forgotten below this weight
-    constexpr float kDriftRate = 0.05f;          // feelings drift toward neutral
-    constexpr float kGoalUrgencyRate = 0.1f;     // urgency gained per second
-
-    constexpr float kTrustGain = 0.15f;          // a fair trade proves reliability
-    constexpr float kDispositionGain = 0.1f;     // aid and company warm feelings
-    constexpr float kDispositionLoss = 0.25f;    // wrongs and fights sour them
-}
-
 namespace LCE::Simulation
 {
     void Update(
         EntityRegistry& registry,
-        double deltaSeconds)
+        double deltaSeconds,
+        const SimulationTuning& tuning)
     {
         const auto delta = static_cast<float>(deltaSeconds);
 
@@ -90,14 +78,14 @@ namespace LCE::Simulation
         // store inside the loop (same rule as the Scheduler).
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Memory>(
-            [delta](EntityId, Memory& memory)
+            [delta, &tuning](EntityId, Memory& memory)
             {
                 for (auto iterator = memory.Events.begin();
                      iterator != memory.Events.end();)
                 {
-                    iterator->Weight -= kMemoryFadeRate * delta;
+                    iterator->Weight -= tuning.MemoryFadeRate * delta;
 
-                    if (iterator->Weight <= kForgetThreshold)
+                    if (iterator->Weight <= tuning.ForgetThreshold)
                     {
                         iterator = memory.Events.erase(iterator);
                     }
@@ -113,16 +101,16 @@ namespace LCE::Simulation
         // unless experience refreshes them.
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Relationships>(
-            [delta](EntityId, Relationships& relationships)
+            [delta, &tuning](EntityId, Relationships& relationships)
             {
                 for (auto& entry : relationships.ByEntity)
                 {
                     auto& relationship = entry.second;
 
                     relationship.Disposition +=
-                        (0.0f - relationship.Disposition) * kDriftRate * delta;
+                        (0.0f - relationship.Disposition) * tuning.DriftRate * delta;
                     relationship.Trust +=
-                        (0.0f - relationship.Trust) * kDriftRate * delta;
+                        (0.0f - relationship.Trust) * tuning.DriftRate * delta;
                 }
             });
 
@@ -130,11 +118,11 @@ namespace LCE::Simulation
         // Goals grow urgent while they go unserved.
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Goals>(
-            [delta](EntityId, Goals& goals)
+            [delta, &tuning](EntityId, Goals& goals)
             {
                 if (goals.Active)
                 {
-                    goals.Active->Urgency += kGoalUrgencyRate * delta;
+                    goals.Active->Urgency += tuning.GoalUrgencyRate * delta;
                 }
             });
 
@@ -168,7 +156,8 @@ namespace LCE::Simulation
     void Remember(
         EntityRegistry& registry,
         EntityId id,
-        const MemoryEvent& event)
+        const MemoryEvent& event,
+        const SimulationTuning& tuning)
     {
         if (!registry.IsAlive(id))
         {
@@ -206,17 +195,17 @@ namespace LCE::Simulation
         switch (event.Kind)
         {
         case InteractionKind::Trade:
-            relationship.Trust += kTrustGain;
+            relationship.Trust += tuning.TrustGain;
             break;
 
         case InteractionKind::Aid:
         case InteractionKind::Social:
-            relationship.Disposition += kDispositionGain;
+            relationship.Disposition += tuning.DispositionGain;
             break;
 
         case InteractionKind::Wronged:
         case InteractionKind::Combat:
-            relationship.Disposition -= kDispositionLoss;
+            relationship.Disposition -= tuning.DispositionLoss;
             break;
         }
     }

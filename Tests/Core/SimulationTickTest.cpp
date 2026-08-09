@@ -17,7 +17,10 @@
 //
 //=============================================================================//
 
+#include "LCE/Config/Configuration.h"
 #include "LCE/Simulation/Simulation.h"
+
+#include <string>
 
 namespace LCE::Tests
 {
@@ -104,6 +107,89 @@ namespace LCE::Tests
         if (freshIntent->Action != Simulation::ActionType::Explore)
         {
             return false;   // no known source anymore → explore
+        }
+
+        // The market reopens when the fact is forgotten: a strong trade
+        // memory (2.0) outlives a weaker closure fact (1.0). While the
+        // fact is remembered the villager stays home; once it fades below
+        // the forget threshold, trade is possible again.
+        const auto villager = registry.CreateEntity();
+
+        registry.AddComponent<Simulation::Needs>(
+            villager,
+            Simulation::Needs{
+                { Simulation::Need{ Simulation::NeedType::Hunger, 0.8f, 0.1f } }
+            });
+
+        Simulation::Remember(
+            registry, villager, { merchant, Simulation::InteractionKind::Trade, 2.0f });
+        Simulation::Remember(
+            registry, villager,
+            { Simulation::EntityId{}, Simulation::InteractionKind::Trade, 1.0f });
+
+        Simulation::Update(registry, 1.0);
+
+        const auto firstIntent = registry.GetComponent<Simulation::Intent>(villager);
+
+        if (!firstIntent)
+        {
+            return false;
+        }
+
+        if (firstIntent->Action == Simulation::ActionType::MoveTo)
+        {
+            return false;   // the closure fact must block the trip
+        }
+
+        Simulation::Update(registry, 5.0);   // the fact fades to nothing
+
+        const auto reopened = registry.GetComponent<Simulation::Intent>(villager);
+
+        if (!reopened)
+        {
+            return false;
+        }
+
+        if (reopened->Action != Simulation::ActionType::MoveTo)
+        {
+            return false;   // forgotten fact → the market is open again
+        }
+
+        if (reopened->Target != merchant)
+        {
+            return false;
+        }
+
+        // Tuning is an input, and the 0.4.0 adapter will build it from
+        // the Configuration service. Prove the pattern here: a slow-fade
+        // tuning keeps a memory alive longer than the default would.
+        Config::Configuration config;
+        config.Set("sim.memory.fade", "0.05");
+        config.Set("sim.memory.forget", "0.05");
+
+        Simulation::SimulationTuning slow;
+        slow.MemoryFadeRate = std::stof(std::string(config.Get("sim.memory.fade")));
+        slow.ForgetThreshold = std::stof(std::string(config.Get("sim.memory.forget")));
+
+        const auto hoarder = registry.CreateEntity();
+
+        Simulation::Remember(
+            registry, hoarder, { merchant, Simulation::InteractionKind::Trade, 1.0f });
+
+        Simulation::Update(registry, 1.0, slow);
+
+        const auto keptMemory = registry.GetComponent<Simulation::Memory>(hoarder);
+
+        if (!keptMemory)
+        {
+            return false;
+        }
+
+        // The default fade would leave 0.80; the configured slow fade
+        // leaves 0.95. Configuration reached into the simulation.
+        if (keptMemory->Events[0].Weight < 0.90f)
+        {
+            return false;
         }
 
         return true;

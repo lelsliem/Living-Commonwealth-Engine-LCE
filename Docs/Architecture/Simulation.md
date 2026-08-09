@@ -146,9 +146,9 @@ struct Goals
 ### 5. Behaviour — the decision (stateless)
 
 ```cpp
-enum class ActionType { MoveTo, Rest, Socialize, Explore, Work };
-// Trimmed to what Decide can produce today. Flee arrives with danger
-// awareness (a later stone); AcquireFood is expressed as MoveTo a source.
+enum class ActionType { MoveTo, Rest, Socialize, Explore, Work, Flee };
+// AcquireFood is expressed as MoveTo a source; Flee means running from
+// a remembered threat (0.3.1).
 
 struct Intent
 {
@@ -302,3 +302,28 @@ harness must teach before the game does.
   core never queries the world.
 - **No locations in core** — intents target entities; the adapter resolves
   the road.
+
+---
+
+## 0.3.1 — The Three Honest Candidates (shipped)
+
+Agreed at the 0.3.0 review and proven by test, in the existing suites:
+
+1. **World facts are deficits.** A memory event with an *invalid* Other is
+   a world fact: it declares interactions of its kind unavailable *while
+   it is remembered*. "The market is closed today" is
+   `{ invalid, Trade, weight }`. While it is remembered, a hungry mind
+   does not head to a trader; when it fades below the forget threshold,
+   the market reopens. The adapter controls duration by re-pushing facts.
+   This is the channel the 0.4.0 adapter will use — now proven, not just
+   promised.
+2. **Safety completes the mind — Flee.** The strongest remembered Wronged
+   or Combat event names the threat; the mind flees it. Safety with no
+   remembered threat produces no decision — you can't flee from nothing.
+3. **Tuning is an input.** The magic numbers moved out of the `.cpp` into
+   `SimulationTuning`, a documented struct carrying the 0.3.0 defaults.
+   `Update` and `Remember` take it (defaulted, so existing callers are
+   untouched); the adapter will build it from the Configuration service.
+   The tick stays stateless — tuning is an argument, never global state
+   (ADR-0014). A test proves the wiring pattern with a real
+   `Configuration` instance.

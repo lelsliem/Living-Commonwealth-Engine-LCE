@@ -113,10 +113,21 @@ Design document: Docs/Architecture/Simulation.md
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.3.1 — Simulation Polish
+Milestone 0.3.1 — Simulation Polish
 
-World-fact channel test · Safety/Flee · Configuration wiring
+STATUS: COMPLETE ✅
 
-Then: Milestone 0.4.0 — Platform Integration
+Stone 01 — World-fact channel ✅ (deficits: a remembered fact blocks
+its kind; the market reopens when it is forgotten)
+Stone 02 — Safety need ✅ (danger awareness → Flee intent)
+Stone 03 — Tuning as input ✅ (SimulationTuning; Configuration
+wiring pattern proven by test)
+
+Test harness: 13/13 suites green — the farmer's story now includes
+a closed market, a fleeing villager, and a world that forgets.
+
+═══════════════════════════════════════════════
+
+Next: Milestone 0.4.0 — Platform Integration
 
 Fallout 4 Adapter · F4SE · CommonLibF4 · Save/Load · Serialization
