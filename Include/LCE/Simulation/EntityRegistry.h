@@ -115,6 +115,18 @@ namespace LCE::Simulation
                 Remove(id);
             }
 
+            // Visits every (entity, component) pair in this store. Exposed
+            // through EntityRegistry::ForEachWithComponent — how systems
+            // find their subjects.
+            template <typename F>
+            void ForEach(F&& function)
+            {
+                for (auto& [id, component] : m_Components)
+                {
+                    function(id, *component);
+                }
+            }
+
         private:
             std::unordered_map<EntityId, std::shared_ptr<T>> m_Components;
         };
@@ -174,6 +186,28 @@ namespace LCE::Simulation
         template <typename T>
         [[nodiscard]]
         std::shared_ptr<T> GetComponent(EntityId id) const;
+
+        //-------------------------------------------------------------------------
+        // Visits every entity that has a component of type T, calling
+        // function(EntityId, T&) for each. Lets systems sweep their
+        // subjects without knowing which entities have the component.
+        //
+        // Do not modify this registry's component stores of type T inside
+        // the callback — same iterator-invalidation rule as everywhere
+        // else in LCE. Collect first, apply after.
+        //-------------------------------------------------------------------------
+        template <typename T, typename F>
+        void ForEachWithComponent(F&& function)
+        {
+            auto store = FindStore<T>();
+
+            if (store == nullptr)
+            {
+                return;
+            }
+
+            store->ForEach(std::forward<F>(function));
+        }
 
     private:
         struct Slot

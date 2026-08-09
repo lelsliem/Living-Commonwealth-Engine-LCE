@@ -1,0 +1,101 @@
+//=============================================================================//
+// ┌─────────────────────────────────────────────────────────────────────────┐
+// │
+// │                       ██╗      ██████╗███████╗
+// │                       ██║     ██╔════╝██╔════╝
+// │                       ██║     ██║     █████╗
+// │                       ██║     ██║     ██╔══╝
+// │                       ███████╗╚██████╗███████╗
+// │                       ╚══════╝ ╚═════╝╚══════╝
+// │
+// │            Building living worlds through simulation.
+// │
+// │     “In the end, every choice is a story waiting to happen.”
+// │
+// └─────────────────────────────────────────────────────────────────────────┘
+//
+// Living Commonwealth Engine (LCE)
+// Building living worlds through simulation.
+//
+// File:
+//
+//      Behaviour.h
+//
+// Purpose:
+//
+//      Defines the behaviour layer: the action an entity can choose
+//      (Intent) and the stateless decision function (Decide) that turns
+//      needs, memory, relationships, and goals into one intent.
+//
+// Project:
+//
+//      Living Commonwealth Engine (LCE)
+//
+// License:
+//
+//      MIT License
+//
+// SPDX-License-Identifier: MIT
+//
+// Copyright:
+//
+//      (c) 2026-present LCE Contributors
+//=============================================================================//
+
+#pragma once
+
+#include "LCE/Simulation/EntityId.h"
+#include "LCE/Simulation/EntityRegistry.h"
+#include "LCE/Simulation/Goals.h"
+#include "LCE/Simulation/Memory.h"
+#include "LCE/Simulation/Needs.h"
+#include "LCE/Simulation/Relationships.h"
+
+#include <optional>
+
+namespace LCE::Simulation
+{
+    //-------------------------------------------------------------------------
+    // ActionType
+    //
+    // The generic actions the core can choose. Trimmed to what Decide can
+    // produce today; Flee arrives with danger awareness, and acquiring
+    // food is expressed as MoveTo a source.
+    //
+    // The core never names a game action — MoveTo a target the adapter
+    // resolves into \"walk along the road to town\".
+    //-------------------------------------------------------------------------
+    enum class ActionType
+    {
+        MoveTo,
+        Rest,
+        Socialize,
+        Explore,
+        Work
+    };
+
+    //-------------------------------------------------------------------------
+    // Intent
+    //
+    // The behaviour output, used as a component: an entity with a Needs
+    // component is a mind, and each tick its Intent is recomputed (or
+    // removed if it has no decision). The adapter reads it and executes
+    // the action in the game world.
+    //-------------------------------------------------------------------------
+    struct Intent
+    {
+        ActionType Action = ActionType::Explore;
+        EntityId Target;
+        float Confidence = 0.0f;   // how strongly the entity wants this
+    };
+
+    //-------------------------------------------------------------------------
+    // Reads the entity's components and returns the action it most wants,
+    // or nullopt when it has no drives or no decision this tick.
+    // Stateless (ADR-0026): a pure function of data.
+    //-------------------------------------------------------------------------
+    [[nodiscard]]
+    std::optional<Intent> Decide(
+        const EntityRegistry& registry,
+        EntityId id);
+}

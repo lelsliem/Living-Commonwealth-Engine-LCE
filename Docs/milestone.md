@@ -93,6 +93,26 @@ Design document: Docs/Architecture/EntitySystem.md
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.3.0 — Simulation
+Milestone 0.3.0 — Simulation
 
-Memory · Relationships · Behaviour · Goals · Needs
+STATUS: COMPLETE ✅
+
+Stone 01 — Needs ✅ (the urgent drives)
+Stone 02 — Memory ✅ (experience, salience, forgetting)
+Stone 03 — Relationships ✅ (feelings toward others)
+Stone 04 — Goals ✅ (minimal: one active goal + urgency)
+Stone 05 — Behaviour ✅ (Decide + Intent)
+Stone 06 — Registry iteration ✅ (ForEachWithComponent)
+Stone 07 — Harness upgrade ✅ (named suites)
+
+Proof: the farmer goes to market — hungry, knowing the merchant,
+trusting them, and understanding the road. The Behaviour suite is
+that proof, and the harness reports 13/13 suites green.
+
+Design document: Docs/Architecture/Simulation.md
+
+═══════════════════════════════════════════════
+
+Next: Milestone 0.4.0 — Platform Integration
+
+Fallout 4 Adapter · F4SE · CommonLibF4 · Save/Load · Serialization

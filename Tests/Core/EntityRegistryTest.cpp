@@ -207,6 +207,30 @@ namespace LCE::Tests
             return false;
         }
 
+        // ForEachWithComponent visits exactly the entities that have the
+        // type — how systems find their subjects.
+        registry.AddComponent<Name>(second, Name{ "Piper" });
+
+        int visited = 0;
+        Simulation::EntityId visitedId;
+
+        registry.ForEachWithComponent<Name>(
+            [&visited, &visitedId](Simulation::EntityId id, Name&)
+            {
+                ++visited;
+                visitedId = id;
+            });
+
+        if (visited != 1)
+        {
+            return false;
+        }
+
+        if (visitedId != second)
+        {
+            return false;
+        }
+
         return true;
     }
 }

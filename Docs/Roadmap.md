@@ -14,9 +14,9 @@ Status
 
 Current Version : 0.1.0-alpha
 
-Current Stage   : Entity System — complete
+Current Stage   : Simulation — complete
 
-Next Milestone  : 0.3.0 — Simulation
+Next Milestone  : 0.4.0 — Platform Integration
 
 ═══════════════════════════════════════════════
 
@@ -88,15 +88,23 @@ STATUS: COMPLETE ✅
 
 ═══════════════════════════════════════════════
 
-0.3.0 — Simulation (NEXT)
+0.3.0 — Simulation
 
 ═══════════════════════════════════════════════
 
-[ ] Memory
-[ ] Relationships
-[ ] Behaviour
-[ ] Goals
-[ ] Needs
+STATUS: COMPLETE ✅
+
+[✓] Needs — the urgent drives
+[✓] Memory — experience, salience, forgetting
+[✓] Relationships — feelings toward others
+[✓] Goals — minimal: one active goal + urgency
+[✓] Behaviour — Decide + Intent
+[✓] Registry iteration — ForEachWithComponent
+[✓] Harness upgrade — named suites, 13/13 green
+
+Proof: the farmer goes to market. The Behaviour suite shows a hungry
+farmer who knows and trusts the merchant deciding to move to them —
+no quest script fired.
 
 ═══════════════════════════════════════════════
 

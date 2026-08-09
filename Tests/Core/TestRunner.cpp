@@ -9,7 +9,9 @@
 //
 // Purpose:
 //
-//      Runs the LCE core subsystem tests.
+//      Runs every LCE core suite by name and reports PASS/FAIL for each.
+//      The harness is a dev-time tool: it never ships. From 0.4.0 on, the
+//      real test is Fallout 4 itself.
 //
 // SPDX-License-Identifier: MIT
 //
@@ -22,27 +24,65 @@
 #include "TaskTest.h"
 #include "ServiceRegistryTest.h"
 #include "EntityRegistryTest.h"
+#include "NeedsTest.h"
+#include "MemoryTest.h"
+#include "RelationshipsTest.h"
+#include "GoalsTest.h"
+#include "BehaviourTest.h"
+#include "SimulationTickTest.h"
 
-#include <iostream>
+#include <cstdio>
+
+namespace
+{
+    // Every suite is a bool-returning function: true means passed. The
+    // table is data — adding a suite is adding one row.
+    struct Suite
+    {
+        const char* Name;
+        bool (*Run)();
+    };
+
+    constexpr Suite Suites[] = {
+        { "Logging",         LCE::Tests::LoggingTest },
+        { "EventBus",        LCE::Tests::EventBusTest },
+        { "Clock",           LCE::Tests::ClockTest },
+        { "Scheduler",       LCE::Tests::SchedulerTest },
+        { "Task",            LCE::Tests::TaskTest },
+        { "ServiceRegistry", LCE::Tests::ServiceRegistryTest },
+        { "EntityRegistry",  LCE::Tests::EntityRegistryTest },
+        { "Needs",           LCE::Tests::NeedsTest },
+        { "Memory",          LCE::Tests::MemoryTest },
+        { "Relationships",   LCE::Tests::RelationshipsTest },
+        { "Goals",           LCE::Tests::GoalsTest },
+        { "Behaviour",       LCE::Tests::BehaviourTest },
+        { "SimulationTick",  LCE::Tests::SimulationTickTest },
+    };
+
+    constexpr int kSuiteCount =
+        static_cast<int>(sizeof(Suites) / sizeof(Suites[0]));
+}
 
 int main()
 {
-    bool success = true;
+    int passed = 0;
 
-    success &= LCE::Tests::LoggingTest();
-    success &= LCE::Tests::EventBusTest();
-    success &= LCE::Tests::ClockTest();
-    success &= LCE::Tests::SchedulerTest();
-    success &= LCE::Tests::TaskTest();
-    success &= LCE::Tests::ServiceRegistryTest();
-    success &= LCE::Tests::EntityRegistryTest();
-
-    if (success)
+    for (const auto& suite : Suites)
     {
-        std::cout << "All LCE Core tests passed.\n";
-        return 0;
+        std::printf("[ RUN  ] %s\n", suite.Name);
+
+        if (suite.Run())
+        {
+            std::printf("[  OK  ] %s\n", suite.Name);
+            ++passed;
+        }
+        else
+        {
+            std::printf("[ FAIL ] %s\n", suite.Name);
+        }
     }
 
-    std::cout << "LCE Core tests failed.\n";
-    return 1;
+    std::printf("\n%d/%d suites passed.\n", passed, kSuiteCount);
+
+    return passed == kSuiteCount ? 0 : 1;
 }

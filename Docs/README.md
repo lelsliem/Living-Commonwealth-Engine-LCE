@@ -40,7 +40,7 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.2.0--alpha-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.3.0--alpha-emerald.svg)](#roadmap)
 [![Status](https://img.shields.io/badge/Status-In%20Development-emerald.svg)](#roadmap)
 [![Platform](https://img.shields.io/badge/Platform-Fallout%204-emerald.svg)](#architecture)
 
@@ -170,12 +170,13 @@ One subsystem at a time. Each one designed, documented, implemented, built, and 
 | **Configuration** | `LCE::Config` | `Configuration.h` · `Configuration.cpp` | A simple runtime key/value store. Services read their settings from it. |
 | **Service Registry** | `LCE::Runtime` | `ServiceRegistry.h` | Type-safe container for core services. Subsystems are given what they need — they never reach out to find it. Header-only, replaceable by design. |
 | **Entity System** | `LCE::Simulation` | `EntityId.h` · `EntityRegistry.h` · `EntityRegistry.cpp` | An entity is an ID, not an object. Tagged `EntityId` with generational slots, a registry that owns entities and their components, and type-erased component stores. |
+| **Simulation** | `LCE::Simulation` | `Needs.h` · `Memory.h` · `Relationships.h` · `Goals.h` · `Behaviour.h` · `Simulation.h` | The Mind: needs decay, memory fades, relationships drift, and behaviour decides one intent per mind. The farmer goes to market because he's hungry, he knows the merchant, and he understands the road. |
 
 ### Next
 
 | Subsystem | Namespace | Description |
 |----------|-----------|-------------|
-| **Simulation** | `LCE::Simulation` | Milestone 0.3.0 — memory, relationships, behaviour, goals, needs. The living part of the living worlds. |
+| **Platform Integration** | `Include/Platforms/` | Milestone 0.4.0 — the Fallout 4 adapter: game lifecycle, co-save, thread marshalling, entity translation. The game becomes the real test. |
 
 ### Test Output
 
@@ -187,11 +188,37 @@ One subsystem at a time. Each one designed, documented, implemented, built, and 
 [warning] Logging test: Warning
 [error] Logging test: Error
 [critical] Logging test: Critical
+[ RUN  ] Logging
+[  OK  ] Logging
+[ RUN  ] EventBus
+[  OK  ] EventBus
+[ RUN  ] Clock
+[  OK  ] Clock
+[ RUN  ] Scheduler
+[  OK  ] Scheduler
+[ RUN  ] Task
+[  OK  ] Task
+[ RUN  ] ServiceRegistry
+[  OK  ] ServiceRegistry
+[ RUN  ] EntityRegistry
+[  OK  ] EntityRegistry
+[ RUN  ] Needs
+[  OK  ] Needs
+[ RUN  ] Memory
+[  OK  ] Memory
+[ RUN  ] Relationships
+[  OK  ] Relationships
+[ RUN  ] Goals
+[  OK  ] Goals
+[ RUN  ] Behaviour
+[  OK  ] Behaviour
+[ RUN  ] SimulationTick
+[  OK  ] SimulationTick
 
-All LCE Core tests passed.
+13/13 suites passed.
 ```
 
-The harness runs seven suites — Logging, EventBus, Clock, Scheduler, Task, Service Registry, Entity Registry — and every suite must pass for the build to be green.
+Every suite is a named, bool-returning function; the runner reports PASS/FAIL for each and a final count. The harness is a dev-time tool — from 0.4.0 on, the real test is Fallout 4 itself.
 
 ---
 
@@ -205,8 +232,8 @@ The cathedral is built stone by stone. Each milestone is a complete, tested, doc
 | `0.0.1` | Foundation | The First Heartbeat | ✅ Complete |
 | `0.1.0` | Alpha — Core Runtime | Services | ✅ Complete |
 | `0.2.0` | Entity System | Entities | ✅ Complete |
-| `0.3.0` | Simulation | Memory · Relationships | ⬜ Next |
-| `0.4.0` | Platform Integration | Fallout 4 Adapter | ⬜ Pending |
+| `0.3.0` | Simulation | Memory · Relationships | ✅ Complete |
+| `0.4.0` | Platform Integration | Fallout 4 Adapter | ⬜ Next |
 | `0.5.0` | Public Beta | SDK · Sample Modules | ⬜ Pending |
 | `0.9.0` | Release Candidate | Polish · API Freeze | ⬜ Pending |
 | `1.0.0` | Living Worlds | Release | ⬜ Pending |

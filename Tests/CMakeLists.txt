@@ -17,6 +17,12 @@ add_executable(LCE.Core.Tests
     Core/TaskTest.cpp
     Core/ServiceRegistryTest.cpp
     Core/EntityRegistryTest.cpp
+    Core/NeedsTest.cpp
+    Core/MemoryTest.cpp
+    Core/RelationshipsTest.cpp
+    Core/GoalsTest.cpp
+    Core/BehaviourTest.cpp
+    Core/SimulationTickTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests
