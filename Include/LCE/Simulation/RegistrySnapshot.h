@@ -10,7 +10,7 @@
 // │
 // │            Building living worlds through simulation.
 // │
-// │     (this line is reserved for a joke or quote from the author)
+// │     “If the world freezes, don’t panic — it’s just taking a selfie.”
 // │
 // └─────────────────────────────────────────────────────────────────────────┘
 //
