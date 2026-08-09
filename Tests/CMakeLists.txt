@@ -16,6 +16,7 @@ add_executable(LCE.Core.Tests
     Core/SchedulerTest.cpp
     Core/TaskTest.cpp
     Core/ServiceRegistryTest.cpp
+    Core/EntityRegistryTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

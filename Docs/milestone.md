@@ -78,6 +78,21 @@ Decisions: ADR-0034 (Service Registry shape and placement)
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.2.0 — Entity System
+Milestone 0.2.0 — Entity System
 
-Entity IDs · Components · Entity Registry · Lifetime Management
+STATUS: COMPLETE ✅
+
+Stone 01 — EntityId ✅ (tagged type: index + generation)
+Stone 02 — Component stores ✅ (type-erased, per-type)
+Stone 03 — EntityRegistry ✅ (slots, free list, stores)
+Stone 04 — Lifetime management ✅ (generational reuse, stale-ID safety)
+
+Test harness: seven suites, all green.
+
+Design document: Docs/Architecture/EntitySystem.md
+
+═══════════════════════════════════════════════
+
+Next: Milestone 0.3.0 — Simulation
+
+Memory · Relationships · Behaviour · Goals · Needs

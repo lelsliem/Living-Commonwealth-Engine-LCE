@@ -14,9 +14,9 @@ Status
 
 Current Version : 0.1.0-alpha
 
-Current Stage   : Core Runtime (Services) — complete
+Current Stage   : Entity System — complete
 
-Next Milestone  : 0.2.0 — Entity System
+Next Milestone  : 0.3.0 — Simulation
 
 ═══════════════════════════════════════════════
 
@@ -73,20 +73,22 @@ STATUS: COMPLETE ✅
 
 ═══════════════════════════════════════════════
 
-0.2.0 — Entity System (NEXT)
+0.2.0 — Entity System
 
 ═══════════════════════════════════════════════
 
 The first stone of the simulation layer.
 
-[ ] Entity IDs
-[ ] Components
-[ ] Entity Registry
-[ ] Lifetime Management
+STATUS: COMPLETE ✅
+
+[✓] Entity IDs — tagged EntityId (index + generation)
+[✓] Components — type-erased per-type stores
+[✓] Entity Registry — slots, free list, component access
+[✓] Lifetime Management — generational reuse, stale-ID safety
 
 ═══════════════════════════════════════════════
 
-0.3.0 — Simulation
+0.3.0 — Simulation (NEXT)
 
 ═══════════════════════════════════════════════
 
@@ -114,11 +116,15 @@ The first stone of the simulation layer.
 
 ═══════════════════════════════════════════════
 
+> **Reminder:** before 0.5.0 ships, discuss 0.6.0, 0.7.0, 0.8.0, 0.9.0,
+> and the 1.0.0 public release in detail.
+
 [ ] SDK
 [ ] Sample Modules
 [ ] Module Loader
 [ ] Engine Coordinator
-[ ] Discord Testing
+[ ] GitHub Beta Release — public builds + tracked issue feedback
+[ ] Discord Community — announcements, support, live feedback
 [ ] Performance Profiling
 [ ] Documentation Review
 

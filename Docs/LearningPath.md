@@ -33,6 +33,12 @@ becomes familiar:
 5. **Composition.** Complex behaviour is built from simple pieces (Law 001).
    The Scheduler is a vector of tasks and a countdown. The EventBus is a map
    of type → handlers. Nothing here is clever; everything is assembled.
+6. **Templates — one function, any type.** A template is a function with a
+   blank where a type goes: `template <typename T>` means *"the caller tells
+   me the type."* `AddComponent<T>` is one piece of code that becomes a real,
+   typed function for every component type you use. T is exactly what the
+   caller says it is — nothing more. This is the *compile-time* half of type
+   erasure; `type_index` and virtuals are the *runtime* half.
 
 ---
 
@@ -89,6 +95,15 @@ A hand-rolled harness: every suite is a bool-returning function.
 **Teaches:** why the project refuses a test framework (ADR-0010,
 ADR-0029 — minimal dependencies), and how little a harness really needs.
 
+### 10. Entity System — `EntityId.h`, `EntityRegistry.h`, `EntityRegistry.cpp`
+An entity is an ID, not an object. All data lives in components.
+**Teaches:** tagged types (an `EntityId` can never be confused with an
+ordinary integer — the compiler rejects the mistake), generational indices
+(a stale ID can never alias a reused slot), and templates — `T` is whatever
+the caller says it is, and the registry stores components it has never
+heard of, erasing the type at runtime (`type_index` + virtuals) while the
+caller keeps typed access at compile time (`T`).
+
 ---
 
 ## Exercises (learn by doing)
@@ -110,6 +125,9 @@ ADR-0029 — minimal dependencies), and how little a harness really needs.
    (Law 001).
 6. **The warning discipline.** Remove `/WX` from `CMakeLists.txt` and write
    code with a warning. Feel the safety net disappear, then restore it.
+7. **Templates.** Write a third component type — `Position { float X, Y, Z; }`
+   — attach it to an entity and read it back. Notice you wrote zero new
+   registry code: the template generated it. That is `T` in action.
 
 ---
 

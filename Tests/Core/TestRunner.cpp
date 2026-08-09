@@ -21,6 +21,7 @@
 #include "SchedulerTest.h"
 #include "TaskTest.h"
 #include "ServiceRegistryTest.h"
+#include "EntityRegistryTest.h"
 
 #include <iostream>
 
@@ -34,6 +35,7 @@ int main()
     success &= LCE::Tests::SchedulerTest();
     success &= LCE::Tests::TaskTest();
     success &= LCE::Tests::ServiceRegistryTest();
+    success &= LCE::Tests::EntityRegistryTest();
 
     if (success)
     {
