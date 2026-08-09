@@ -101,8 +101,18 @@ An entity is an ID, not an object. All data lives in components.
 ordinary integer — the compiler rejects the mistake), generational indices
 (a stale ID can never alias a reused slot), and templates — `T` is whatever
 the caller says it is, and the registry stores components it has never
-heard of, erasing the type at runtime (`type_index` + virtuals) while the
-caller keeps typed access at compile time (`T`).
+heard of, erasing the type at runtime (`type_index` + virtuals) whilethe caller keeps typed access at compile time (`T`).
+
+### 11. Registry Snapshot — `RegistrySnapshot.h`, `EntityRegistry.h`
+Save/load substrate: the whole registry becomes pure data and back.
+**Teaches:** type erasure applied a *third* time — components stay erased,
+so the adapter registers a `ComponentSerializer<T>` per type (compile-time
+type in, runtime blob out) and the registry never interprets the bytes.
+Also: identity as a contract (the snapshot preserves index + generation
+exactly, so a save/load can never alias entities), and the free list as a
+source of truth (restored slots are alive; new entities reuse only the
+dead ones). This is the stone that lets the simulation ride inside a
+game's save file.
 
 ---
 
@@ -128,6 +138,11 @@ caller keeps typed access at compile time (`T`).
 7. **Templates.** Write a third component type — `Position { float X, Y, Z; }`
    — attach it to an entity and read it back. Notice you wrote zero new
    registry code: the template generated it. That is `T` in action.
+8. **Snapshot.** Register a serializer for your `Position` component from
+   exercise 7 (three floats — 12 bytes) and prove a round-trip: capture,
+   restore into a fresh registry, read the position back. Then remove the
+   serializer and capture again — `Position` silently vanishes from the
+   snapshot. Data presence decides membership, everywhere in LCE.
 
 ---
 

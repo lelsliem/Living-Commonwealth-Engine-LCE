@@ -126,4 +126,130 @@ namespace LCE::Simulation
         // slot may have been reused by a brand-new entity.
         return slot.Alive && slot.Generation == id.Generation();
     }
+
+    void EntityRegistry::DestroyAllEntities()
+    {
+        for (std::size_t index = 0; index < m_Slots.size(); ++index)
+        {
+            if (m_Slots[index].Alive)
+            {
+                DestroyEntity(EntityId::Make(
+                    static_cast<std::uint32_t>(index),
+                    m_Slots[index].Generation));
+            }
+        }
+    }
+
+    void EntityRegistry::Materialize(EntityId id)
+    {
+        const auto index = id.Index();
+
+        // Grow the slot array so the index exists. New slots are dead and
+        // free — exactly as CreateEntity leaves the tail of the array.
+        while (m_Slots.size() <= index)
+        {
+            const auto newIndex = static_cast<std::uint32_t>(m_Slots.size());
+
+            m_Slots.push_back({ 0, false });
+            m_FreeIndices.push_back(newIndex);
+        }
+
+        // The slot is about to be alive: take it off the free list. The
+        // list is a stack of reusable indices; remove this one occurrence.
+        for (auto iterator = m_FreeIndices.begin();
+             iterator != m_FreeIndices.end();
+             ++iterator)
+        {
+            if (*iterator == index)
+            {
+                m_FreeIndices.erase(iterator);
+                break;
+            }
+        }
+
+        auto& slot = m_Slots[index];
+
+        // Adopt the snapshot's generation so the ID means what it meant
+        // when captured — stale references can never alias a restored
+        // entity any more than a live one.
+        slot.Generation = id.Generation();
+        slot.Alive = true;
+    }
+
+    RegistrySnapshot EntityRegistry::Capture() const
+    {
+        RegistrySnapshot snapshot;
+        snapshot.Version = kSnapshotVersion;
+
+        for (std::size_t index = 0; index < m_Slots.size(); ++index)
+        {
+            const auto& slot = m_Slots[index];
+
+            if (!slot.Alive)
+            {
+                continue;
+            }
+
+            SnapshotEntity entity;
+            entity.Id = EntityId::Make(
+                static_cast<std::uint32_t>(index),
+                slot.Generation);
+
+            // Every store that can serialize this entity contributes one
+            // blob. Types without a registered serializer are skipped —
+            // data presence decides membership, as everywhere in LCE.
+            for (const auto& [type, store] : m_Stores)
+            {
+                ComponentBlob blob;
+
+                if (store->Serialize(entity.Id, blob))
+                {
+                    entity.Components.push_back(
+                        { type, std::move(blob) });
+                }
+            }
+
+            snapshot.Entities.push_back(std::move(entity));
+        }
+
+        return snapshot;
+    }
+
+    void EntityRegistry::Restore(const RegistrySnapshot& snapshot)
+    {
+        DestroyAllEntities();
+
+        for (const auto& entity : snapshot.Entities)
+        {
+            if (!entity.Id.IsValid())
+            {
+                continue;
+            }
+
+            Materialize(entity.Id);
+
+            for (const auto& component : entity.Components)
+            {
+                const auto iterator = m_Stores.find(component.Type);
+
+                if (iterator == m_Stores.end())
+                {
+                    continue;   // no serializer registered for this type
+                }
+
+                iterator->second->Deserialize(entity.Id, component.Data);
+            }
+        }
+    }
+
+    void EntityRegistry::Clear()
+    {
+        DestroyAllEntities();
+
+        // A blank registry: no slots, no free list. The stores survive —
+        // their serializers are registered once at init and must remain
+        // for the next game's Restore.
+        m_Slots.clear();
+        m_FreeIndices.clear();
+    }
 }

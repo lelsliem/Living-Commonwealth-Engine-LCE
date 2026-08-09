@@ -1,7 +1,8 @@
 # Platform Integration (0.4.0) — The Handshake
 
 **Milestone:** 0.4.0 — Alpha · Platform Integration
-**Status:** Design — pending review
+**Status:** Implemented and tested (core side); adapter in progress
+(separate project)
 **Related ADRs:** ADR-0023 (the core never includes game headers — now a
 build fact), ADR-0024 (adapters translate, don't simulate), ADR-0014 (no
 global state), Law 001 (simple things; compose the complex)
@@ -36,12 +37,12 @@ The question 0.4.0 answers is therefore narrow and precise:
 
 ---
 
-## Decision #1: the boundary is the public API
+## Decision #1: the boundary is the public API — approved, stubs deleted
 
-Three empty stubs sit in `Include/LCE/Interfaces/` (`IGameAdapter`,
+Three empty stubs sat in `Include/LCE/Interfaces/` (`IGameAdapter`,
 `IWorld`, `IEntity`) — reserved before the simulation existed, on the guess
-that the core would need virtual seams. The design review says:
-**delete them.**
+that the core would need virtual seams. The design review said delete
+them; approved and done. The tree now has no Interfaces directory.
 
 The core's public API already *is* the boundary:
 
@@ -209,22 +210,21 @@ The core repo carries none of it — the tree is the proof.
 
 | Where | Proves |
 |-------|--------|
-| Core (this repo) | Snapshot round-trip preserves a living registry; boundary semantics (intents readable, Remember channel, world facts); existing 13 suites stay green |
+| Core (this repo) | Snapshot round-trip preserves a living registry — the farmer still goes to market after a save and a load. 14/14 suites green (Snapshot suite added) |
 | Adapter project (separate repo) | The real test: a settler in Fallout 4 goes to market because they are hungry — no script |
 
----
+---## Decisions — approved
 
-## Decisions to review
-
-1. **API-only boundary — delete the `Interfaces/` stubs.** (Recommended;
-   the four questions say simpler.)
-2. **Tick on the game thread for 0.4.0.** (Simple first; thread-migration
+1. ✅ **API-only boundary — `Interfaces/` stubs deleted.** (The four
+   questions said simpler.)
+2. ✅ **Tick on the game thread for 0.4.0.** (Simple first; thread-migration
    is a later stone with TaskInterface already waiting.)
-3. **Snapshot via registered serializers.** (Components stay erased; the
-   adapter owns save-compat.)
-4. **World facts through `Remember`** — settled and proven in 0.3.1;
-   restated here because the adapter is its first real consumer.
+3. ✅ **Snapshot via registered serializers.** (Components stay erased;
+   the adapter owns save-compat.)
+4. ✅ **World facts through `Remember`** — settled and proven in 0.3.1;
+   the adapter is its first real consumer.
 
-Review these, and the build is: delete the stubs, add
-`RegistrySnapshot` + registered serializers, round-trip tests, docs — and
-the adapter repository is born.
+The core side is built: stubs deleted, `RegistrySnapshot` +
+`RegisterSerializer` / `Capture` / `Restore` / `Clear` implemented,
+round-trip proven — 14/14 suites green. The adapter repository was born
+alongside.

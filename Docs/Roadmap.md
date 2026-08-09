@@ -12,7 +12,7 @@ Project Roadmap
 
 Status
 
-Current Version : 0.3.1-alpha
+Current Version : 0.4.0-alpha
 
 Current Stage   : Simulation — complete
 
@@ -127,6 +127,8 @@ everything 0.4.0 leans on. All shipped and tested.
 
 0.4.0 — Platform Integration
 
+STATUS: CORE SIDE COMPLETE ✅ (adapter in progress, separate project)
+
 ═══════════════════════════════════════════════
 
 The boundary design is the stone: Docs/Architecture/PlatformIntegration.md.
@@ -135,9 +137,9 @@ the core side (MIT).
 
 Core side (this repo):
 
-[ ] Boundary design — PlatformIntegration.md
-[ ] Registry snapshot/restore + registered serializers
-[ ] Snapshot round-trip tests
+[✓] Boundary design — PlatformIntegration.md
+[✓] Registry snapshot/restore + registered serializers
+[✓] Snapshot round-trip tests — 14/14 suites green
 
 Adapter project (separate repo, born this milestone):
 

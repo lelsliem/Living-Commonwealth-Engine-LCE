@@ -128,9 +128,25 @@ a closed market, a fleeing villager, and a world that forgets.
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.4.0 — Platform Integration (core side)
+Milestone 0.4.0 — Platform Integration (core side)
 
-Boundary design · Registry snapshot/restore · Round-trip tests
+STATUS: COMPLETE ✅
 
-The Fallout 4 adapter itself is a separate project (GPL), born with
-this milestone: F4SE plugin · form translation · intent executor · co-save.
+Stone 01 — Boundary design ✅ (PlatformIntegration.md; the adapter is a
+client of the public API; Interfaces stubs deleted per Decision #1)
+Stone 02 — Registry snapshot ✅ (RegistrySnapshot, RegisterSerializer,
+Capture / Restore / Clear)
+Stone 03 — Round-trip tests ✅ (Snapshot suite; the farmer still goes to
+market after a save and a load)
+
+Test harness: 14/14 suites green.
+
+The Fallout 4 adapter is a separate project (GPL), born with this
+milestone: F4SE plugin · form translation · intent executor · co-save.
+
+═══════════════════════════════════════════════
+
+Next: Milestone 0.5.0 — Public Beta
+
+SDK · Sample Modules · Module Loader · Engine Coordinator · GitHub Beta
+Release · Discord Community · Performance Profiling · Documentation Review

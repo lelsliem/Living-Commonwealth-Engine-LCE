@@ -45,9 +45,11 @@
 #pragma once
 
 #include "LCE/Simulation/EntityId.h"
+#include "LCE/Simulation/RegistrySnapshot.h"
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <typeindex>
 #include <unordered_map>
 #include <utility>
@@ -75,6 +77,16 @@ namespace LCE::Simulation
             // Removes every component of this store's type that belongs to
             // the given entity. Called by DestroyEntity.
             virtual void RemoveEntity(EntityId id) = 0;
+
+            // Appends the entity's component of this store's type as a
+            // blob. Returns false when the entity has no such component or
+            // no serializer is registered — that type is simply not part
+            // of the snapshot.
+            virtual bool Serialize(EntityId id, ComponentBlob& out) const = 0;
+
+            // Replaces the entity's component with one deserialized from
+            // the blob. Requires the serializer registered at capture time.
+            virtual void Deserialize(EntityId id, const ComponentBlob& blob) = 0;
         };
 
         template <typename T>
@@ -115,6 +127,37 @@ namespace LCE::Simulation
                 Remove(id);
             }
 
+            // The adapter registers how this type becomes bytes and back.
+            void SetSerializer(ComponentSerializer<T> serializer)
+            {
+                m_Serializer = std::move(serializer);
+            }
+
+            bool Serialize(EntityId id, ComponentBlob& out) const override
+            {
+                const auto iterator = m_Components.find(id);
+
+                if (iterator == m_Components.end() || !m_Serializer)
+                {
+                    return false;
+                }
+
+                out = m_Serializer->Serialize(*iterator->second);
+
+                return true;
+            }
+
+            void Deserialize(EntityId id, const ComponentBlob& blob) override
+            {
+                if (!m_Serializer)
+                {
+                    return;
+                }
+
+                m_Components[id] =
+                    std::make_shared<T>(m_Serializer->Deserialize(blob));
+            }
+
             // Visits every (entity, component) pair in this store. Exposed
             // through EntityRegistry::ForEachWithComponent — how systems
             // find their subjects.
@@ -128,6 +171,7 @@ namespace LCE::Simulation
             }
 
         private:
+            std::optional<ComponentSerializer<T>> m_Serializer;
             std::unordered_map<EntityId, std::shared_ptr<T>> m_Components;
         };
     }
@@ -209,6 +253,39 @@ namespace LCE::Simulation
             store->ForEach(std::forward<F>(function));
         }
 
+        //-------------------------------------------------------------------------
+        // Registers how component type T becomes bytes and back. Required
+        // for T to appear in a snapshot — a component type with no
+        // serializer is simply not persisted. Register at init, once; the
+        // registration survives Clear() so Restore always has it.
+        //-------------------------------------------------------------------------
+        template <typename T>
+        void RegisterSerializer(ComponentSerializer<T> serializer)
+        {
+            GetStore<T>().SetSerializer(std::move(serializer));
+        }
+
+        //-------------------------------------------------------------------------
+        // Captures every live entity and its serializable components as
+        // pure data. Types without a registered serializer are omitted.
+        //-------------------------------------------------------------------------
+        [[nodiscard]]
+        RegistrySnapshot Capture() const;
+
+        //-------------------------------------------------------------------------
+        // Clears the registry and rebuilds it from the snapshot, preserving
+        // entity IDs exactly (index + generation). Requires the same
+        // serializers to be registered as when the snapshot was captured.
+        //-------------------------------------------------------------------------
+        void Restore(const RegistrySnapshot& snapshot);
+
+        //-------------------------------------------------------------------------
+        // Destroys every entity and resets the registry to blank. Stores
+        // (and their serializers) survive — they are registered once at
+        // init and must remain for the next game's Restore.
+        //-------------------------------------------------------------------------
+        void Clear();
+
     private:
         struct Slot
         {
@@ -249,6 +326,14 @@ namespace LCE::Simulation
 
             return static_cast<Detail::ComponentStore<T>&>(*store);
         }
+
+        // Destroys every live entity, leaving stores (and serializers)
+        // intact. Shared by Clear and Restore.
+        void DestroyAllEntities();
+
+        // Makes a slot live with the exact ID from a snapshot, growing the
+        // slot array and clearing the slot from the free list as needed.
+        void Materialize(EntityId id);
 
         std::vector<Slot> m_Slots;
         std::vector<std::uint32_t> m_FreeIndices;
