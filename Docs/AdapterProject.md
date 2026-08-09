@@ -95,19 +95,28 @@ that matter to this project:
 
 ## Dependency Wiring
 
-`C:\Fallout4Adaption\Depends\` already contains full clones the author
-moved over: `f4se`, `commonlibf4`, `common`, `json`, `DirectXTK`, `spdlog`.
+`C:\Fallout4Adaption\Depends\` holds the clones the build needs:
+`commonlibf4` (the static dependency, built via xmake `includes`) and
+`spdlog` (offline source for the core build's v1.16.0). The original six
+were trimmed in 2026-08 — see the adapter repo's `Depends/README.md`
+for what was removed and why.
 
-- **CommonLibF4** + **F4SE** — link these (the mod's game API + runtime).
-  CommonLibF4 is **xmake-only** (no CMakeLists — confirmed), and the mod
-  project chose xmake-native, matching the F4SE modding ecosystem.
-- **LCE.Core** — link it. xmake has no FetchContent; the pattern is:
-  build `LCE.Core.lib` once with CMake (the core's own build), then link
-  it in xmake via `add_linkdirs` + `add_links`. The mod must build
-  against a known core version.
-- **spdlog** — the vendored copy in `Depends/` is likely **redundant**:
-  the core now fetches its own spdlog, and the mod logs through LCE's API
-  (or CommonLibF4's `REX::LOG`), never spdlog directly. Confirm and remove.
+- **CommonLibF4** — the mod's game API + plugin contract. Built from the
+  local clone; its `RUNTIME_LATEST` (1.11.221) matches the game.
+- **F4SE** — runtime-only. The plugin does not link the F4SE source;
+  CommonLibF4 replaces it as the static dependency. The `f4se_1_10_*.dll`
+  runtime is a download, installed via the mod manager.
+- **LCE.Core** — linked statically, built by its own CMake via the
+  `lce.core` rule into `Build/core` (never touching the core repo's
+  `Build/`). The rule pins the core version: it reads `Version.h` and
+  refuses anything below 0.4.0.
+- **spdlog** — the local clone feeds the core build's `v1.16.0` (matching
+  the plugin's xrepo spdlog, `std::format` mode) so one spdlog serves the
+  DLL. The mod itself logs through LCE's API and `REX::LOG`, never spdlog
+  directly.
+
+The adapter repo owns the living copy of this handoff; this file in the
+core repo is the snapshot from which it grew.
 
 ---
 
