@@ -1,3 +1,9 @@
+Building living worlds through simulation.
+
+One milestone at a time.
+
+The cathedral is built stone by stone. Each milestone is a complete, tested, documented layer before the next begins. We do not skip floors.
+
 =============================================================================
 
 Living Commonwealth Engine (LCE)
@@ -16,11 +22,35 @@ Status
 
 \------
 
-Current Version : 0.0.0
+Current Version : 0.2.0 - Alpha
 
-Current Stage   : Planning Complete
+Current Stage   : Started
 
-Next Milestone  : 0.0.1 Foundation
+Next Milestone  : 0.3.0 - Alpha
+
+
+
+=========================================================================
+
+0.0.0 Project Definition
+
+=========================================================================
+
+
+
+"The Blueprint"
+
+
+
+\[✓]• Vision
+
+\[✓]• Philosophy
+
+\[✓]• Architecture
+
+\[✓]• Development charter established
+
+\[✓]• The cathedral's blueprints are drawn.
 
 
 
@@ -44,33 +74,33 @@ Objectives
 
 
 
-\[ ] CMake Build System
+\[✓]• CMake Build System
 
-\[ ] C++23
+\[✓]• C++23
 
-\[ ] Visual Studio 2022
+\[✓]• Visual Studio 2022
 
-\[ ] Platform Toolset v143
+\[✓]• Platform Toolset v143
 
-\[ ] Static Runtime (/MT)
+\[✓]• Static Runtime (/MT)
 
-\[ ] Zero Warnings
+\[✓]• Zero Warnings
 
-\[ ] Logger
+\[✓]• Logger
 
-\[ ] Configuration
+\[✓]• Configuration
 
-\[ ] Version
+\[✓]• Version
 
-\[ ] Service Registry
+\[✓]• Service Registry
 
-\[ ] Module Loader
+\[✓]• Module Loader
 
-\[ ] Engine
+\[✓]• Engine
 
-\[ ] Documentation
+\[✓]• Documentation
 
-\[ ] First Successful Build
+\[✓]• First Successful Build
 
 
 
@@ -100,19 +130,19 @@ Core Runtime
 
 
 
-• Event Bus
+\[✓]• Event Bus
 
-• Clock
+\[✓]• Clock
 
-• Scheduler
+\[✓]• Scheduler
 
-• Task System
+\[✓]• Task System
 
-• Configuration
+\[✓]• Configuration
 
-• Logging
+\[✓]• Logging
 
-• Service Architecture
+\[✓]• Service Architecture
 
 
 
@@ -255,8 +285,4 @@ Documentation
 Examples
 
 MIT Licensed
-
-
-
-Building living worlds through simulation.
 

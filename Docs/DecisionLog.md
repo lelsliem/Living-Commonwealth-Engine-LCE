@@ -6,653 +6,542 @@ Decision Log
 
 =============================================================================
 
+We record why, not just what.
 
-
-Purpose
-
-
-
-Every architectural decision is recorded.
-
-
-
-The goal is not simply to remember WHAT was decided,
-
-but WHY it was decided.
-
-
-
-Once accepted, a decision should only change if a better
-
-architectural solution exists.
-
-
+Every architectural decision is logged. Once accepted, a decision only changes if a better architectural solution exists. After all these decisions, we know exactly why LCE looks the way it does.
 
 =============================================================================
 
 
 
-Decision 0001
-
-
-
-Title
-
-
+0001
 
 Open Source
 
-
-
-Status
-
-
-
 Accepted
 
-
-
-Decision
-
-
-
-LCE will be fully open source under the MIT License.
+The Living Commonwealth Engine is fully open source under the MIT License. The simulation belongs to everyone.
 
 
 
-Reason
-
-
-
-Teach through code.
-
-Encourage collaboration.
-
-Allow the community to extend the engine.
-
-
+ADR-0001 · 2026-01
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0002
+0002
 
-
-
-Title
-
-
-
-Architecture Before Code
-
-
-
-Status
-
-
+C++23 Standard
 
 Accepted
 
-
-
-Decision
-
-
-
-No subsystem will be implemented before it has been designed.
+LCE targets C++23. Modern features — concepts, ranges, modules-ready, constexpr improvements — are not just allowed but expected.
 
 
 
-Reason
-
-
-
-Reduce technical debt.
-
-Improve documentation.
-
-Keep architecture consistent.
-
-
+ADR-0002 · 2026-01
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0003
-
-
-
-Title
-
-
+0003
 
 Platform Independence
 
-
-
-Status
-
-
-
 Accepted
 
-
-
-Decision
-
-
-
-Core engine must never directly include
-
-Fallout 4, F4SE or CommonLibF4 headers.
+The Core never includes Fallout 4, F4SE, or CommonLibF4 headers. Platform-specific code lives exclusively in Platform adapters.
 
 
 
-Reason
-
-
-
-Maintain platform independence.
-
-
+ADR-0003 · 2026-01
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0004
-
-
-
-Title
-
-
+0004
 
 Service Registry
 
-
-
-Status
-
-
-
 Accepted
 
-
-
-Decision
-
-
-
-Core services are provided through
-
-ServiceRegistry.
+Core services are provided through a registry, not direct instantiation. Loose coupling, replaceable implementations, testable by design.
 
 
 
-Reason
-
-
-
-Loose coupling.
-
-Easy testing.
-
-Replaceable implementations.
-
-
+ADR-0004 · 2026-01
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0005
+0005
 
-
-
-Title
-
-
-
-Module Loader
-
-
-
-Status
-
-
+Module System
 
 Accepted
 
-
-
-Decision
-
-
-
-Engine functionality is extended through
-
-loadable modules.
+Modules are dynamically loaded extensions. They consume the simulation through the SDK and cannot access Core internals.
 
 
 
-Reason
-
-
-
-Stable engine.
-
-Extensible architecture.
-
-Minimal core modifications.
-
-
+ADR-0005 · 2026-01
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0006
+0006
 
-
-
-Title
-
-
-
-Documentation First
-
-
-
-Status
-
-
+Single Coordinator
 
 Accepted
 
-
-
-Decision
-
-
-
-Every public class requires
-
-
-
-Header
-
-Source
-
-Documentation
-
-
-
-Reason
-
-
-
-Teach Through Code.
-
-
+The Engine layer contains one Coordinator. It orchestrates the simulation but never owns gameplay logic. Gameplay lives in modules.
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0007
+0007
 
-
-
-Title
-
-
-
-Build Philosophy
-
-
-
-Status
-
-
+Event-Driven Architecture
 
 Accepted
 
-
-
-Decision
-
-
-
-Every commit must compile successfully.
+Communication between subsystems flows through events, not direct calls. The EventBus is the nervous system.
 
 
 
-Reason
-
-
-
-Prevent broken branches.
-
-
+ADR-0007 · 2026-01
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0008
+0008
 
-
-
-Title
-
-
-
-Version Strategy
-
-
-
-Status
-
-
+Simulation Over Scripting
 
 Accepted
 
-
-
-Decision
-
-
-
-0.x.x Development
+Instead of scripting every event, LCE simulates systems from which events naturally emerge. Stories are not written — they occur.
 
 
 
-1.0 Stable
-
-
-
-Semantic Versioning thereafter.
-
-
+ADR-0008 · 2026-01
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0009
+0009
 
-
-
-Title
-
-
-
-Coding Standard
-
-
-
-Status
-
-
+Documentation Before Implementation
 
 Accepted
 
-
-
-Decision
-
-
-
-Modern C++23
-
-
-
-Visual Studio 2022
-
-
-
-Platform Toolset v143
-
-
-
-/MT Runtime
-
-
-
-Zero warnings
-
-
-
-SPDX License headers
-
-
+Every subsystem is designed and documented before a single line of implementation is written. The document is the spec.
 
 \-----------------------------------------------------------------------------
 
 
 
-Decision 0010
+0010
 
-
-
-Title
-
-
-
-Project Motto
-
-
-
-Status
-
-
+Test Harness
 
 Accepted
 
+LCE owns its own test harness. Tests live in the repository and run on every build. Untested code does not ship.
 
 
-Decision
 
+ADR-0010 · 2026-01
 
+\-----------------------------------------------------------------------------
 
-Building living worlds through simulation.
 
 
+0011
 
-Reason
+Semantic Versioning
 
+Accepted
 
+LCE follows semantic versioning: MAJOR.MINOR.PATCH. Breaking API changes require a major version bump. The public contract is sacred.
 
-Every feature should support this philosophy.
 
 
+ADR-0011 · 2026-01
 
-Decision 0015 - Source File Discovery
+\-----------------------------------------------------------------------------
 
 
 
-Status: Accepted ✅
+0012
 
+Public API Stability
 
+Accepted
 
-Automatic source discovery using file(GLOB\_RECURSE ... CONFIGURE\_DEPENDS ...)
+Once a public API is released, it does not change without deprecation. The SDK is the contract with module authors.
 
-Each target discovers only its own files.
 
-No repository-wide globbing.
 
-Zero maintenance when adding new source files.
+ADR-0012 · 2026-01
 
-Decision 0016 - Repository Ownership
+\-----------------------------------------------------------------------------
 
 
 
-Status: Accepted ✅
+0013
 
+Namespaces Mirror Folders
 
+Accepted
 
-Every directory owns exactly one logical target.
+Namespace hierarchy matches folder structure. LCE::Core::Logging lives in Core/Logging. If you can find the folder, you know the namespace.
 
 
 
-Root
+ADR-0013 · 2026-01
 
-│
+\-----------------------------------------------------------------------------
 
-├── Source/          -> LCE\_Core
 
-├── Platform/        -> Platform Adapters
 
-├── SDK/             -> LCE\_SDK
+0014
 
-├── Tests/           -> LCE\_Tests
+No Global State
 
-├── Samples/         -> Example Applications
+Accepted
 
-├── Modules/         -> Example Modules
+No global variables, no static singletons, no hidden mutable state. Everything flows through explicit ownership and the service registry.
 
-├── Docs/            -> Documentation
 
-└── Depends/         -> Third-party libraries
 
+ADR-0014 · 2026-01
 
+\-----------------------------------------------------------------------------
 
-This scales extremely well.
 
 
+0015
 
-Decision 0017 - Self Contained CMake
+Dependency Injection
 
+Accepted
 
+Services receive their dependencies through constructors or the registry. No service reaches out to find another — it is given what it needs.
 
-Status: Accepted ✅
 
 
+ADR-0015 · 2026-01
 
-Every major directory contains its own CMakeLists.txt.
+\-----------------------------------------------------------------------------
 
 
 
-LivingCommonwealthEngine/
+0016
 
-│
+RAII Resource Management
 
-├── CMakeLists.txt
+Accepted
 
-├── Source/
+Resources are acquired in constructors and released in destructors. No manual init/shutdown pairs. Ownership is expressed through object lifetime.
 
-│   └── CMakeLists.txt
 
-├── Platform/
 
-│   └── CMakeLists.txt
+ADR-0016 · 2026-01
 
-├── SDK/
+\-----------------------------------------------------------------------------
 
-│   └── CMakeLists.txt
 
-├── Tests/
 
-│   └── CMakeLists.txt
+0017
 
-├── Samples/
+Const Correctness
 
-│   └── CMakeLists.txt
+Accepted
 
-└── Modules/
+Every method that does not modify state is marked const. The compiler enforces immutability. This is not optional.
 
-&#x20;   └── CMakeLists.txt
 
 
+ADR-0017 · 2026-01
 
-The root project orchestrates.
+\-----------------------------------------------------------------------------
 
-Each directory builds itself.
 
 
+0018
 
-Decision 0018 - Consistent Project Identity
+No Exceptions in Core
 
+Proposed
 
+Core uses std::expected and error codes instead of exceptions. Deterministic, no hidden control flow, no allocation surprises.
 
-Status: Accepted ✅
 
 
+ADR-0018 · 2026-02
 
-Every source file should begin with the official LCE banner.
+\-----------------------------------------------------------------------------
 
 
 
-Including
+0019
 
+Layered Dependency Rule
 
+Accepted
 
-.cpp
+Dependencies point downward only. A layer may depend on the layer below it but never sideways or upward. This single rule prevents circular dependencies.
 
-.h
 
-.hpp
 
-CMakeLists.txt
+ADR-0019 · 2026-02
 
-.cmake
+\-----------------------------------------------------------------------------
 
-Scripts where practical
 
 
+0020
 
-Consistency matters.
+No Circular Dependencies
 
+Accepted
 
+Circular dependencies are a design failure, not a build problem. If two modules need to know each other, extract the shared concept downward.
 
-Decision 0019 - Layered Dependency Rule
 
 
+ADR-0020 · 2026-02
 
-This one just became obvious while we were talking.
+\-----------------------------------------------------------------------------
 
 
 
-Status: Accepted ✅
+0021
 
+The Cathedral Principle
 
+Accepted
 
-Dependencies may only point downward.
+Foundations are strengthened before new layers are added. We do not build the second floor until the first is load-bearing. Speed comes from never having to rebuild.
 
 
 
-Applications
+ADR-0021 · 2026-02
 
-&#x20;     │
+\-----------------------------------------------------------------------------
 
-&#x20;     ▼
 
-Platform Adapters
 
-&#x20;     │
+0022
 
-&#x20;     ▼
+Build for Fallout 4, Architect for Every Bethesda Game
 
-Engine
+Accepted
 
-&#x20;     │
+The first platform is Fallout 4, but the architecture serves every Bethesda title. If Fallout 5 ships tomorrow, only the adapter changes.
 
-&#x20;     ▼
 
-Runtime
 
-&#x20;     │
+ADR-0022 · 2026-02
 
-&#x20;     ▼
+\-----------------------------------------------------------------------------
 
-Services
 
-&#x20;     │
 
-&#x20;     ▼
+0023
 
-Foundation
+Core Never Includes Game Headers
+
+Accepted
+
+No Fallout 4, F4SE, or CommonLibF4 header appears in Core. The simulation is game-agnostic by compile-time guarantee, not convention.
+
+
+
+ADR-0023 · 2026-02
+
+\-----------------------------------------------------------------------------
+
+
+
+0024
+
+Adapters Translate, Don't Simulate
+
+Accepted
+
+Platform adapters translate simulation calls to game APIs. They do not contain simulation logic. If logic leaks into an adapter, extract it downward.
+
+
+
+ADR-0024 · 2026-02
+
+\-----------------------------------------------------------------------------
+
+
+
+0025
+
+Header-Only Foundation Constants
+
+Accepted
+
+Compile-time immutable data stays header-only — no .cpp file, no linker cost, no runtime initialization. Version is the exemplar.
+
+
+
+ADR-0025 · 2026-02
+
+\-----------------------------------------------------------------------------
+
+
+
+0026
+
+Free Functions Over Static Classes
+
+Accepted
+
+When a class has no state, use free functions in a namespace. Logging's six functions are not methods on a Logger class — they are free functions in LCE::Logging.
+
+
+
+ADR-0026 · 2026-02
+
+\-----------------------------------------------------------------------------
+
+
+
+0027
+
+Hide Third-Party Libraries
+
+Accepted
+
+Public headers expose only LCE types and standard C++. spdlog, json, and all external libraries are hidden behind the implementation boundary.
+
+
+
+ADR-0027 · 2026-02
+
+\-----------------------------------------------------------------------------
+
+
+
+0028
+
+Forward Declarations First
+
+Accepted
+
+Prefer forward declarations over includes in headers. Only include what you construct or destroy. Compile times are a feature.
+
+
+
+ADR-0028 · 2026-02
+
+\-----------------------------------------------------------------------------
+
+
+
+0029
+
+Minimal Dependencies
+
+Accepted
+
+Every external library must justify its maintenance cost. If a feature can be implemented in fifty lines of standard C++, do not add a dependency.
+
+
+
+ADR-0029 · 2026-03
+
+\-----------------------------------------------------------------------------
+
+
+
+0030
+
+Own the Interface, Not the Implementation
+
+Accepted
+
+LCE owns its public interfaces. Implementations may wrap third-party libraries, but the public API is pure LCE. If spdlog disappears, only Logger.cpp changes.
+
+
+
+ADR-0030 · 2026-03
+
+\-----------------------------------------------------------------------------
+
+
+
+0031
+
+Design Before Code
+
+Accepted
+
+Each subsystem is designed — interface, responsibilities, dependencies, tests — before implementation begins. The design document is the first deliverable.
+
+
+
+ADR-0031 · 2026-03
+
+\-----------------------------------------------------------------------------
+
+
+
+0032
+
+One Subsystem at a Time
+
+Accepted
+
+Only one subsystem is in progress at any time. It is designed, documented, implemented, built, and tested before the next begins. No parallel chaos.
+
+
+
+ADR-0032 · 2026-03
+
+\-----------------------------------------------------------------------------
+
+
+
+0033
+
+The Four Questions
+
+Accepted
+
+Before introducing any new class, subsystem, feature, or dependency, the project leads review: Can it be simpler? Does it belong? Do we need this at all? Will this help build living worlds through simulation?
+
+\-----------------------------------------------------------------------------
+
+
+0034
+
+Service Registry Shape and Placement
+
+Accepted
+
+The Service Registry lives in LCE::Runtime as a header-only container keyed by std::type_index. Type erasure through std::shared_ptr<void> keeps it dependency-free, replaceable, and testable; the templates live in the header because the erased storage requires their definitions at the call site. If a Services layer is ever introduced, the registry moves with one namespace rename.
+
+ADR-0034 · 2026-08
+
+\-----------------------------------------------------------------------------
+
+
+
+\-----------------------------------------------------------------------------
 

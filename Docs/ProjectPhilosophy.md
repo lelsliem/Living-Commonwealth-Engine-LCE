@@ -1,74 +1,110 @@
+Not a mod. Middleware for Fallout 4.
+
+LCE does not create stories — it creates a living world from which stories naturally emerge. Instead of scripting every event, it simulates entities, relationships, memories, factions, locations, and world events through modular systems.
+
+
+
+The engine separates simulation from presentation. It provides the systems; modules provide the gameplay; mods provide the content. The core is completely game-agnostic — Fallout 4 is simply the first platform that consumes it.
+
+
+
+A farmer doesn't need a scripted schedule. LCE gives the farmer hunger, a home, a relationship with the local merchant, and an understanding of the road to town. The farmer goes to market because the simulation compels it — not because a quest script fired.
+
+
+
+Build for Fallout 4. Architect for every Bethesda game.
+
+
+
+We don't build a Fallout 4 engine. We build a simulation engine with a Fallout 4 adapter. If Bethesda ships Fallout 5, only the adapter changes — the simulation stays the same.
+
+
+
+The Cathedral Principle
+
+Foundations are strengthened before new layers are added. We do not build the second floor until the first is load-bearing. Speed comes from never having to rebuild.
+
+
+
+Simulation Over Scripting
+
+Instead of scripting every event, LCE simulates systems from which events naturally emerge. Stories are not written — they occur. The world is alive because its inhabitants are.
+
+
+
 Project Philosophy
 
+Architecture before code
 
+Documentation before implementation
 
-Architecture before code.
+Simulation over scripting
 
+Platform independence
 
+Single responsibility
 
-Documentation before implementation.
+Stable public APIs
 
+Open by design
 
+Performance matters
 
-Simulation over scripting.
+Teach through code
 
+Build together
 
+Simplicity through design
 
-Platform independence.
+Own the interface, not the implementation
 
+Challenge ideas, not people
 
+Questions Before Code
 
-Single responsibility.
-
-
-
-Stable public APIs.
-
-
-
-Open by design.
-
-
-
-Performance matters.
-
-
-
-Teach through code.
+Before introducing any new class, subsystem, feature, or dependency — the project leads review these.
 
 
 
-Build together.
+1\.
+
+Can it be simpler?
+
+2\.
+
+Does it belong?
+
+3\.
+
+Do we need this at all?
+
+4\.
+
+Will this help build living worlds through simulation?
 
 
 
-LCE should be understandable.
+┌─────────────────────────────┐
+
+│        LCE SUBSYSTEM REVIEW         
+
+├─────────────────────────────┤
+
+│ Responsibility      ✓              
+
+│ Simplicity          ✓              
+
+│ Documentation       ✓              
+
+│ Extensibility       ✓              
+
+│ Teaching Value      ✓              
+
+│ Third-Party Hidden  ✓              
+
+│ Approved            ✓              
+
+└─────────────────────────────┘
 
 
-
-LCE should be extensible.
-
-
-
-LCE should never become dependent on one game.
-
-
-
-Every decision must strengthen the architecture.
-
-
-
-Every feature must support the mission:
-
-
-
-Building living worlds through simulation.
-
-
-
-Simplicity is not the absence of capability; it is the elimination of unnecessary complexity. Every class, function, and subsystem should be as simple as possible while fulfilling its responsibility completely.
-
-
-
-Every idea is welcome. Every idea should be questioned. Decisions should be based on architecture, evidence, and the project's goals—not on who suggested them.
 

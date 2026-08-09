@@ -10,80 +10,50 @@
 // │                                                                                                    
 // │            Building living worlds through simulation.                                              
 // │                                                                                                    
-// │         Simple things should be simple. Complex things should be composed from simple things       
+// │                "“My code doesn’t have bugs. It just develops random features.”"
 // │                                                                                                    
 // └─────────────────────────────────────────────────────────────────────────┘
 //
 // Living Commonwealth Engine (LCE)
 //-----------------------------------------------------------------------------//
 // File:
-//      Version.h
+//
+//      Event.h
 //
 // Purpose:
-//      Provides compile-time version information for the Living Commonwealth
-//      Engine.
+//
+//      Defines the base event contract used by the LCE event system.
 //
 // Project:
+//
 //      Living Commonwealth Engine (LCE)
 //
 // License:
+//
 //      MIT License
 //
 // SPDX-License-Identifier: MIT
 //
 // Copyright:
+//
 //      (c) 2026-present LCE Contributors
 //=============================================================================//
 
 #pragma once
 
-#include <string_view>
+#include <functional>
+#include <memory>
+#include <typeindex>
+#include <vector>
 
-namespace LCE::Version
+namespace LCE::Events
 {
-    //-------------------------------------------------------------------------
-    // Engine Version
-    //
-    // These values define the current version of the Living Commonwealth
-    // Engine. They are compile-time constants and should only be updated when
-    // releasing a new version.
-    //-------------------------------------------------------------------------
-
-    inline constexpr int MajorValue = 0;
-    inline constexpr int MinorValue = 1;
-    inline constexpr int PatchValue = 0;
-
-    inline constexpr std::string_view VersionString = "0.1.0-alpha";
-
-    inline constexpr std::string_view EngineName = "Living Commonwealth Engine";
-
-    //-------------------------------------------------------------------------
-    // Returns the major version number.
-    //-------------------------------------------------------------------------
-    [[nodiscard]]
-    constexpr int Major() noexcept;
-
-    //-------------------------------------------------------------------------
-    // Returns the minor version number.
-    //-------------------------------------------------------------------------
-    [[nodiscard]]
-    constexpr int Minor() noexcept;
-
-    //-------------------------------------------------------------------------
-    // Returns the patch version number.
-    //-------------------------------------------------------------------------
-    [[nodiscard]]
-    constexpr int Patch() noexcept;
-
-    //-------------------------------------------------------------------------
-    // Returns the complete version string.
-    //-------------------------------------------------------------------------
-    [[nodiscard]]
-    constexpr std::string_view String() noexcept;
-
-    //-------------------------------------------------------------------------
-    // Returns the engine name.
-    //-------------------------------------------------------------------------
-    [[nodiscard]]
-    constexpr std::string_view Name() noexcept;
+    /// <summary>
+    /// Defines the base contract for events published through LCE.
+    /// </summary>
+    class Event
+    {
+    public:
+        virtual ~Event() = default;
+    };
 }

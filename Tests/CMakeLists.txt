@@ -7,4 +7,23 @@
 #
 #==============================================================================
 
-# Tests will be added during Milestone 0.1.
+# LCE Core test harness — every subsystem has a suite; runs on every build.
+add_executable(LCE.Core.Tests
+    Core/TestRunner.cpp
+    Core/LoggingTest.cpp
+    Core/EventBusTest.cpp
+    Core/ClockTest.cpp
+    Core/SchedulerTest.cpp
+    Core/TaskTest.cpp
+    Core/ServiceRegistryTest.cpp
+)
+
+target_link_libraries(LCE.Core.Tests
+    PRIVATE
+        LCE.Core
+)
+
+target_compile_features(LCE.Core.Tests
+    PRIVATE
+        cxx_std_23
+)
