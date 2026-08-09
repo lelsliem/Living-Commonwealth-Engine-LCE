@@ -24,6 +24,13 @@ adapter became a separate project.
   exposed publicly, so the backend can be replaced without changing the SDK.
 - **License:** MIT
 - **Repository:** https://github.com/gabime/spdlog
+- **Acquired via:** FetchContent, pinned to `v1.17.0` — the core has no
+  vendored code and no submodules. A fresh clone configures and builds
+  with no manual steps.
+- **Proven in the field (0.4.x):** The Living Commonwealth adapter builds
+  the core against the F4SE ecosystem's spdlog (1.16 +
+  `SPDLOG_USE_STD_FORMAT`) so one logging implementation serves the
+  plugin DLL — with zero changes to LCE's public API. The wrap works.
 
 ---
 

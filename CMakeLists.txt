@@ -83,10 +83,20 @@ endif()
 # spdlog provides the backend for LCE's logging subsystem.
 # LCE links to spdlog privately so it does not become part of the public API.
 
-add_subdirectory(
-    "${CMAKE_SOURCE_DIR}/Depends/spdlog"
-    "${CMAKE_BINARY_DIR}/_deps/spdlog"
+# Fetched via FetchContent rather than vendored: a fresh clone configures
+# and builds with no manual steps — no gitlinks, no submodule bookkeeping.
+# Pinned to the version used since 0.0.1.
+
+include(FetchContent)
+
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG        v1.17.0
+    GIT_SHALLOW    TRUE
 )
+
+FetchContent_MakeAvailable(spdlog)
 
 #------------------------------------------------------------------------------
 # Build Targets

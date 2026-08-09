@@ -129,11 +129,23 @@ everything 0.4.0 leans on. All shipped and tested.
 
 ═══════════════════════════════════════════════
 
-[ ] Fallout 4 Platform Adapter
-[ ] CommonLibF4
-[ ] F4SE
-[ ] Serialization
-[ ] Save / Load
+The boundary design is the stone: Docs/Architecture/PlatformIntegration.md.
+The adapter itself is a separate project (GPL) — this repo carries only
+the core side (MIT).
+
+Core side (this repo):
+
+[ ] Boundary design — PlatformIntegration.md
+[ ] Registry snapshot/restore + registered serializers
+[ ] Snapshot round-trip tests
+
+Adapter project (separate repo, born this milestone):
+
+[ ] F4SE plugin scaffold (F4SEPlugin_Load)
+[ ] Entity ↔ form translation
+[ ] Intent → game action executor
+[ ] Co-save integration
+[ ] The real test: settlers with needs in Fallout 4
 
 ═══════════════════════════════════════════════
 

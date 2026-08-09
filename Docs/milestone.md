@@ -128,6 +128,9 @@ a closed market, a fleeing villager, and a world that forgets.
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.4.0 — Platform Integration
+Next: Milestone 0.4.0 — Platform Integration (core side)
 
-Fallout 4 Adapter · F4SE · CommonLibF4 · Save/Load · Serialization
+Boundary design · Registry snapshot/restore · Round-trip tests
+
+The Fallout 4 adapter itself is a separate project (GPL), born with
+this milestone: F4SE plugin · form translation · intent executor · co-save.

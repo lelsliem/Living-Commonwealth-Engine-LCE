@@ -1,141 +1,230 @@
-# Platform Integration Notes (Fallout 4)
+# Platform Integration (0.4.0) — The Handshake
 
-**Purpose:** what F4SE and CommonLibF4 can do, and how that shapes the 0.4.0
-Fallout 4 adapter — without ever leaking game knowledge into the core.
-The core never includes these headers (ADR-0003, ADR-0023); this document is
-for the adapter's design.
+**Milestone:** 0.4.0 — Alpha · Platform Integration
+**Status:** Design — pending review
+**Related ADRs:** ADR-0023 (the core never includes game headers — now a
+build fact), ADR-0024 (adapters translate, don't simulate), ADR-0014 (no
+global state), Law 001 (simple things; compose the complex)
 
 ---
 
-## F4SE — the runtime
+## The Spec Is a City
 
-F4SE (ianpatt/f4se). The Fallout 4 Script Extender. It was vendored in
-`Depends/` for study and removed when the adapter became a separate
-project.
+> A player walks into Diamond City. The settlers are not on quest scripts —
+> they are hungry, they remember who cheated them, they flee when raiders
+> come, and the market closes on rainy days. The game does nothing but show
+> the result.
 
-**What it is:** a launcher (`f4se_loader`) that starts the game with a
-patched, plugin-loading runtime. Plugins are DLLs that declare compatibility
-and export an entry point.
+That sentence is the test plan. 0.4.0 makes it true by handing the
+simulation to Fallout 4 — through one seam, in a separate project, with the
+core untouched.
 
-**The plugin contract** (`f4se/f4se/PluginAPI.h`):
+---
 
-- `F4SEPlugin_Version` — a data struct declaring name, author, and version
-  compatibility (address independence: signatures vs Address Library;
-  structure independence: which runtime layout).
-- `F4SEPlugin_Load(const F4SEInterface*)` — the entry point. From here a
-  plugin queries typed interfaces by ID.
+## The Boundary Is the Whole Design
 
-**Interfaces a plugin can query:**
+Two decisions are already made, and both are now physical:
 
-| Interface | What it provides | Why LCE's adapter cares |
-|-----------|------------------|--------------------------|
-| **Messaging** | Game-lifecycle events: `NewGame`, `GameLoaded`, `GameDataReady`, `PreSaveGame`, `PostSaveGame`, `PreLoadGame`, `PostLoadGame`, `DeleteGame`, `InputLoaded`; plus plugin-to-plugin messages. | The simulation's heartbeat: start on `GameLoaded`, suspend/save on save events, reset on load. |
-| **Serialization** | Co-save: write/read records inside the game's save file, with save/load/revert callbacks and form-ID resolution. | LCE's save/load stone (roadmap 0.4.0) hooks here — simulation state rides inside the game save. |
-| **Papyrus** | Register native functions with the game's script VM; query event registrations. | Lets mods ask the simulation questions through Papyrus. |
-| **Task** | `AddTask` / `AddUITask` — run work on the game thread / UI thread. | The thread-safety bridge: simulation may tick on its own thread, but game API calls must be marshalled to the game thread. |
-| **Scaleform** | Register Flash/Scaleform UI callbacks. | Optional UI (HUD readouts, debug menus). |
-| **Trampoline** | Allocate code from branch/local pools. | Low-level hooking — the adapter should rarely need this directly. |
-| **Object** | Delay functors, object registry, persistent object storage. | F4SE's own persistence helpers. |
+1. **The core never knows the game.** ADR-0023 is a build fact: the game
+   headers are not even on disk in this repo. There is nothing to violate.
+2. **The adapter is a separate project.** It links LCE.Core + CommonLibF4
+   as an F4SE plugin. The license split is physical too: MIT core, GPL
+   adapter (CommonLibF4 is GPL-3.0 with modding/linking exceptions).
 
-F4SE also ships `Hooks_*` (input, memory, Papyrus, save/load, Scaleform,
-threads, gameplay) — machinery we inherit, not something we write.
+The question 0.4.0 answers is therefore narrow and precise:
+**what exactly crosses the seam?**
 
-## CommonLibF4 — the modern typed API
+---
 
-CommonLibF4 (libxse/commonlibf4). C++23, xmake build. Vendored for
-study, removed with the separate-project decision.
-*"Intended to replace F4SE as a static dependency. The runtime component of
-F4SE is still required."*
+## Decision #1: the boundary is the public API
 
-**What it is:** a static library that wraps the game's memory layout behind
-typed, version-independent C++ classes, plus a modern F4SE API.
+Three empty stubs sit in `Include/LCE/Interfaces/` (`IGameAdapter`,
+`IWorld`, `IEntity`) — reserved before the simulation existed, on the guess
+that the core would need virtual seams. The design review says:
+**delete them.**
 
-**`include/F4SE/`** — the plugin API in modern C++:
+The core's public API already *is* the boundary:
 
-- `F4SE::Init(interface, InitInfo{...})` — one call, done.
-- `F4SE::GetMessagingInterface()`, `GetSerializationInterface()`,
-  `GetPapyrusInterface()`, `GetTaskInterface()`, ... — typed access to the
-  same interfaces F4SE exposes raw.
-- `F4SE_PLUGIN_LOAD(...)` / `F4SE_PLUGIN_VERSION` macros — the entry points.
-- `PluginVersionData` — compatibility declaration, with helpful helpers
-  (`UsesAddressLibrary`, `CompatibleVersions`).
-- `REX::LOG` — logging with levels and rotation.
+- The adapter **calls**: `CreateEntity`, `DestroyEntity`, `Remember`
+  (experiences and world facts), `Update` — and **reads** intents via
+  `GetComponent<Intent>`.
+- The adapter **guarantees**: an intent is a *hint*, not a command — the
+  adapter decides how to walk the farmer, and may refuse.
+- The core **promises**: no game knowledge, no queries of the world, a
+  stateless tick (ADR-0014).
 
-**`include/RE/`** — the reverse-engineered game, organized A–X:
-`Actor`, `TESForm`, `AIProcess`, `ActorValueOwner`, `BSScript::IVirtualMachine`,
-`Scaleform::GFx::Movie` — 1,400+ types in the `Fallout.h` umbrella. Typed
-access to game objects and their data, ported against the Address Library so
-it survives game updates.
+A virtual `IGameAdapter` would add a layer the game plugin never needs (it
+can call the API directly) and one the tests don't need (the harness
+already drives the simulation). The contract lives in this document and in
+the adapter repo's implementation — not in empty headers.
 
-**`REL`** — the version-independent addressing (address library). This is
-what lets one plugin build work across runtime versions.
+The four questions, answered: *simpler?* yes. *belongs?* no. *needed?* no.
+*helps?* no. If 0.5.0's SDK ever wants a host API — a desktop app driving a
+world — we add a real interface then, shaped by a real consumer (YAGNI).
 
-## Licensing — a landmine to plan for
+---
 
-LCE core is MIT. **CommonLibF4 is GPL-3.0-or-later with a modding exception
-and a linking exception.** Per its README, linking a mod against CommonLibF4
-and distributing it requires distributing source under the same license
-(modded code and modding libraries are excepted).
+## The Two Sides
 
-Practical shape for 0.4.0: the **Fallout 4 adapter is a separate F4SE
-plugin** that links LCE.Core + CommonLibF4. The adapter (and any code that
-links the GPL library) may need GPL licensing, while the engine core stays
-MIT. This is a legal decision to review before 0.4.0 — the common pattern in
-this ecosystem is an MIT core + GPL adapter, clearly separated.
+```
+   Fallout 4 (the game)                  LCE.Core (the engine)
+   ─────────────────────                 ─────────────────────
+   RE::Actor, TESForm,                   EntityId, components,
+   ActorValues, AI packages              Needs, Memory, Intent
+        │                                     │
+        │   adapter project (GPL)             │   this repo (MIT)
+        │   an F4SE plugin                    │
+        │   - form ↔ entity mapping           │
+        │   - translator (form ↔ component)   │
+        │   - executor (intent → game action) │
+        └──────────┬──────────────────────────┘
+                   │  the seam: the public API
+                   │  adapter calls: CreateEntity, Remember, Update
+                   │  adapter reads: GetComponent<Intent>
+```
 
-## Where the adapter lives — a separate project (decision)
+The adapter is a *client* of the core, exactly like the test harness — it
+just happens to live in a different repository and talk to a game.
 
-The Fallout 4 adapter is **not built inside this repository**. It is a
-separate project (its own repo) that links LCE.Core + CommonLibF4 as an
-F4SE plugin. The core repo's empty `Include/Platforms/` scaffolding was
-removed — placeholder trees for Fallout 4, Skyrim, Starfield, and a Mock
-adapter (Addresses / Hooks / Papyrus / Scaleform / Serialization) that no
-one ever filled.
+---
 
-Why separate:
+## Lifecycle — the game's heartbeat drives the simulation
 
-1. **The license boundary becomes physical.** The adapter is GPL (it links
-   CommonLibF4); the core is MIT. A separate repo means the two licenses
-   never share a tree — the boundary is a build fact, not a discipline.
-2. **The compile-time guarantee becomes a build fact.** The core never
-   includes game headers (ADR-0023). With the adapter in another project,
-   that guarantee cannot be violated by accident — the headers are not even
-   on disk here.
-3. **Each game is a different world.** Skyrim means SKSE, Starfield means
-   SFSE — different SDKs, different communities. One adapter project per
-   game is the ecosystem pattern (F4SE and CommonLibF4 are separate
-   projects too).
-4. **The core stays the product.** This repo is the engine: MIT, no game
-   knowledge, tested by the harness. Everything game-specific — Addresses,
-   Hooks, Papyrus, Scaleform, Serialization, form translation — belongs in
-   the adapter project, which is exactly why those folders were never
-   filled here.
+F4SE's Messaging interface delivers the game's life events; the adapter
+maps them onto the simulation:
 
-What the core carries instead: only the *shape* of the boundary —
-`Include/LCE/Interfaces/` (`IGameAdapter`, `IWorld`, `IEntity`). That
-contract is the 0.4.0 deliverable on the core side; the adapter project
-implements it.
+| Game event   | The adapter does                                        |
+|--------------|---------------------------------------------------------|
+| `GameLoaded` | Create the registry; translate each sim-relevant Actor into an entity with components |
+| game tick    | `Update(registry, delta)`; read intents; execute via RE:: |
+| world events | `Remember` — experiences and world facts                |
+| `PreSaveGame`| Snapshot the registry into the co-save record           |
+| `PostSaveGame` | release the snapshot                                  |
+| `PreLoadGame` | Clear the registry                                     |
+| `PostLoadGame`| Restore the registry from the co-save record           |
+| `DeleteGame` | Clear everything                                         |
 
-## How the adapter will fit (design implications)
+The simulation never hears the word "quest." It hears: entities created,
+time passing, things remembered.
 
-1. **The adapter is a F4SE plugin** (`F4SEPlugin_Load`), built separately
-   from `LCE.Core`, linking it as a static library.
-2. **The core never changes for this.** LCE::Simulation entities are pure
-   data; the adapter translates them to and from game forms. A settler's
-   `Hunger` component becomes `ActorValue` writes through `RE::Actor` —
-   the translation happens at the edge (ADR-0024: adapters translate, don't
-   simulate).
-3. **Lifecycle events** (Messaging) and **co-save** (Serialization) are the
-   adapter's two biggest hooks — the simulation starts, ticks, and persists
-   around the game's own life.
-4. **Threading:** the adapter marshals game-touching work onto the game
-   thread via `TaskInterface`. The simulation itself stays
-   thread-agnostic.
-5. The empty stubs in `Include/LCE/Interfaces/` (`IGameAdapter`, `IWorld`,
-   `IEntity`) exist so the core can define the *shape* of the boundary
-   without knowing the game. That interface is the 0.4.0 deliverable on the
-   core side.
+---
 
-**Not needed for 0.2.0 — 0.3.0:** this knowledge is banked. When we reach
-Platform Integration, the adapter project, its license, and the `IGameAdapter`
-contract are the stones to lay.
+## Translation rules — the adapter's art
+
+- **Components ↔ game data.** A settler's `Hunger` becomes an `ActorValue`
+  write through `RE::Actor`; a `Memory` of a merchant maps to the
+  merchant's form. Translation happens at the edge (ADR-0024), never inside
+  the core.
+- **Intents ↔ game actions.** `MoveTo{merchant}` → a movement AI package to
+  the merchant's location; `Flee{bandit}` → a flee package; `Rest` →
+  wait/sleep; `Socialize` → a conversation scene. An intent names *what*,
+  never *how*.
+- **World facts — the proven channel (0.3.1).** "The market is closed
+  today" = `Remember(id, { invalid, Trade, weight })`. The core blocks
+  trade while the fact is remembered and reopens when it fades; the adapter
+  re-pushes to extend. The core never queries the game.
+- **Locations stay out of the core.** Intents target *entities*, not
+  coordinates. The adapter resolves "the road to town."
+
+---
+
+## Threading — simple first
+
+For 0.4.0 the simulation ticks **on the game thread** (a Papyrus timer or
+a frame hook): zero contention, trivially debuggable, and the adapter's
+data structures need no locking. When the simulation moves off-thread (a
+later stone), F4SE's `TaskInterface` already exists to marshal
+game-touching calls back — and because translation happens at the edge, the
+adapter is already shaped for it.
+
+---
+
+## Save/Load — the deep stone
+
+The game owns the save file; the simulation rides inside it (co-save via
+F4SE's Serialization interface). The core side needs exactly one new
+capability: **snapshot and restore the registry** — every entity, its
+components, versioned.
+
+Component types are erased in the registry; only the adapter knows their
+shape. So serialization is *registered*, never assumed:
+
+```cpp
+// Core (0.4.0). A snapshot is type-erased bytes plus a version:
+// the adapter turns it into F4SE serialization records and back.
+struct RegistrySnapshot
+{
+    std::uint32_t Version;
+    // one record per entity: id, alive flag, then per-component blobs
+};
+
+// The adapter registers a serializer per component type it uses.
+// Compile-time type in; runtime blob out — and back again.
+registry.RegisterSerializer<Needs>(
+    [](const Needs& n) { return Blob{/* ... */}; },   // serialize
+    [](const Blob& b) { return Needs{/* ... */}; });  // deserialize
+
+auto snapshot = registry.Capture();     // into RegistrySnapshot
+registry.Restore(snapshot);             // back into a fresh registry
+```
+
+The snapshot is a **pure data exchange** — no game knowledge crosses it.
+Save-compatibility is the adapter's job: version the record, migrate on
+load. The core test is a round-trip: snapshot a living registry, restore
+into a fresh one, assert identical behaviour — the farmer still goes to
+market.
+
+---
+
+## What stays OUT of the core (the isolation, again)
+
+- Coordinates and locations
+- Form IDs and game handles
+- Papyrus (the adapter registers natives if mods need to ask the sim)
+- Game events, quests, dialogue
+- The threading policy
+
+The core's world is entities, needs, memories, relationships, and intents.
+Nothing else exists there — and the tree physically cannot contain anything
+else (ADR-0023 is a build fact).
+
+---
+
+## Dependencies in the adapter project
+
+The adapter fetches its own dependencies via FetchContent — the same
+pattern this repo now uses for spdlog, pinned and self-contained:
+
+- **CommonLibF4** (GPL-3.0 + modding/linking exceptions) — the typed game
+  API: `F4SE::Init`, `GetMessagingInterface()`, `GetSerializationInterface()`,
+  `GetTaskInterface()`, and `RE::` types (Actor, TESForm, ActorValueOwner).
+- **F4SE** — the runtime and plugin contract (`F4SEPlugin_Load`); required
+  at runtime, replaced as a static dependency by CommonLibF4.
+
+The core repo carries none of it — the tree is the proof.
+
+---
+
+## Test plan
+
+| Where | Proves |
+|-------|--------|
+| Core (this repo) | Snapshot round-trip preserves a living registry; boundary semantics (intents readable, Remember channel, world facts); existing 13 suites stay green |
+| Adapter project (separate repo) | The real test: a settler in Fallout 4 goes to market because they are hungry — no script |
+
+---
+
+## Decisions to review
+
+1. **API-only boundary — delete the `Interfaces/` stubs.** (Recommended;
+   the four questions say simpler.)
+2. **Tick on the game thread for 0.4.0.** (Simple first; thread-migration
+   is a later stone with TaskInterface already waiting.)
+3. **Snapshot via registered serializers.** (Components stay erased; the
+   adapter owns save-compat.)
+4. **World facts through `Remember`** — settled and proven in 0.3.1;
+   restated here because the adapter is its first real consumer.
+
+Review these, and the build is: delete the stubs, add
+`RegistrySnapshot` + registered serializers, round-trip tests, docs — and
+the adapter repository is born.
