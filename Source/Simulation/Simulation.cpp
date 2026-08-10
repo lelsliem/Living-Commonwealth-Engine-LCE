@@ -45,6 +45,7 @@
 #include "LCE/Events/EventBus.h"
 #include "LCE/Simulation/SimulationEvents.h"
 
+#include <algorithm>
 #include <exception>
 #include <string>
 #include <string_view>
@@ -103,6 +104,47 @@ namespace
         }
 
         return false;
+    }
+
+    //-------------------------------------------------------------------------
+    // PublishCrossings
+    //
+    // Edge-triggered bond-threshold events (0.6.0 stone 08): for every
+    // threshold in the tuning's watch-list, if the disposition moved
+    // across the line during this mutation — below to above, or above to
+    // below — publish a RelationshipChangedEvent naming the line.
+    // Crossing is strict: resting exactly on a line and drifting away is
+    // not a crossing. The world names its own lines; the core only knows
+    // a configured line was crossed.
+    //-------------------------------------------------------------------------
+    void PublishCrossings(
+        LCE::Events::EventBus* events,
+        const LCE::Simulation::SimulationTuning& tuning,
+        LCE::Simulation::EntityId subject,
+        LCE::Simulation::EntityId other,
+        float before,
+        float after,
+        float trust,
+        std::uint64_t day)
+    {
+        if (events == nullptr)
+        {
+            return;
+        }
+
+        for (const auto& threshold : tuning.BondThresholds)
+        {
+            const auto crossedUp =
+                before < threshold.Value && after >= threshold.Value;
+            const auto crossedDown =
+                before > threshold.Value && after <= threshold.Value;
+
+            if (crossedUp || crossedDown)
+            {
+                events->Publish(LCE::Simulation::RelationshipChangedEvent{
+                    subject, other, after, trust, threshold.Name, day });
+            }
+        }
     }
 }
 
@@ -242,7 +284,8 @@ namespace LCE::Simulation
         EntityId id,
         const MemoryEvent& event,
         const SimulationTuning& tuning,
-        WorldTime time)
+        WorldTime time,
+        LCE::Events::EventBus* events)
     {
         if (!registry.IsAlive(id))
         {
@@ -287,6 +330,8 @@ namespace LCE::Simulation
 
         // Memories shape feelings: fair trade earns trust, aid warms,
         // wrongs and fights sour.
+        const auto dispositionBefore = relationship.Disposition;
+
         switch (event.Kind)
         {
         case InteractionKind::Trade:
@@ -303,6 +348,15 @@ namespace LCE::Simulation
             relationship.Disposition -= tuning.DispositionLoss;
             break;
         }
+
+        // Bond crossing (0.6.0 stone 08): an experience moved the
+        // disposition across a line the world configured — the moment is
+        // news. Drift is deliberately quiet: cooling below a line is a
+        // dissolve, not an event; the adapter re-derives bonds from state.
+        PublishCrossings(
+            events, tuning, id, event.Other,
+            dispositionBefore, relationship.Disposition,
+            relationship.Trust, time.Day);
     }
 
     void ReportOutcome(
@@ -355,6 +409,8 @@ namespace LCE::Simulation
 
             auto& relationship = relationships->ByEntity[outcome.Other];
 
+            const auto dispositionBefore = relationship.Disposition;
+
             switch (outcome.Kind)
             {
             case InteractionKind::Trade:
@@ -377,6 +433,14 @@ namespace LCE::Simulation
                 relationship.Disposition -= tuning.DispositionLoss;
                 break;
             }
+
+            // Bond crossing (0.6.0 stone 08) — same edge-triggered rule
+            // as Remember: the moment a line is crossed, not the resting
+            // state beside it.
+            PublishCrossings(
+                events, tuning, id, outcome.Other,
+                dispositionBefore, relationship.Disposition,
+                relationship.Trust, time.Day);
         }
 
         //-------------------------------------------------------------------------
@@ -456,6 +520,42 @@ namespace LCE::Simulation
         tuning.DispositionGain = read("sim.disposition.gain", tuning.DispositionGain);
         tuning.DispositionLoss = read("sim.disposition.loss", tuning.DispositionLoss);
         tuning.NeedJitter = read("sim.jitter", tuning.NeedJitter);
+
+        // The bond watch-list (0.6.0 stone 08): every
+        // sim.bond.threshold.<name> key adds one line the world drew
+        // across disposition. A broken value is ignored — a bad line must
+        // never break the world. Names are sorted so that when several
+        // lines cross in one mutation, the events arrive in a stable
+        // order (determinism, stone 05).
+        config.ForEach(
+            [&tuning](std::string_view name, std::string_view value)
+            {
+                constexpr std::string_view prefix = "sim.bond.threshold.";
+
+                if (!name.starts_with(prefix))
+                {
+                    return;
+                }
+
+                try
+                {
+                    tuning.BondThresholds.push_back(BondThreshold{
+                        std::string(name.substr(prefix.size())),
+                        std::stof(std::string(value)) });
+                }
+                catch (const std::exception&)
+                {
+                    // not a number — the line is ignored
+                }
+            });
+
+        std::sort(
+            tuning.BondThresholds.begin(),
+            tuning.BondThresholds.end(),
+            [](const BondThreshold& left, const BondThreshold& right)
+            {
+                return left.Name < right.Name;
+            });
 
         return tuning;
     }

@@ -39,6 +39,7 @@
 #include "WorldCalendarTest.h"
 #include "JitterTest.h"
 #include "DoctorTest.h"
+#include "BondThresholdTest.h"
 
 #include <cstdio>
 
@@ -75,6 +76,7 @@ namespace
         { "WorldCalendar",    LCE::Tests::WorldCalendarTest },
         { "Jitter",          LCE::Tests::JitterTest },
         { "Doctor",          LCE::Tests::DoctorTest },
+        { "BondThreshold",   LCE::Tests::BondThresholdTest },
     };
 
     constexpr int kSuiteCount =

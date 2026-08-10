@@ -38,7 +38,7 @@ adapter executes intents in the game — and pushes world facts back in as
 memories. No quest script anywhere.
 
 The 0.5.0 boundary contract — the decide → act → observe → remember loop —
-is complete and proven (22/22 test suites green):
+is complete and proven (23/23 test suites green):
 
 - **Tuning** — the modder's knob: one text file sets the world's
   personality.
@@ -68,7 +68,9 @@ point it at a project, get a plain pass/fail log), and packaging —
 `cmake --install`, then a consumer links `LCE::Core` through
 `find_package(LCE)` with nothing else on the path. The official recipe is
 [Docs/SDK/Embedding.md](Docs/SDK/Embedding.md). The two GitHub repos are
-live; the v0.5.0 tags + release notes are the last chore of 0.5.0.
+live and tagged v0.5.0. The 0.6.0 Society milestone has begun — bond
+thresholds + `RelationshipChangedEvent` (the adapter's ask) already
+shipped as stone 08.
 
 **The ladder beyond:**
 
@@ -107,7 +109,7 @@ The harness reports every suite by name:
 [ RUN  ] SimulationTick
 [  OK  ] SimulationTick
 
-22/22 suites passed.
+23/23 suites passed.
 ```
 
 ## Repository map

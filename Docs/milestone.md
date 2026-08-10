@@ -206,8 +206,8 @@ bit-identical, and the knob demonstrably widens the gap. 21/21 green.)
 The core-side boundary contract is COMPLETE — the decide → act →
 observe → remember loop is closed and proven (tuning, outcome channel,
 observation events, query surface, seeded RNG + determinism, world
-calendar + memory timestamps, per-mind decay jitter; 22/22 suites
-green).
+calendar + memory timestamps, per-mind decay jitter; 23/23 suites
+green, counting stone 08's BondThreshold suite).
 
 The SDK side of 0.5.0 is DONE too: the Sample Host (Samples/SampleHost
 — the non-game proof; the money test runs live: fair twice, cheated
@@ -218,9 +218,16 @@ real target), and packaging (install targets + find_package(LCE),
 verified end to end by a consumer build; Docs/SDK/Embedding.md is the
 official recipe). Both GitHub repos are live and public.
 
-What remains of 0.5.0: the v0.5.0 tags + release notes on both repos.
+What remains of 0.5.0: the formal GitHub release notes (the v0.5.0
+tags are pushed on both repos).
 
-Then: 0.6.0 Society (groups + traits) · 0.7.0 Legacy (birth, death,
-inheritance) · 0.8.0 Scale (a settlement, not a village) · 0.9.0
-Release Candidate + Public Beta (the freeze; Nexus + GitHub, no
+0.6.0 — Society has begun. Stone 08 — Bond thresholds +
+RelationshipChangedEvent (the adapter's Request A) — is SHIPPED: the
+world names its own bond lines (sim.bond.threshold.*); an experience
+crossing one publishes the moment, edge-triggered and drift-quiet;
+proven by the BondThreshold suite (23/23 suites green). The stones
+after it: groups + membership, group memory and attitude, trust
+shaped by membership, personality traits. Then 0.7.0 Legacy (birth,
+death, inheritance) · 0.8.0 Scale (a settlement, not a village) ·
+0.9.0 Release Candidate + Public Beta (the freeze; Nexus + GitHub, no
 Discord) · 1.0.0 Release (the promise, made good).

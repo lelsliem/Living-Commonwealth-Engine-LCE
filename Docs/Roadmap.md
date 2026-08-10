@@ -243,6 +243,13 @@ survives save/load.
 
 ═══════════════════════════════════════════════
 
+[✓] Bond thresholds + RelationshipChanged (stone 08, SHIPPED
+    2026-08-10) — the watch-list the world names
+    (sim.bond.threshold.<name>); an experience crossing a line
+    publishes RelationshipChangedEvent, edge-triggered — bond
+    formation and bond souring are events, not polls. The adapter's
+    Request A, built (proven by the BondThreshold suite).
+
 Groups — the layer between the individual and the world. The stone
 Faction Wars and Children of the Commonwealth both stand on.
 

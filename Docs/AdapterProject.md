@@ -97,10 +97,12 @@ that matter to this project:
 
 ## The core's 0.5.0 side is built — the complete boundary contract
 
-The core is at `0.5.0` (21/21 suites green). All seven stones of the
+The core is at `0.5.0` (23/23 suites green). All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
-calendar, per-mind decay jitter):
+calendar, per-mind decay jitter) — and stone 08 (bond thresholds +
+`RelationshipChanged`, Request A below) has already shipped as the
+first 0.6.0 stone:
 
 **Tuning ergonomics — `SimulationTuning::FromConfiguration(config)`.**
 The modder's knob. Build the world's tuning from the Configuration
@@ -360,17 +362,23 @@ and experimental births on the existing surface — `CreateEntity` /
 `Memory`, the `Outcome` channel, observation events, `WorldTime`, and
 the seeded `Rng`. No new core components are required to start.
 
-**Request A — `RelationshipChanged` observation event (candidate core
-stone 08).** The core owns disposition/trust dynamics (drift, outcome
-shifts). Let the core emit an observation event when a relationship
-crosses a configurable threshold — so bond formation is an **event** the
-adapter (and, through gossip, other minds) reacts to, instead of the
-adapter polling `Relationships` every tick. Payload: `subject`, `other`,
-disposition, trust, threshold name (from tuning, e.g.
-`sim.bond.threshold.*`), world day. The core stays world-agnostic: it
-knows nothing about marriage — only that a relationship crossed a line
-the world configured. This is a small, testable addition in the same
-shape as the shipped observation events (push, not poll).
+**Request A — `RelationshipChanged` observation event — SHIPPED (core
+stone 08, 2026-08-10, proven by the BondThreshold suite).** The core
+now watches a bond watch-list named by the world: every
+`sim.bond.threshold.<name>` key in the tuning file draws one line
+across disposition (`sim.bond.threshold.friend = 0.3`,
+`sim.bond.threshold.enemy = -0.6`; broken values ignored, names sorted
+for deterministic order). When an experience — `Remember` or
+`ReportOutcome` — moves a relationship across a line, the core
+publishes `RelationshipChangedEvent` on the EventBus, edge-triggered:
+the moment of crossing, then silent while the relationship rests on
+either side. Payload: `subject`, `other`, `disposition`, `trust`,
+`threshold` (the line's name — the world's vocabulary), `day` (world
+day of the crossing). Drift is deliberately quiet: a bond cooling
+below a line is a dissolve, not an event — re-derive bonds from the
+relationship state you already read. Default watch-list is empty:
+name your lines or hear nothing. `Remember`'s new trailing `EventBus*`
+is defaulted — existing calls are untouched.
 
 **Request B — optional, deferred: `GoalType` growth.** If the core wants
 arcs first-class (`FindPartner`, `Avenge`, `Lead`) rather than the

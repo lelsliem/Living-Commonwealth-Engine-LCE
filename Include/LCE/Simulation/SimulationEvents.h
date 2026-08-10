@@ -49,6 +49,8 @@
 #include "LCE/Simulation/EntityId.h"
 #include "LCE/Simulation/Outcome.h"
 
+#include <cstdint>
+#include <string>
 #include <utility>
 
 namespace LCE::Simulation
@@ -106,5 +108,42 @@ namespace LCE::Simulation
 
         EntityId Id;
         Outcome Outcome;
+    };
+
+    //-------------------------------------------------------------------------
+    // RelationshipChangedEvent
+    //
+    // Published when a relationship's disposition crosses one of the
+    // bond thresholds the world configured (sim.bond.threshold.<name>,
+    // 0.6.0 stone 08). Edge-triggered: the event fires the moment the
+    // line is crossed — a bond formed, a bond soured — and stays silent
+    // while the relationship rests on either side. The threshold's name
+    // is the world's vocabulary ("friend", "enemy"); the core knows
+    // only that a line the world configured was crossed.
+    //-------------------------------------------------------------------------
+    struct RelationshipChangedEvent : public LCE::Events::Event
+    {
+        RelationshipChangedEvent(
+            EntityId subject,
+            EntityId other,
+            float disposition,
+            float trust,
+            std::string threshold,
+            std::uint64_t day)
+            : Subject(subject)
+            , Other(other)
+            , Disposition(disposition)
+            , Trust(trust)
+            , Threshold(std::move(threshold))
+            , Day(day)
+        {
+        }
+
+        EntityId Subject;
+        EntityId Other;
+        float Disposition;
+        float Trust;
+        std::string Threshold;   // the line crossed, by the world's name
+        std::uint64_t Day;       // the world day of the crossing
     };
 }

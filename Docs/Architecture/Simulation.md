@@ -392,6 +392,37 @@ existing callers are untouched.
 
 ---
 
+## 0.6.0 — Bond Thresholds & RelationshipChanged (stone 08, shipped)
+
+The fourth observation event — the one the world configures itself.
+`SimulationTuning` carries a **bond watch-list**: every
+`sim.bond.threshold.<name>` tuning key draws one line across
+*disposition* (`sim.bond.threshold.friend = 0.3`,
+`sim.bond.threshold.enemy = -0.6`). The default watch-list is empty —
+the world must name its own lines; a default would invent vocabulary
+(the core knows nothing about "friendship", only that a line it was
+told about was crossed). Broken values are ignored; names are sorted so
+that several crossings in one mutation arrive in a stable order
+(determinism, stone 05).
+
+When an experience — `Remember` or `ReportOutcome` — moves a
+relationship's disposition across a listed line, the core publishes
+`RelationshipChangedEvent`: `subject`, `other`, `disposition`, `trust`,
+`threshold` (the line's name), `day` (the world day of the crossing).
+
+Edge-triggered, not level-triggered: the event fires the *moment* a
+line is crossed — a bond formed, a bond soured — and stays silent
+while the relationship rests on either side. Crossing is strict
+(resting exactly on a line and drifting away is not a crossing), and
+drift is deliberately quiet: a bond cooling below a line over time is a
+dissolve, not an event — the adapter re-derives bonds from the
+relationship state it always has. `Remember` gained a trailing
+defaulted `EventBus*` (existing callers are untouched). Proven by the
+BondThreshold suite: payloads, both directions, multi-crossing order,
+quiet drift, world facts never firing.
+
+---
+
 ## 0.5.0 — Query Surface (shipped)
 
 `EntityRegistry::QueryWhere<T>(predicate)` — filtered reads with

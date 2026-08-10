@@ -32,6 +32,7 @@ add_executable(LCE.Core.Tests
     Core/WorldCalendarTest.cpp
     Core/JitterTest.cpp
     Core/DoctorTest.cpp
+    Core/BondThresholdTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

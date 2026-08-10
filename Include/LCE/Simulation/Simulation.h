@@ -55,8 +55,25 @@ namespace LCE::Events
 #include "LCE/Simulation/Outcome.h"
 #include "LCE/Simulation/WorldTime.h"
 
+#include <string>
+#include <vector>
+
 namespace LCE::Simulation
 {
+    //-------------------------------------------------------------------------
+    // BondThreshold
+    //
+    // One line the world drew across disposition (0.6.0 stone 08): a
+    // name and the crossing point. "friend" at 0.3, "enemy" at -0.6 —
+    // the vocabulary is the world's; the core knows only that a line it
+    // was told about was crossed.
+    //-------------------------------------------------------------------------
+    struct BondThreshold
+    {
+        std::string Name;
+        float Value = 0.0f;
+    };
+
     //-------------------------------------------------------------------------
     // SimulationTuning
     //
@@ -75,6 +92,13 @@ namespace LCE::Simulation
         float DispositionGain = 0.1f;    // aid and company warmth
         float DispositionLoss = 0.25f;   // wrongs and fights sour them
         float NeedJitter = 0.15f;        // per-mind metabolism spread (±15%)
+
+        // The bond watch-list (0.6.0 stone 08). Empty by default — the
+        // world must name its own lines; a default here would invent
+        // vocabulary the core has no business owning. When a disposition
+        // crosses a listed line, RelationshipChangedEvent is published
+        // (edge-triggered: the moment of crossing, then silent).
+        std::vector<BondThreshold> BondThresholds;
 
         //-------------------------------------------------------------------------
         // Builds tuning from the Configuration service — the modder's
@@ -121,7 +145,8 @@ namespace LCE::Simulation
         EntityId id,
         const MemoryEvent& event,
         const SimulationTuning& tuning = {},
-        WorldTime time = {});
+        WorldTime time = {},
+        LCE::Events::EventBus* events = nullptr);
 
     //-------------------------------------------------------------------------
     // Observation events (0.5.0): when a non-null EventBus is passed, the
