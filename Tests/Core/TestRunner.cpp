@@ -40,6 +40,8 @@
 #include "JitterTest.h"
 #include "DoctorTest.h"
 #include "BondThresholdTest.h"
+#include "GroupsTest.h"
+#include "TraitsTest.h"
 
 #include <cstdio>
 
@@ -77,6 +79,8 @@ namespace
         { "Jitter",          LCE::Tests::JitterTest },
         { "Doctor",          LCE::Tests::DoctorTest },
         { "BondThreshold",   LCE::Tests::BondThresholdTest },
+        { "Groups",          LCE::Tests::GroupsTest },
+        { "Traits",          LCE::Tests::TraitsTest },
     };
 
     constexpr int kSuiteCount =

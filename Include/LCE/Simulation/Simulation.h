@@ -51,6 +51,7 @@ namespace LCE::Events
 #include "LCE/Config/Configuration.h"
 #include "LCE/Simulation/Behaviour.h"
 #include "LCE/Simulation/EntityRegistry.h"
+#include "LCE/Simulation/Groups.h"
 #include "LCE/Simulation/Memory.h"
 #include "LCE/Simulation/Outcome.h"
 #include "LCE/Simulation/WorldTime.h"
@@ -92,6 +93,7 @@ namespace LCE::Simulation
         float DispositionGain = 0.1f;    // aid and company warmth
         float DispositionLoss = 0.25f;   // wrongs and fights sour them
         float NeedJitter = 0.15f;        // per-mind metabolism spread (±15%)
+        float GroupInheritance = 0.5f;   // how strongly a feeling reaches group-mates
 
         // The bond watch-list (0.6.0 stone 08). Empty by default — the
         // world must name its own lines; a default here would invent
@@ -187,4 +189,22 @@ namespace LCE::Simulation
         const SimulationTuning& tuning = {},
         LCE::Events::EventBus* events = nullptr,
         WorldTime time = {});
+
+    //-------------------------------------------------------------------------
+    // InheritGroupAttitudes
+    //
+    // Seeds a newcomer's feelings from the group's collective experience
+    // (0.6.0 stone 09): the newcomer's disposition toward everyone the
+    // group collectively knows becomes the group's mean disposition —
+    // then their own experiences diverge it. Personal knowledge always
+    // beats inherited: an existing relationship is left untouched. Trust
+    // is never inherited — trust is earned personally. Quiet by design:
+    // seeding is not an event (the same rule as drift). The world calls
+    // this after adding the membership; the group's mean is derived from
+    // the members' relationship stores, never stored separately.
+    //-------------------------------------------------------------------------
+    void InheritGroupAttitudes(
+        EntityRegistry& registry,
+        EntityId id,
+        GroupId group);
 }

@@ -423,6 +423,53 @@ quiet drift, world facts never firing.
 
 ---
 
+## 0.6.0 — Society: Groups & Traits (stone 09, shipped)
+
+The layer between the individual and the world. Both pieces stay
+world-agnostic; both build on the stone 08 event channel.
+
+**Groups.** `GroupId` — an opaque id the world assigns (a family, a
+settlement, a faction) — and the `Groups` membership component. The
+component query (`QueryWhere<Groups>`) finds a group's members; there
+is no separate group registry, no new global state (ADR-0014). Two
+behaviours rest on membership:
+
+- **The echo — trust is earned personally; disposition travels.**
+  When an experience (`Remember` or `ReportOutcome`) shapes a
+  relationship, every mind sharing a group with the subject feels a
+  fainter version of the same feeling toward the Other, at
+  `sim.group.inheritance` strength (default 0.5). "They wronged my
+  brother." The echo shapes feelings, not memory — memory is
+  personal, and the `RelationshipChangedEvent` is how a mate learns
+  the news. A wrong done to one settler turns a whole settlement
+  cold, and every crossing publishes: one outcome, many minds.
+- **`InheritGroupAttitudes`** — the function the world calls when an
+  entity joins a group: the newcomer's disposition toward everyone
+  the group collectively knows becomes the group's *mean*
+  disposition — then their own experiences diverge it. Personal
+  knowledge always beats inherited (an existing relationship is left
+  untouched); trust is never inherited; quiet by design (seeding is
+  not an event, the same rule as drift). The mean is derived from
+  the members' stores, never stored separately.
+
+**Traits.** The personality substrate. `Traits` is a named-float
+component — "boldness", "sociability", the vocabulary is the
+world's; the core only carries it. `JitteredTraits(base, id, rng,
+spread)` derives per-entity variation from the seeded RNG: same seed
++ same entity = same personality, every run, the parent stream never
+advances; zero spread reproduces the base exactly. The *influence* of
+a trait is the world's business (its behaviour tables read the
+component) — the same boundary as the species split; the core's
+`Decide` stays vocabulary-free. A co-save component like any other:
+persisted, queried, restored.
+
+Proven by the Groups suite (the rally: one wrong, every member's
+crossing fires; trust never echoing; inheritance means and
+boundaries) and the Traits suite (divergence, determinism, fallback,
+identity, round trip) — 25/25 suites total.
+
+---
+
 ## 0.5.0 — Query Surface (shipped)
 
 `EntityRegistry::QueryWhere<T>(predicate)` — filtered reads with

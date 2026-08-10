@@ -49,6 +49,7 @@
 #include <exception>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -144,6 +145,98 @@ namespace
                 events->Publish(LCE::Simulation::RelationshipChangedEvent{
                     subject, other, after, trust, threshold.Name, day });
             }
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // SpreadToGroupMates
+    //
+    // The Society echo (0.6.0 stone 09): trust is earned personally;
+    // disposition travels. Every mind sharing a group with the subject
+    // feels a fainter version of the subject's feeling about the other —
+    // "they wronged my brother" — at GroupInheritance strength. The echo
+    // shapes feelings, not memory: memory is personal, and the
+    // RelationshipChangedEvent is how a mate learns the news. Crossings
+    // publish exactly like any other relationship change.
+    //-------------------------------------------------------------------------
+    void SpreadToGroupMates(
+        LCE::Simulation::EntityRegistry& registry,
+        const LCE::Simulation::SimulationTuning& tuning,
+        LCE::Simulation::EntityId subject,
+        LCE::Simulation::EntityId other,
+        float dispositionDelta,
+        LCE::Events::EventBus* events,
+        std::uint64_t day)
+    {
+        if (dispositionDelta == 0.0f)
+        {
+            return;
+        }
+
+        const auto subjectGroups =
+            registry.GetComponent<LCE::Simulation::Groups>(subject);
+
+        if (!subjectGroups || subjectGroups->Memberships.empty())
+        {
+            return;
+        }
+
+        const auto delta = dispositionDelta * tuning.GroupInheritance;
+
+        if (delta == 0.0f)
+        {
+            return;
+        }
+
+        // Every mind sharing any of the subject's groups hears the echo.
+        const auto members = registry.QueryWhere<LCE::Simulation::Groups>(
+            [&subjectGroups](
+                LCE::Simulation::EntityId,
+                const LCE::Simulation::Groups& groups)
+            {
+                for (const auto memberGroup : groups.Memberships)
+                {
+                    for (const auto subjectGroup : subjectGroups->Memberships)
+                    {
+                        if (memberGroup == subjectGroup)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            });
+
+        for (const auto member : members)
+        {
+            // Not the subject, and never the other — a mate who IS the
+            // other has no self-relationship to shape.
+            if (member == subject || member == other)
+            {
+                continue;
+            }
+
+            auto relationships =
+                registry.GetComponent<LCE::Simulation::Relationships>(member);
+
+            if (!relationships)
+            {
+                registry.AddComponent<LCE::Simulation::Relationships>(
+                    member, LCE::Simulation::Relationships{});
+                relationships =
+                    registry.GetComponent<LCE::Simulation::Relationships>(member);
+            }
+
+            auto& relationship = relationships->ByEntity[other];
+            const auto before = relationship.Disposition;
+
+            relationship.Disposition += delta;
+
+            PublishCrossings(
+                events, tuning, member, other,
+                before, relationship.Disposition,
+                relationship.Trust, day);
         }
     }
 }
@@ -331,6 +424,7 @@ namespace LCE::Simulation
         // Memories shape feelings: fair trade earns trust, aid warms,
         // wrongs and fights sour.
         const auto dispositionBefore = relationship.Disposition;
+        float vicariousDisposition = 0.0f;
 
         switch (event.Kind)
         {
@@ -341,11 +435,13 @@ namespace LCE::Simulation
         case InteractionKind::Aid:
         case InteractionKind::Social:
             relationship.Disposition += tuning.DispositionGain;
+            vicariousDisposition = tuning.DispositionGain;
             break;
 
         case InteractionKind::Wronged:
         case InteractionKind::Combat:
             relationship.Disposition -= tuning.DispositionLoss;
+            vicariousDisposition = -tuning.DispositionLoss;
             break;
         }
 
@@ -357,6 +453,12 @@ namespace LCE::Simulation
             events, tuning, id, event.Other,
             dispositionBefore, relationship.Disposition,
             relationship.Trust, time.Day);
+
+        // The Society echo (0.6.0 stone 09): the subject's group-mates
+        // feel a fainter version of the same feeling.
+        SpreadToGroupMates(
+            registry, tuning, id, event.Other,
+            vicariousDisposition, events, time.Day);
     }
 
     void ReportOutcome(
@@ -410,6 +512,7 @@ namespace LCE::Simulation
             auto& relationship = relationships->ByEntity[outcome.Other];
 
             const auto dispositionBefore = relationship.Disposition;
+            float vicariousDisposition = 0.0f;
 
             switch (outcome.Kind)
             {
@@ -425,12 +528,15 @@ namespace LCE::Simulation
                 // they don't.
                 relationship.Disposition +=
                     tuning.DispositionGain * ResultScale(outcome.Result);
+                vicariousDisposition =
+                    tuning.DispositionGain * ResultScale(outcome.Result);
                 break;
 
             case InteractionKind::Wronged:
             case InteractionKind::Combat:
                 // A wrong is a wrong, however it went — full loss.
                 relationship.Disposition -= tuning.DispositionLoss;
+                vicariousDisposition = -tuning.DispositionLoss;
                 break;
             }
 
@@ -441,6 +547,12 @@ namespace LCE::Simulation
                 events, tuning, id, outcome.Other,
                 dispositionBefore, relationship.Disposition,
                 relationship.Trust, time.Day);
+
+            // The Society echo (0.6.0 stone 09): group-mates share the
+            // feeling, fainter — the outcome that sour a settlement.
+            SpreadToGroupMates(
+                registry, tuning, id, outcome.Other,
+                vicariousDisposition, events, time.Day);
         }
 
         //-------------------------------------------------------------------------
@@ -484,6 +596,89 @@ namespace LCE::Simulation
         }
     }
 
+    void InheritGroupAttitudes(
+        EntityRegistry& registry,
+        EntityId id,
+        GroupId group)
+    {
+        if (!registry.IsAlive(id))
+        {
+            return;
+        }
+
+        auto relationships = registry.GetComponent<Relationships>(id);
+
+        if (!relationships)
+        {
+            registry.AddComponent<Relationships>(id, Relationships{});
+            relationships = registry.GetComponent<Relationships>(id);
+        }
+
+        // The group's collective knowledge, derived from its members:
+        // for every other the group knows, the sum and count of the
+        // members' dispositions toward them. Derived, never stored — the
+        // same rule as the seasons.
+        std::unordered_map<EntityId, std::pair<double, int>> sums;
+
+        const auto members = registry.QueryWhere<Groups>(
+            [group, id](EntityId member, const Groups& memberships)
+            {
+                if (member == id)
+                {
+                    return false;   // the newcomer is not their own group
+                }
+
+                for (const auto candidate : memberships.Memberships)
+                {
+                    if (candidate == group)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+        for (const auto member : members)
+        {
+            const auto memberRelationships =
+                registry.GetComponent<Relationships>(member);
+
+            if (!memberRelationships)
+            {
+                continue;
+            }
+
+            for (const auto& [other, relationship] : memberRelationships->ByEntity)
+            {
+                if (other == id)
+                {
+                    continue;   // no self-knowledge to inherit
+                }
+
+                auto& sum = sums[other];
+                sum.first += relationship.Disposition;
+                ++sum.second;
+            }
+        }
+
+        // Seed the newcomer with the group's mean disposition. Personal
+        // knowledge always beats inherited: an existing relationship is
+        // left untouched — divergence has already begun. Trust is never
+        // inherited; trust is earned personally. Quiet by design: seeding
+        // is not an event (the same rule as drift).
+        for (const auto& [other, sum] : sums)
+        {
+            if (relationships->ByEntity.contains(other))
+            {
+                continue;
+            }
+
+            relationships->ByEntity[other].Disposition =
+                static_cast<float>(sum.first / sum.second);
+        }
+    }
+
     SimulationTuning SimulationTuning::FromConfiguration(
         const LCE::Config::Configuration& config)
     {
@@ -520,6 +715,7 @@ namespace LCE::Simulation
         tuning.DispositionGain = read("sim.disposition.gain", tuning.DispositionGain);
         tuning.DispositionLoss = read("sim.disposition.loss", tuning.DispositionLoss);
         tuning.NeedJitter = read("sim.jitter", tuning.NeedJitter);
+        tuning.GroupInheritance = read("sim.group.inheritance", tuning.GroupInheritance);
 
         // The bond watch-list (0.6.0 stone 08): every
         // sim.bond.threshold.<name> key adds one line the world drew

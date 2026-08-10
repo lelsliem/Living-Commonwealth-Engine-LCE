@@ -253,17 +253,25 @@ survives save/load.
 Groups — the layer between the individual and the world. The stone
 Faction Wars and Children of the Commonwealth both stand on.
 
-[ ] Group component + membership — a settler belongs to a family,
-    a settlement, a faction
-[ ] Group-level memory and attitude — feelings inherit from the
-    group's experiences, then diverge
-[ ] Trust shaped by membership — "they wronged my brother"
-[ ] Personality / traits — identical needs produce different
-    individuals (bold vs cautious); variation within and across
-    groups
+[✓] Group component + membership (stone 09, SHIPPED 2026-08-10) —
+    GroupId + the Groups component; a settler belongs to a family,
+    a settlement, a faction at once
+[✓] Group-level memory and attitude (stone 09) —
+    InheritGroupAttitudes: feelings inherit from the group's
+    experiences (the mean disposition), then the newcomer's own
+    experiences diverge them
+[✓] Trust shaped by membership (stone 09) — the echo: a wrong done
+    to one settler cools every member of their settlement toward the
+    wrongdoer at sim.group.inheritance strength; trust stays
+    personal
+[✓] Personality / traits (stone 09) — the Traits substrate:
+    JitteredTraits turns a base template into per-entity variation,
+    deterministic under the seeded RNG; the influence is the world's
+    to apply (the same boundary as the species split)
 
-Proof: a faction rallies — every member of a settlement turns cold
-to the merchant who cheated one of them. One event, many minds.
+Proof (proven by the Groups suite): a wrong done to one settler —
+the settlement turns cold to the merchant who cheated them, and every
+member's bond crossing publishes. One outcome, many minds.
 
 ═══════════════════════════════════════════════
 

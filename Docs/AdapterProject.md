@@ -97,7 +97,7 @@ that matter to this project:
 
 ## The core's 0.5.0 side is built — the complete boundary contract
 
-The core is at `0.5.0` (23/23 suites green). All seven stones of the
+The core is at `0.5.0` (25/25 suites green). All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
 calendar, per-mind decay jitter) — and stone 08 (bond thresholds +
@@ -388,6 +388,17 @@ adapter chaining the four generic intents, add them. **Not required for
 
 
 **Request C — tentative, for the agency pillar (0.8.0).** If settlers build, haul, and demolish as first-class goals, `GoalType` grows with `Construct` / `Haul` / `Demolish`. Not required: the adapter can map `Prosper` to labor intents on the existing surface. Flagged so the core knows the direction before 0.8.0 lands.
+
+## Society is here — the adapter's 0.6.0 substrate (core stone 09, SHIPPED 2026-08-10, proven by the Groups + Traits suites)
+
+The core's Society layer ships in the same world-agnostic shape as everything else. What the adapter gets, for free:
+
+- **`Groups` component + `GroupId`** — the world assigns the ids (a settlement = a workshop hashed, a family, a faction); the adapter attaches `Groups` to each mind's memberships at translation.
+- **The echo — automatic.** Once minds carry `Groups`, every `Remember` / `ReportOutcome` spreads a fainter disposition echo to their group-mates at `sim.group.inheritance` (default 0.5): wrong one settler and the settlement cools toward the wrongdoer — and each mate's bond crossings publish `RelationshipChangedEvent` (stone 08 rides along). Trust is never echoed — reliability is personal.
+- **`InheritGroupAttitudes(registry, id, groupId)`** — call it when a mind joins a group (after `AddComponent<Groups>`): the newcomer inherits the group's mean disposition toward everyone the group collectively knows; their own experiences then diverge it. Personal knowledge beats inherited; quiet — seeding is not an event.
+- **The `Traits` substrate** — `JitteredTraits(base, id, rng, spread)` derives per-entity personality from the seeded RNG (persist via the co-save like any component); your behaviour tables read the component and decide what "boldness" means — the influence is yours, exactly like the species split.
+
+Your 0.6.0 life stones (bonds, gossip, arcs) now have their substrate: settlement membership, the rally, the inherited grudge. The next core need, if any, will be named in the adapter's hand-off.
 
 **What the adapter will NOT ask for:** population logic, aging rules, or
 quest grammar in the core — those are world-specific and the adapter's

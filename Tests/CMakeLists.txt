@@ -33,6 +33,8 @@ add_executable(LCE.Core.Tests
     Core/JitterTest.cpp
     Core/DoctorTest.cpp
     Core/BondThresholdTest.cpp
+    Core/GroupsTest.cpp
+    Core/TraitsTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

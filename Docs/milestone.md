@@ -206,8 +206,9 @@ bit-identical, and the knob demonstrably widens the gap. 21/21 green.)
 The core-side boundary contract is COMPLETE — the decide → act →
 observe → remember loop is closed and proven (tuning, outcome channel,
 observation events, query surface, seeded RNG + determinism, world
-calendar + memory timestamps, per-mind decay jitter; 23/23 suites
-green, counting stone 08's BondThreshold suite).
+calendar + memory timestamps, per-mind decay jitter; 25/25 suites
+green, counting stone 08's BondThreshold and stone 09's Groups and
+Traits suites).
 
 The SDK side of 0.5.0 is DONE too: the Sample Host (Samples/SampleHost
 — the non-game proof; the money test runs live: fair twice, cheated
@@ -221,13 +222,18 @@ official recipe). Both GitHub repos are live and public.
 What remains of 0.5.0: the formal GitHub release notes (the v0.5.0
 tags are pushed on both repos).
 
-0.6.0 — Society has begun. Stone 08 — Bond thresholds +
+0.6.0 — Society is in full swing. Stone 08 — Bond thresholds +
 RelationshipChangedEvent (the adapter's Request A) — is SHIPPED: the
 world names its own bond lines (sim.bond.threshold.*); an experience
 crossing one publishes the moment, edge-triggered and drift-quiet;
-proven by the BondThreshold suite (23/23 suites green). The stones
-after it: groups + membership, group memory and attitude, trust
-shaped by membership, personality traits. Then 0.7.0 Legacy (birth,
-death, inheritance) · 0.8.0 Scale (a settlement, not a village) ·
-0.9.0 Release Candidate + Public Beta (the freeze; Nexus + GitHub, no
+proven by the BondThreshold suite. Stone 09 — Society: Groups &
+Traits — is SHIPPED: GroupId + the Groups membership component; the
+echo (trust is earned personally, disposition travels to group-mates
+at sim.group.inheritance — one wrong, a settlement turns cold);
+InheritGroupAttitudes (feelings inherit from the group's
+experiences, then diverge); and the Traits substrate
+(JitteredTraits, deterministic under the seeded RNG, influence
+adapter-side). 25/25 suites green. Then 0.7.0 Legacy (birth, death,
+inheritance) · 0.8.0 Scale (a settlement, not a village) · 0.9.0
+Release Candidate + Public Beta (the freeze; Nexus + GitHub, no
 Discord) · 1.0.0 Release (the promise, made good).
