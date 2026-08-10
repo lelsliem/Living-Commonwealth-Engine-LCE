@@ -146,7 +146,19 @@ milestone: F4SE plugin · form translation · intent executor · co-save.
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.5.0 — Public Beta
+Next: Milestone 0.5.0 — SDK & Samples · "The Consumable Engine"
 
-SDK · Sample Modules · Module Loader · Engine Coordinator · GitHub Beta
-Release · Discord Community · Performance Profiling · Documentation Review
+The complete boundary contract — the decide → act → observe → remember
+loop: outcome channel, observation events, query surface, tuning
+ergonomics, seeded RNG + determinism, world calendar + memory
+timestamps.
+
+The SDK: Sample Host (the non-game proof), Sample Modules (the seven
+mod-type teaching patterns), LCE Doctor (CLI validation), packaging
+(install targets, find_package, pinned recipe), first GitHub releases
+for engine and mod — two repos, tagged, source public.
+
+Then: 0.6.0 Society (groups + traits) · 0.7.0 Legacy (birth, death,
+inheritance) · 0.8.0 Scale (a settlement, not a village) · 0.9.0
+Release Candidate + Public Beta (the freeze; Nexus + GitHub, no
+Discord) · 1.0.0 Release (the promise, made good).
