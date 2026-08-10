@@ -40,6 +40,10 @@ option(LCE_BUILD_SAMPLES
     "Build LCE sample applications."
     OFF)
 
+option(LCE_BUILD_TOOLS
+    "Build LCE developer tools (LCE Doctor)."
+    OFF)
+
 option(LCE_BUILD_DOCS
     "Build project documentation."
     OFF)
@@ -110,4 +114,8 @@ endif()
 
 if(LCE_BUILD_SAMPLES)
     add_subdirectory(Samples)
+endif()
+
+if(LCE_BUILD_TOOLS)
+    add_subdirectory(Tools)
 endif()

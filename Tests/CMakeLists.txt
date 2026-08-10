@@ -31,6 +31,7 @@ add_executable(LCE.Core.Tests
     Core/RngTest.cpp
     Core/WorldCalendarTest.cpp
     Core/JitterTest.cpp
+    Core/DoctorTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests
@@ -41,4 +42,11 @@ target_link_libraries(LCE.Core.Tests
 target_compile_features(LCE.Core.Tests
     PRIVATE
         cxx_std_23
+)
+
+# The Doctor suite tests LCE Doctor's checks — the tools live beside
+# the core, so the harness reaches them by include path.
+target_include_directories(LCE.Core.Tests
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/Tools
 )

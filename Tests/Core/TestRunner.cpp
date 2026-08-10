@@ -38,6 +38,7 @@
 #include "RngTest.h"
 #include "WorldCalendarTest.h"
 #include "JitterTest.h"
+#include "DoctorTest.h"
 
 #include <cstdio>
 
@@ -73,6 +74,7 @@ namespace
         { "Rng",             LCE::Tests::RngTest },
         { "WorldCalendar",    LCE::Tests::WorldCalendarTest },
         { "Jitter",          LCE::Tests::JitterTest },
+        { "Doctor",          LCE::Tests::DoctorTest },
     };
 
     constexpr int kSuiteCount =
