@@ -448,3 +448,31 @@ The timestamp is data, so it must survive a save: the Memory
 serializer now carries `Day` (the adapter's co-save record must too —
 its format version bumps). This is the substrate 0.7.0 Legacy stands
 on: "entities remember decades", not ticks.
+
+---
+
+## 0.5.0 — Per-Mind Decay Jitter (shipped)
+
+The herd, broken at the source. Identical minds used to share one
+clock — the same `DecayRate`, the same start value, the same
+threshold — so a settlement marched to the bench in lockstep. Under a
+seeded `Rng`, each entity's needs now decay at its own rate, derived
+from its ID:
+
+```cpp
+const auto rate = rng->Derive(id.Value()).NextFloat(
+    1.0f - tuning.NeedJitter, 1.0f + tuning.NeedJitter);
+need.Value -= need.DecayRate * delta * rate;
+```
+
+Same seed + same entity = same metabolism, every run; the parent
+stream never advances (the adapter owns world-level randomness); one
+number in the co-save resumes it. `sim.jitter` (default 0.15) is the
+modder's knob for how strongly minds diverge — `0` turns the spread
+off entirely. Without an `Rng` the rate is exactly 1.0, so no
+existing caller is affected.
+
+Proven by the Jitter suite: two identical minds under one seed
+diverge over ten ticks; two identical worlds under the same seed stay
+bit-identical (determinism untouched); no Rng → behavior unchanged;
+`sim.jitter = 0` → no divergence even with a seed.

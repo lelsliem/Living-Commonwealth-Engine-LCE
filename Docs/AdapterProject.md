@@ -274,6 +274,16 @@ Contract: `Derive(key)` never advances the parent, so the tick's
 unordered store iteration is safe by construction. Pass `nullptr` (or
 omit) to keep the deterministic id-hash fallback — behavior unchanged.
 
+**The herd, broken (stone 07):** once you pass the `Rng`, the tick's
+need-decay step gives every mind its own metabolism — each entity's
+needs decay at `DecayRate * Derive(id).NextFloat(1 ± jitter)`, so
+identical settlers stop getting hungry on the same clock. The knob is
+`sim.jitter` (default 0.15); `0` turns the spread off. No Rng → decay
+is exactly as it always was. In-game symptom this fixes: the whole
+settlement marching to the bench in lockstep. Pair it with the
+settlement-market stone (each mind seeded with its home settlement's
+market fact) and the march becomes a market day.
+
 ## Animals are not settlers — a field finding for the translator
 
 In-game observation: junkyard dogs and brahmin get minds and walk to

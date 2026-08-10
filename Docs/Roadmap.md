@@ -191,6 +191,13 @@ The complete boundary contract — the loop the adapter walks:
     fact is now.Day - event.Day — the substrate Legacy stands on
     (proven by the WorldCalendar suite: stamp, seasons, snapshot
     round-trip).
+[✓] Per-mind decay jitter — the herd, broken at the source: under a
+    seeded Rng each mind's needs decay at its own rate, derived from
+    its ID (same seed + same entity = same metabolism, every run;
+    the parent stream never advances). sim.jitter (default 0.15) is
+    the knob; 0 turns the spread off; without an Rng behavior is
+    unchanged (proven by the Jitter suite: identical minds diverge,
+    identical worlds stay bit-identical).
 
 The SDK:
 

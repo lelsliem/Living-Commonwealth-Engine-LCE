@@ -72,16 +72,17 @@ namespace LCE::Simulation
         float DriftRate = 0.05f;         // feelings drift toward neutral
         float GoalUrgencyRate = 0.1f;    // urgency gained per second
         float TrustGain = 0.15f;         // a fair trade proves reliability
-        float DispositionGain = 0.1f;    // aid and company warm feelings
+        float DispositionGain = 0.1f;    // aid and company warmth
         float DispositionLoss = 0.25f;   // wrongs and fights sour them
+        float NeedJitter = 0.15f;        // per-mind metabolism spread (±15%)
 
         //-------------------------------------------------------------------------
         // Builds tuning from the Configuration service — the modder's
         // knob (0.5.0). Known keys ("sim.memory.fade", "sim.drift.rate",
-        // ...) override the defaults above; a missing or unparsable value
-        // keeps the default; unknown keys are ignored so the adapter may
-        // carry its own keys in the same file. Pure function — tuning
-        // stays an input, never global state (ADR-0014).
+        // "sim.jitter", ...) override the defaults above; a missing or
+        // unparsable value keeps the default; unknown keys are ignored so
+        // the adapter may carry its own keys in the same file. Pure
+        // function — tuning stays an input, never global state (ADR-0014).
         //-------------------------------------------------------------------------
         static SimulationTuning FromConfiguration(
             const LCE::Config::Configuration& config);

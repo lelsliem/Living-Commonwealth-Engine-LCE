@@ -30,6 +30,7 @@ add_executable(LCE.Core.Tests
     Core/QueryTest.cpp
     Core/RngTest.cpp
     Core/WorldCalendarTest.cpp
+    Core/JitterTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

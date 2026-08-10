@@ -120,13 +120,27 @@ namespace LCE::Simulation
         //-------------------------------------------------------------------------
         // Needs decay. Only entities WITH a Needs component are simulated —
         // a rock has no needs and is untouched.
+        //
+        // Per-mind metabolism (0.5.0): when a seeded Rng is present, each
+        // entity's needs decay at its own rate, derived from its ID — the
+        // same seed + the same entity yields the same rate every tick, and
+        // the parent stream never advances. This is what breaks the herd:
+        // identical minds no longer get hungry on the same clock. Without
+        // an Rng the jitter is exactly 1.0 — behaviour unchanged, so no
+        // existing caller is affected.
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Needs>(
-            [delta](EntityId, Needs& needs)
+            [delta, rng, &tuning](EntityId id, Needs& needs)
             {
+                const auto rate = (rng != nullptr)
+                    ? rng->Derive(id.Value()).NextFloat(
+                          1.0f - tuning.NeedJitter,
+                          1.0f + tuning.NeedJitter)
+                    : 1.0f;
+
                 for (auto& need : needs.List)
                 {
-                    need.Value -= need.DecayRate * delta;
+                    need.Value -= need.DecayRate * delta * rate;
 
                     if (need.Value < 0.0f)
                     {
@@ -441,6 +455,7 @@ namespace LCE::Simulation
         tuning.TrustGain = read("sim.trust.gain", tuning.TrustGain);
         tuning.DispositionGain = read("sim.disposition.gain", tuning.DispositionGain);
         tuning.DispositionLoss = read("sim.disposition.loss", tuning.DispositionLoss);
+        tuning.NeedJitter = read("sim.jitter", tuning.NeedJitter);
 
         return tuning;
     }

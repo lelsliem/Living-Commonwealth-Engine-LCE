@@ -37,6 +37,7 @@
 #include "QueryTest.h"
 #include "RngTest.h"
 #include "WorldCalendarTest.h"
+#include "JitterTest.h"
 
 #include <cstdio>
 
@@ -71,6 +72,7 @@ namespace
         { "Query",           LCE::Tests::QueryTest },
         { "Rng",             LCE::Tests::RngTest },
         { "WorldCalendar",    LCE::Tests::WorldCalendarTest },
+        { "Jitter",          LCE::Tests::JitterTest },
     };
 
     constexpr int kSuiteCount =

@@ -189,15 +189,23 @@ counter the adapter drives from the game clock, and SeasonOf — four
 90-day seasons. MemoryEvent::Day anchors a memory to the world day it
 happened; Remember/ReportOutcome stamp it from the passed WorldTime
 and a caller-set day wins. The age of a fact is now.Day - event.Day —
-the substrate 0.7.0 Legacy stands on. Proven by the WorldCalendar
-suite: stamping, caller-priority, season boundaries, and the timestamp
-surviving a snapshot round trip. 20/20 green — the boundary contract
-is complete.)
+the substrate 0.7.0 Legacy stands on. Proven by the WorldCalendar    suite: stamping, caller-priority, season boundaries, and the timestamp
+    surviving a snapshot round trip. 20/20 green.)
+
+Stone 07 — Per-mind decay jitter ✅ (the herd, broken at the source:
+under a seeded Rng each entity's needs decay at its own rate, derived
+from its ID — same seed + same entity = same metabolism, every run,
+and the parent stream never advances. sim.jitter (default 0.15) is the
+modder's knob; 0 turns the spread off; without an Rng the rate is
+exactly 1.0, so no existing caller is affected. Proven by the Jitter
+suite: identical minds diverge under one seed, identical worlds stay
+bit-identical, and the knob demonstrably widens the gap. 21/21 green.)
 
 The core-side boundary contract is COMPLETE — the decide → act →
 observe → remember loop is closed and proven (tuning, outcome channel,
 observation events, query surface, seeded RNG + determinism, world
-calendar + memory timestamps; 20/20 suites green).
+calendar + memory timestamps, per-mind decay jitter; 21/21 suites
+green).
 
 What remains of 0.5.0 is the SDK side: Sample Host (the non-game
 proof), Sample Modules (the seven mod-type teaching patterns), LCE
