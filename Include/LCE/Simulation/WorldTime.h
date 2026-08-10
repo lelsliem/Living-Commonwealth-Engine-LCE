@@ -10,7 +10,7 @@
 // │
 // │            Building living worlds through simulation.
 // │
-// │            “What we remember shapes what we become — engines included.”
+// │       “A day remembered is a day that mattered; a day forgotten is a day lost.”
 // │
 // └─────────────────────────────────────────────────────────────────────────┘
 //
@@ -19,12 +19,14 @@
 //
 // File:
 //
-//      Memory.h
+//      WorldTime.h
 //
 // Purpose:
 //
-//      Defines the Memory component — what an entity has experienced, and
-//      the raw material of its decisions.
+//      Defines the world calendar — the day counter that anchors
+//      memories to world time, and the seasons derived from it (0.5.0).
+//      The substrate 0.7.0 Legacy stands on: entities remember decades,
+//      not ticks.
 //
 // Project:
 //
@@ -43,58 +45,51 @@
 
 #pragma once
 
-#include "LCE/Simulation/EntityId.h"
-
 #include <cstdint>
-#include <vector>
 
 namespace LCE::Simulation
 {
     //-------------------------------------------------------------------------
-    // InteractionKind
+    // WorldTime
     //
-    // The generic categories of experience the core reasons over. The
-    // adapter reports events; the simulation gives them meaning.
+    // The world's calendar, in days. The adapter drives it from the
+    // game's clock and passes it to Remember/ReportOutcome, which stamp
+    // memories with the day they happened. An input, never global state
+    // (ADR-0014).
     //-------------------------------------------------------------------------
-    enum class InteractionKind
+    struct WorldTime
     {
-        Trade,
-        Combat,
-        Aid,
-        Social,
-        Wronged
-    };
-
-    //-------------------------------------------------------------------------
-    // MemoryEvent
-    //
-    // One remembered experience. Weight is salience: how much it matters
-    // and how strongly it is remembered. It fades with time and is
-    // forgotten below a threshold; reinforcement restores it.
-    //
-    // Other may be invalid for world facts (\"the market is open today\").
-    //-------------------------------------------------------------------------
-    struct MemoryEvent
-    {
-        EntityId Other;
-        InteractionKind Kind = InteractionKind::Social;
-        float Weight = 1.0f;
-
-        // The world day this was remembered (0.5.0). Stamped by
-        // Remember/ReportOutcome when a WorldTime is passed; 0 means
-        // unstamped. The age of a fact is now.Day - event.Day — the
-        // substrate 0.7.0 Legacy stands on ("entities remember decades").
         std::uint64_t Day = 0;
     };
 
     //-------------------------------------------------------------------------
-    // Memory
-    //
-    // The component. No memory of the merchant, no reason to choose their
-    // stall.
+    // Season — the calendar's rhythm. Derived, never stored.
     //-------------------------------------------------------------------------
-    struct Memory
+    enum class Season
     {
-        std::vector<MemoryEvent> Events;
+        Spring,
+        Summer,
+        Autumn,
+        Winter
     };
+
+    //-------------------------------------------------------------------------
+    // The season for a world day: four seasons of 90 days in a 360-day
+    // year. Pure — a function of the day alone.
+    //-------------------------------------------------------------------------
+    [[nodiscard]]
+    inline Season SeasonOf(std::uint64_t day) noexcept
+    {
+        switch ((day / 90) % 4)
+        {
+        case 0:
+            return Season::Spring;
+        case 1:
+            return Season::Summer;
+        case 2:
+            return Season::Autumn;
+        default:
+            return Season::Winter;
+        }
+    }
 }

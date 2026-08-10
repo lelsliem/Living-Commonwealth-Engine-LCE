@@ -421,3 +421,20 @@ identical worlds with the same seed produce bit-identical intents
 (proven by the Rng suite); a different seed changes personality but
 never the action a hungry farmer chooses. This is the substrate
 save/load determinism and, later, 0.6.0 traits stand on.
+
+---
+
+## 0.5.0 — World Calendar + Memory Timestamps (shipped)
+
+The last stone of the boundary contract. `WorldTime` is a day counter
+the adapter drives from the game's clock; `SeasonOf(day)` derives the
+season (four 90-day seasons in a 360-day year). `MemoryEvent::Day`
+anchors a memory to the world day it happened: `Remember` and
+`ReportOutcome` stamp it from the passed `WorldTime`, and **a
+caller-set day wins** — the adapter can report a historical event
+while passing today. The age of a fact is `now.Day - event.Day`.
+
+The timestamp is data, so it must survive a save: the Memory
+serializer now carries `Day` (the adapter's co-save record must too —
+its format version bumps). This is the substrate 0.7.0 Legacy stands
+on: "entities remember decades", not ticks.

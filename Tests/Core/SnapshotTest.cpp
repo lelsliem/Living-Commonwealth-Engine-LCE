@@ -152,6 +152,7 @@ namespace
                     writer.U64(event.Other.Value());
                     writer.U32(static_cast<std::uint32_t>(event.Kind));
                     writer.F(event.Weight);
+                    writer.U64(event.Day);   // world-time anchor (0.5.0)
                 }
 
                 return writer.Blob;
@@ -168,7 +169,8 @@ namespace
                     memory.Events.push_back(LCE::Simulation::MemoryEvent{
                         LCE::Simulation::EntityId{ reader.U64() },
                         static_cast<LCE::Simulation::InteractionKind>(reader.U32()),
-                        reader.F() });
+                        reader.F(),
+                        reader.U64() });   // world-time anchor (0.5.0)
                 }
 
                 return memory;

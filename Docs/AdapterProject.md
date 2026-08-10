@@ -291,6 +291,33 @@ door. Two layers to fix:
 Either way the core stays game-agnostic — it never needs to know what
 a dog is.
 
+## World calendar + memory timestamps (core stone 06, shipped — the last boundary stone)
+
+`LCE::Simulation::WorldTime` — a day counter you drive from the game's
+clock — and `SeasonOf(day)` (four 90-day seasons). `MemoryEvent::Day`
+anchors a memory to the world day it happened:
+
+```cpp
+// Pass today's world day when pushing facts or reporting outcomes:
+LCE::Simulation::Remember(
+    registry, id, { merchant, LCE::Simulation::InteractionKind::Trade, 1.0f },
+    {}, LCE::Simulation::WorldTime{ currentGameDay });
+
+LCE::Simulation::ReportOutcome(
+    registry, id, outcome, tuning, &bus,
+    LCE::Simulation::WorldTime{ currentGameDay });
+```
+
+Rules: a caller-set `event.Day` wins (report a historical event while
+passing today); otherwise the passed `WorldTime` stamps it. The age of
+a fact is `now.Day - event.Day`. Seasons are derived, never stored.
+
+**⚠ Save-format change — your co-save record must carry it.** The
+Memory serializer must now write `event.Day` (the core's Snapshot
+suite does). This is your co-save version seam's first real exercise:
+write the new field, bump your record format version, and migrate old
+saves on load. Save-compat is yours.
+
 ## Canonical Copy
 
 The Living Commonwealth Engine repo owns this document. The adapter

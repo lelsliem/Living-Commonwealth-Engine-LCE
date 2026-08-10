@@ -227,7 +227,8 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         EntityId id,
         const MemoryEvent& event,
-        const SimulationTuning& tuning)
+        const SimulationTuning& tuning,
+        WorldTime time)
     {
         if (!registry.IsAlive(id))
         {
@@ -242,7 +243,17 @@ namespace LCE::Simulation
             memory = registry.GetComponent<Memory>(id);
         }
 
-        memory->Events.push_back(event);
+        // Anchor the memory to world time (0.5.0): stamp the day it
+        // happened — unless the caller already set one, which wins (the
+        // adapter may report a historical event while passing today).
+        auto stamped = event;
+
+        if (stamped.Day == 0 && time.Day != 0)
+        {
+            stamped.Day = time.Day;
+        }
+
+        memory->Events.push_back(stamped);
 
         // World facts have no other entity; they shape nothing here.
         if (!event.Other.IsValid())
@@ -285,7 +296,8 @@ namespace LCE::Simulation
         EntityId id,
         const Outcome& outcome,
         const SimulationTuning& tuning,
-        LCE::Events::EventBus* events)
+        LCE::Events::EventBus* events,
+        WorldTime time)
     {
         if (!registry.IsAlive(id))
         {
@@ -293,7 +305,8 @@ namespace LCE::Simulation
         }
 
         //-------------------------------------------------------------------------
-        // 1. Record the memory — the experience itself.
+        // 1. Record the memory — the experience itself, anchored to the
+        //    world day (0.5.0) unless the caller already stamped it.
         //-------------------------------------------------------------------------
         auto memory = registry.GetComponent<Memory>(id);
 
@@ -303,7 +316,14 @@ namespace LCE::Simulation
             memory = registry.GetComponent<Memory>(id);
         }
 
-        memory->Events.push_back({ outcome.Other, outcome.Kind, outcome.Weight });
+        auto stamped = MemoryEvent{ outcome.Other, outcome.Kind, outcome.Weight };
+
+        if (stamped.Day == 0 && time.Day != 0)
+        {
+            stamped.Day = time.Day;
+        }
+
+        memory->Events.push_back(stamped);
 
         //-------------------------------------------------------------------------
         // 2. Relationship effects, scaled by the result. World outcomes

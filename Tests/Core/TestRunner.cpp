@@ -36,6 +36,7 @@
 #include "ObservationTest.h"
 #include "QueryTest.h"
 #include "RngTest.h"
+#include "WorldCalendarTest.h"
 
 #include <cstdio>
 
@@ -69,6 +70,7 @@ namespace
         { "Observation",     LCE::Tests::ObservationTest },
         { "Query",           LCE::Tests::QueryTest },
         { "Rng",             LCE::Tests::RngTest },
+        { "WorldCalendar",    LCE::Tests::WorldCalendarTest },
     };
 
     constexpr int kSuiteCount =

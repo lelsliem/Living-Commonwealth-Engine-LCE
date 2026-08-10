@@ -53,6 +53,7 @@ namespace LCE::Events
 #include "LCE/Simulation/EntityRegistry.h"
 #include "LCE/Simulation/Memory.h"
 #include "LCE/Simulation/Outcome.h"
+#include "LCE/Simulation/WorldTime.h"
 
 namespace LCE::Simulation
 {
@@ -118,7 +119,8 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         EntityId id,
         const MemoryEvent& event,
-        const SimulationTuning& tuning = {});
+        const SimulationTuning& tuning = {},
+        WorldTime time = {});
 
     //-------------------------------------------------------------------------
     // Observation events (0.5.0): when a non-null EventBus is passed, the
@@ -157,5 +159,6 @@ namespace LCE::Simulation
         EntityId id,
         const Outcome& outcome,
         const SimulationTuning& tuning = {},
-        LCE::Events::EventBus* events = nullptr);
+        LCE::Events::EventBus* events = nullptr,
+        WorldTime time = {});
 }

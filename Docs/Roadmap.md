@@ -185,9 +185,12 @@ The complete boundary contract — the loop the adapter walks:
     gives order-independent per-entity noise — the tick's iteration
     order can never leak into results. Same seed resumes the exact
     same world (proven by the Rng suite).
-[ ] World calendar + memory timestamps — memories anchored to world
-    time (day counter, seasons, age of a fact). The substrate
-    Legacy stands on.
+[✓] World calendar + memory timestamps — WorldTime (day counter) +
+    SeasonOf (90-day seasons); MemoryEvent::Day stamped by
+    Remember/ReportOutcome (caller-set days win). The age of a
+    fact is now.Day - event.Day — the substrate Legacy stands on
+    (proven by the WorldCalendar suite: stamp, seasons, snapshot
+    round-trip).
 
 The SDK:
 

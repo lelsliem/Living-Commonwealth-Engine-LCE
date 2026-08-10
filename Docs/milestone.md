@@ -180,9 +180,19 @@ creates order-independent per-entity child streams without advancing
 the parent, so the tick's unordered iteration can never leak into
 results: same seed + same entity = same jitter, every run. Decide and
 Update take an optional Rng (defaulted — existing callers untouched);
-nullptr keeps the deterministic id-hash fallback. Proven by the Rng
-suite — including two identical worlds under one seed producing
-bit-identical intents. 19/19 green.)
+nullptr keeps the deterministic id-hash fallback.Proven by the Rng
+   suite — including two identical worlds under one seed producing
+   bit-identical intents.)
+
+Stone 06 — World calendar + memory timestamps ✅ (WorldTime: a day
+counter the adapter drives from the game clock, and SeasonOf — four
+90-day seasons. MemoryEvent::Day anchors a memory to the world day it
+happened; Remember/ReportOutcome stamp it from the passed WorldTime
+and a caller-set day wins. The age of a fact is now.Day - event.Day —
+the substrate 0.7.0 Legacy stands on. Proven by the WorldCalendar
+suite: stamping, caller-priority, season boundaries, and the timestamp
+surviving a snapshot round trip. 20/20 green — the boundary contract
+is complete.)
 
 The complete boundary contract — the decide → act → observe → remember
 loop: outcome channel, observation events, query surface, seeded RNG +

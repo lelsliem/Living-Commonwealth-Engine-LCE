@@ -29,6 +29,7 @@ add_executable(LCE.Core.Tests
     Core/ObservationTest.cpp
     Core/QueryTest.cpp
     Core/RngTest.cpp
+    Core/WorldCalendarTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests
