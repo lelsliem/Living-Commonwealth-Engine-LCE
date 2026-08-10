@@ -93,6 +93,69 @@ that matter to this project:
    The round-trip is proven by the core's Snapshot suite — the farmer
    still goes to market after a save and a load.
 
+## The core's 0.5.0 side is building — what the adapter gains
+
+The core is at `0.5.0` stone 01 (15/15 suites green). The first stone
+of the boundary contract is live:
+
+**Tuning ergonomics — `SimulationTuning::FromConfiguration(config)`.**
+The modder's knob. Build the world's tuning from the Configuration
+service in one call:
+
+```cpp
+Config::Configuration config;      // loaded from your ini/text file
+config.Set("sim.memory.fade", "0.05");
+
+const auto tuning =
+    LCE::Simulation::SimulationTuning::FromConfiguration(config);
+
+// Then feed it to the tick:
+LCE::Simulation::Update(registry, deltaSeconds, tuning);
+```
+
+Contract (proven by the core's Tuning suite):
+
+- **Known keys override defaults** — `sim.memory.fade`,
+  `sim.memory.forget`, `sim.drift.rate`, `sim.goal.urgency`,
+  `sim.trust.gain`, `sim.disposition.gain`, `sim.disposition.loss`.
+- **A missing, empty, or unparsable value keeps the default** — a broken
+  line never breaks the world.
+- **Unknown keys are ignored** — the adapter may carry its own keys
+  (`market.open.hour`, whatever) in the same file, and the core will
+  never see them.
+
+This is the *input* channel of your 0.5.0 checklist. The world's
+personality — how fast memories fade, how quickly settlers forgive —
+becomes a text file your users can edit. No recompile.
+
+### The adapter's 0.5.0 roadmap — "The Settler Goes to Market"
+
+Your roadmap item 2 (tuning from Configuration) now has its substrate.
+The remaining stones, and what they need from the core:
+
+1. **World facts via `Remember`** — already shipped and proven in the
+   core (0.3.1). Weather, market open/closed, road conditions: push as
+   memory events with an *invalid* Other. While the fact is remembered,
+   the interaction is unavailable to the mind; when it fades, it
+   reopens. The adapter controls duration by re-pushing.
+2. **Tuning from Configuration** — ✅ core stone 01 (this section).
+   One call, one text file.
+3. **The real test — a settler goes to market because they are hungry.**
+   Needs decay → goal urgency grows → the mind produces a
+   `MoveTo`-class intent → the executor walks them (already proven).
+   The core does not need to know the market is a place; the adapter
+   resolves "which trader" — locations stay out of the core.
+4. **The follow-on: the outcome channel** (core stone 02, not yet
+   built). After the walk, the adapter reports what *actually* happened
+   — trade done, robbed en route, road blocked — and the sim turns it
+   into memory and relationship changes. This is what turns the market
+   trip into a *learning* settler. Not a blocker for the first test;
+   it is the loop's final leg.
+
+When the core ships the outcome channel, this handoff will grow its
+API. Until then, the first market test needs nothing more than stones
+1–3 above plus what the adapter already has.
+
 ## Dependency Wiring
 
 `C:\Fallout4Adaption\Depends\` holds the clones the build needs:
