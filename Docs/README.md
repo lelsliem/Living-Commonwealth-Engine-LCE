@@ -38,7 +38,7 @@ adapter executes intents in the game — and pushes world facts back in as
 memories. No quest script anywhere.
 
 The 0.5.0 boundary contract — the decide → act → observe → remember loop —
-is complete and proven (20/20 test suites green):
+is complete and proven (21/21 test suites green):
 
 - **Tuning** — the modder's knob: one text file sets the world's
   personality.
@@ -53,6 +53,8 @@ is complete and proven (20/20 test suites green):
   save resumes the exact randomness.
 - **World calendar** — memories anchored to world days and seasons; the
   substrate for 0.7.0 Legacy.
+- **Per-mind decay jitter** — every mind has its own metabolism: no two
+  settlers get hungry on the same clock (`sim.jitter` is the knob).
 
 The Fallout 4 adapter (a separate project) already translates settlers
 into entities, walks them to market, and saves 637 minds through the
@@ -103,7 +105,7 @@ The harness reports every suite by name:
 [ RUN  ] SimulationTick
 [  OK  ] SimulationTick
 
-20/20 suites passed.
+21/21 suites passed.
 ```
 
 ## Repository map

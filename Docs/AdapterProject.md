@@ -95,10 +95,10 @@ that matter to this project:
 
 ## The core's 0.5.0 side is built — the complete boundary contract
 
-The core is at `0.5.0` (20/20 suites green). All six stones of the
+The core is at `0.5.0` (21/21 suites green). All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
-calendar):
+calendar, per-mind decay jitter):
 
 **Tuning ergonomics — `SimulationTuning::FromConfiguration(config)`.**
 The modder's knob. Build the world's tuning from the Configuration
