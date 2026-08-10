@@ -127,7 +127,7 @@ everything 0.4.0 leans on. All shipped and tested.
 
 0.4.0 — Platform Integration
 
-STATUS: CORE SIDE COMPLETE ✅ (adapter in progress, separate project)
+STATUS: COMPLETE ✅ (core + adapter; the adapter is verified in-game)
 
 ═══════════════════════════════════════════════
 
@@ -141,13 +141,18 @@ Core side (this repo):
 [✓] Registry snapshot/restore + registered serializers
 [✓] Snapshot round-trip tests — 14/14 suites green
 
-Adapter project (separate repo, born this milestone):
+Adapter project (separate repo — The-Commonwealth-Lives — born this
+milestone, all verified in-game):
 
-[ ] F4SE plugin scaffold (F4SEPlugin_Load)
-[ ] Entity ↔ form translation
-[ ] Intent → game action executor
-[ ] Co-save integration
-[ ] The real test: settlers with needs in Fallout 4
+[✓] F4SE plugin scaffold (F4SEPlugin_Load) — the heartbeat logs in-game
+[✓] Entity ↔ form translation — settler-faction actors become minds
+[✓] Intent → game action executor — settlers walk because they decide to
+[✓] Co-save integration — 637 entities saved/restored; record v4
+    (entities + Rng stream + stall-keepers + memory world-days)
+[✓] The real test: settlers with needs in Fallout 4 — needs decay,
+    goals grow urgent, MoveTo intents walk them to their own
+    settlement's market; the exchange is physical (cap pouches) and
+    the market has hours and weather (verified in-game)
 
 ═══════════════════════════════════════════════
 
@@ -212,14 +217,18 @@ The SDK:
     developer exactly what's missing.
 [ ] Packaging — install targets, find_package, the pinned
     FetchContent recipe made official; a stable public header surface.
-[ ] First GitHub releases — engine (MIT) and mod (GPL), two repos,
-    tagged with release notes. Releases are artifacts with visible
-    history, not a support commitment.
+[✓] First GitHub releases — engine (MIT) and mod (GPL), two repos,
+    both live and public 2026-08-10 (Living-Commonwealth-Engine-LCE-
+    and The-Commonwealth-Lives). v0.5.0 tags + release notes pending.
 
 [ ] Documentation Review — the LearningPath and samples teach.
 
-The adapter project (separate repo) is the living demo: translation
-and the intent executor are in; settlers walk because they decide to.
+The adapter project (separate repo) is the living demo — complete
+through 0.5.0 and verified in-game: settlers walk to their own
+settlement's market because they're hungry, trade with a stall-keeper
+for caps, remember the merchant, stop at nightfall, and the whole
+world (637 minds, Rng stream, stall-keepers, memory world-days)
+survives save/load.
 
 ═══════════════════════════════════════════════
 
