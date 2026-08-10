@@ -75,7 +75,14 @@ namespace LCE::Simulation
         WeatherRain,
         WeatherFog,
         WeatherMisty,
-        WeatherRadstorm
+        WeatherRadstorm,
+
+        // Death (0.6.0 — the adapter's Stone 1, "the world keeps its
+        // books"): the fact that a mind is gone. A fact, never a door —
+        // Decide gates only Trade and Social, so a death never blocks a
+        // walk or a trade. The Other names who died; the Day stamps when.
+        // Ordinal is append-only, like the weather kinds.
+        Death
     };
 
     //-------------------------------------------------------------------------
