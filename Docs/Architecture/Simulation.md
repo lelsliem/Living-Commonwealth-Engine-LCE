@@ -323,7 +323,9 @@ Agreed at the 0.3.0 review and proven by test, in the existing suites:
 3. **Tuning is an input.** The magic numbers moved out of the `.cpp` into
    `SimulationTuning`, a documented struct carrying the 0.3.0 defaults.
    `Update` and `Remember` take it (defaulted, so existing callers are
-   untouched); the adapter will build it from the Configuration service.
+   untouched); the adapter builds it from the Configuration service via
+   `SimulationTuning::FromConfiguration` (0.5.0) — known keys override
+   defaults, broken values keep the default, unknown keys are ignored.
    The tick stays stateless — tuning is an argument, never global state
-   (ADR-0014). A test proves the wiring pattern with a real
-   `Configuration` instance.
+   (ADR-0014). Tests prove the wiring pattern with a real
+   `Configuration` instance (Tuning suite, 0.5.0).

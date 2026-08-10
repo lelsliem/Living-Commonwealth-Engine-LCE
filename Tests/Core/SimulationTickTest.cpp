@@ -160,16 +160,16 @@ namespace LCE::Tests
             return false;
         }
 
-        // Tuning is an input, and the 0.4.0 adapter will build it from
-        // the Configuration service. Prove the pattern here: a slow-fade
-        // tuning keeps a memory alive longer than the default would.
+        // Tuning is an input; the adapter builds it from the Configuration
+        // service via the 0.5.0 factory. Prove the pattern here: a
+        // slow-fade tuning keeps a memory alive longer than the default
+        // would.
         Config::Configuration config;
         config.Set("sim.memory.fade", "0.05");
         config.Set("sim.memory.forget", "0.05");
 
-        Simulation::SimulationTuning slow;
-        slow.MemoryFadeRate = std::stof(std::string(config.Get("sim.memory.fade")));
-        slow.ForgetThreshold = std::stof(std::string(config.Get("sim.memory.forget")));
+        const auto slow =
+            Simulation::SimulationTuning::FromConfiguration(config);
 
         const auto hoarder = registry.CreateEntity();
 

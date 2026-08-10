@@ -170,8 +170,10 @@ The complete boundary contract — the loop the adapter walks:
     push, not poll.
 [ ] Query surface — "everyone hungry", "all settlers who remember
     the raid": filtered queries, documented iteration order.
-[ ] Tuning ergonomics — SimulationTuning loaded from a config file:
-    a modder's knob, not constants in code.
+[✓] Tuning ergonomics — SimulationTuning::FromConfiguration: the
+    modder's knob. Known keys override defaults, broken values keep
+    the default, unknown keys are ignored — one text file sets the
+    world's personality (proven by the Tuning suite).
 [ ] Seeded RNG + determinism — randomness with a seed, snapshot-able,
     so a restored save resumes the exact same world.
 [ ] World calendar + memory timestamps — memories anchored to world

@@ -42,6 +42,9 @@
 
 #include "LCE/Simulation/Simulation.h"
 
+#include <exception>
+#include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -208,5 +211,44 @@ namespace LCE::Simulation
             relationship.Disposition -= tuning.DispositionLoss;
             break;
         }
+    }
+
+    SimulationTuning SimulationTuning::FromConfiguration(
+        const LCE::Config::Configuration& config)
+    {
+        // The modder's knob (0.5.0): each known key overrides the
+        // corresponding default. Missing, empty, or unparsable values
+        // keep the default — a broken line must never break the world.
+        // Unknown keys are ignored, so the adapter can share one file.
+        const auto read = [&config](std::string_view key, float fallback)
+        {
+            const auto raw = config.Get(key);
+
+            if (raw.empty())
+            {
+                return fallback;
+            }
+
+            try
+            {
+                return std::stof(std::string(raw));
+            }
+            catch (const std::exception&)
+            {
+                return fallback;
+            }
+        };
+
+        SimulationTuning tuning;
+
+        tuning.MemoryFadeRate = read("sim.memory.fade", tuning.MemoryFadeRate);
+        tuning.ForgetThreshold = read("sim.memory.forget", tuning.ForgetThreshold);
+        tuning.DriftRate = read("sim.drift.rate", tuning.DriftRate);
+        tuning.GoalUrgencyRate = read("sim.goal.urgency", tuning.GoalUrgencyRate);
+        tuning.TrustGain = read("sim.trust.gain", tuning.TrustGain);
+        tuning.DispositionGain = read("sim.disposition.gain", tuning.DispositionGain);
+        tuning.DispositionLoss = read("sim.disposition.loss", tuning.DispositionLoss);
+
+        return tuning;
     }
 }

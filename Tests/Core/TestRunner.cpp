@@ -31,6 +31,7 @@
 #include "BehaviourTest.h"
 #include "SimulationTickTest.h"
 #include "SnapshotTest.h"
+#include "TuningTest.h"
 
 #include <cstdio>
 
@@ -59,6 +60,7 @@ namespace
         { "Behaviour",       LCE::Tests::BehaviourTest },
         { "SimulationTick",  LCE::Tests::SimulationTickTest },
         { "Snapshot",        LCE::Tests::SnapshotTest },
+        { "Tuning",          LCE::Tests::TuningTest },
     };
 
     constexpr int kSuiteCount =

@@ -43,6 +43,7 @@
 
 #pragma once
 
+#include "LCE/Config/Configuration.h"
 #include "LCE/Simulation/Behaviour.h"
 #include "LCE/Simulation/EntityRegistry.h"
 #include "LCE/Simulation/Memory.h"
@@ -66,6 +67,17 @@ namespace LCE::Simulation
         float TrustGain = 0.15f;         // a fair trade proves reliability
         float DispositionGain = 0.1f;    // aid and company warm feelings
         float DispositionLoss = 0.25f;   // wrongs and fights sour them
+
+        //-------------------------------------------------------------------------
+        // Builds tuning from the Configuration service — the modder's
+        // knob (0.5.0). Known keys ("sim.memory.fade", "sim.drift.rate",
+        // ...) override the defaults above; a missing or unparsable value
+        // keeps the default; unknown keys are ignored so the adapter may
+        // carry its own keys in the same file. Pure function — tuning
+        // stays an input, never global state (ADR-0014).
+        //-------------------------------------------------------------------------
+        static SimulationTuning FromConfiguration(
+            const LCE::Config::Configuration& config);
     };
 
     //-------------------------------------------------------------------------

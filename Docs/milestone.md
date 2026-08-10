@@ -148,10 +148,15 @@ milestone: F4SE plugin · form translation · intent executor · co-save.
 
 Next: Milestone 0.5.0 — SDK & Samples · "The Consumable Engine"
 
+Stone 01 — Tuning ergonomics ✅ (SimulationTuning::FromConfiguration;
+known keys override defaults, broken values keep the default, unknown
+keys ignored — the adapter's checklist item "tuning from the
+Configuration service" is now a one-liner. Proven by the Tuning suite,
+15/15 green.)
+
 The complete boundary contract — the decide → act → observe → remember
-loop: outcome channel, observation events, query surface, tuning
-ergonomics, seeded RNG + determinism, world calendar + memory
-timestamps.
+loop: outcome channel, observation events, query surface, seeded RNG +
+determinism, world calendar + memory timestamps.
 
 The SDK: Sample Host (the non-game proof), Sample Modules (the seven
 mod-type teaching patterns), LCE Doctor (CLI validation), packaging
