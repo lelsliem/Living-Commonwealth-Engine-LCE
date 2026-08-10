@@ -145,16 +145,52 @@ The remaining stones, and what they need from the core:
    `MoveTo`-class intent → the executor walks them (already proven).
    The core does not need to know the market is a place; the adapter
    resolves "which trader" — locations stay out of the core.
-4. **The follow-on: the outcome channel** (core stone 02, not yet
-   built). After the walk, the adapter reports what *actually* happened
-   — trade done, robbed en route, road blocked — and the sim turns it
-   into memory and relationship changes. This is what turns the market
-   trip into a *learning* settler. Not a blocker for the first test;
-   it is the loop's final leg.
+4. **The outcome channel** — ✅ core stone 02 (shipped, 16/16 green).
+   `LCE::Simulation::ReportOutcome(registry, id, outcome, tuning)`:
 
-When the core ships the outcome channel, this handoff will grow its
-API. Until then, the first market test needs nothing more than stones
-1–3 above plus what the adapter already has.
+   ```cpp
+   // After the executor acts on an Intent, report how it went:
+   LCE::Simulation::Outcome outcome;
+   outcome.Other   = trader;      // the counterparty
+   outcome.Kind    = LCE::Simulation::InteractionKind::Trade;
+   outcome.Result  = LCE::Simulation::OutcomeResult::Success; // or Partial/Failure
+   outcome.Weight  = 1.0f;        // salience of the memory
+
+   LCE::Simulation::ReportOutcome(registry, settler, outcome, tuning);
+   ```
+
+   Semantics (proven by the core's Outcome suite):
+   - The memory is recorded (weights carry, fade, reinforce).
+   - Relationships scale by result — a *successful* trade builds trust;
+     a *failed* one loses it (the merchant proved unreliable); a wrong
+     is a wrong either way.
+   - A Success serves the active goal the kind feeds; a Partial halves
+     its urgency; a Failure leaves it growing.
+   - **The intent is consumed** — the next tick decides fresh with the
+     outcome in memory. The loop closes: decide → act → observe →
+     remember → decide.
+   - World outcomes (`Other` invalid — "the road was blocked") record
+     memory only.
+
+   What this means for the adapter: after each executed walk, translate
+   what the game actually did into an `Outcome` and call
+   `ReportOutcome`. The settler robbed en route remembers it; the
+   merchant who cheats loses trust; the next market trip chooses
+   differently — a learning settler, no script. Use `OutcomeResult`
+   honestly: a walk that never reached the trader is a `Failure`; one
+   that got there but didn't trade is `Partial`; a fair trade is a
+   `Success`.
+
+---
+
+## Canonical Copy
+
+The Living Commonwealth Engine repo owns this document. The adapter
+project (`C:\Fallout4Adaption`) reads it from
+`C:\LivingCommonwealthEngine\Docs\AdapterProject.md` — the core repo is
+the single source of truth, and any copy in the adapter repo is a
+snapshot, not a fork. When the core ships a new stone, this document
+grows here first.
 
 ## Dependency Wiring
 
