@@ -378,6 +378,9 @@ adapter chaining the four generic intents, add them. **Not required for
 0.6.0** — the adapter chains `AcquireFood` / `ReachSafety` / `Socialize` /
 `Prosper`.
 
+
+**Request C — tentative, for the agency pillar (0.8.0).** If settlers build, haul, and demolish as first-class goals, `GoalType` grows with `Construct` / `Haul` / `Demolish`. Not required: the adapter can map `Prosper` to labor intents on the existing surface. Flagged so the core knows the direction before 0.8.0 lands.
+
 **What the adapter will NOT ask for:** population logic, aging rules, or
 quest grammar in the core — those are world-specific and the adapter's
 job by design. The core stays a stateless, world-free tick.
