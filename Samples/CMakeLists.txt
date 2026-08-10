@@ -35,3 +35,39 @@ add_custom_command(TARGET LCE.SampleHost POST_BUILD
         ${CMAKE_CURRENT_SOURCE_DIR}/SampleHost/host.ini
         $<TARGET_FILE_DIR:LCE.SampleHost>/host.ini
 )
+
+# ---------------------------------------------------------------------------
+# Sample Modules — the teaching patterns, one idea each. Read them in
+# order: Farmer (the atoms), Village (relationships), Market (world
+# facts + calendar). Each is a small main.cpp that prints its lesson.
+# ---------------------------------------------------------------------------
+
+# SAMPLE 1 — The Farmer: the smallest living loop (one mind, one need,
+# one decision, one outcome).
+add_executable(LCE.SampleFarmer
+    Sample-Farmer/main.cpp
+)
+
+# SAMPLE 2 — The Village: many minds and the feelings between them;
+# outcomes shape relationships and relationships steer choices.
+add_executable(LCE.SampleVillage
+    Sample-Village/main.cpp
+)
+
+# SAMPLE 3 — The Market: world facts (the door is a fading memory),
+# the world calendar, and day-stamped weather memories.
+add_executable(LCE.SampleMarket
+    Sample-Market/main.cpp
+)
+
+foreach(sample LCE.SampleFarmer LCE.SampleVillage LCE.SampleMarket)
+    target_link_libraries(${sample}
+        PRIVATE
+            LCE.Core
+    )
+
+    target_compile_features(${sample}
+        PRIVATE
+            cxx_std_23
+    )
+endforeach()
