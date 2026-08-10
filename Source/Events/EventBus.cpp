@@ -1,3 +1,46 @@
+//=============================================================================//
+// ┌─────────────────────────────────────────────────────────────────────────┐
+// │
+// │                       ██╗      ██████╗███████╗
+// │                       ██║     ██╔════╝██╔════╝
+// │                       ██║     ██║     █████╗
+// │                       ██║     ██║     ██╔══╝
+// │                       ███████╗╚██████╗███████╗
+// │                       ╚══════╝ ╚═════╝╚══════╝
+// │
+// │            Building living worlds through simulation.
+// │
+// │            “One event, many ears — news travels at the speed of a typeid.”
+// │
+// └─────────────────────────────────────────────────────────────────────────┘
+//
+// Living Commonwealth Engine (LCE)
+// Building living worlds through simulation.
+//
+// File:
+//
+//      EventBus.cpp
+//
+// Purpose:
+//
+//      Implements the publish/subscribe bus — handlers keyed by typeid,
+//      delivered from a snapshot so mid-publish subscriptions stay safe.
+//
+// Project:
+//
+//      Living Commonwealth Engine (LCE)
+//
+// License:
+//
+//      MIT License
+//
+// SPDX-License-Identifier: MIT
+//
+// Copyright:
+//
+//      (c) 2026-present LCE Contributors
+//=============================================================================//
+
 #include "LCE/Events/EventBus.h"
 
 #include <utility>
