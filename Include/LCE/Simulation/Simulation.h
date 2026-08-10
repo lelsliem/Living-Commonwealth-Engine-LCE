@@ -99,7 +99,8 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         double deltaSeconds,
         const SimulationTuning& tuning = {},
-        LCE::Events::EventBus* events = nullptr);
+        LCE::Events::EventBus* events = nullptr,
+        const Rng* rng = nullptr);
 
     //-------------------------------------------------------------------------
     // Records an experience for the entity: appends it to Memory and
@@ -123,6 +124,10 @@ namespace LCE::Simulation
     // Observation events (0.5.0): when a non-null EventBus is passed, the
     // tick publishes IntentProducedEvent for every fresh decision. Push,
     // not poll — the bus is an input, never global state (ADR-0014).
+    //
+    // Seeded determinism (0.5.0): when an Rng is passed, Decide draws its
+    // personality jitter from per-entity child streams derived from the
+    // ID — same seed resumes the exact same world, order-independent.
     //-------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------

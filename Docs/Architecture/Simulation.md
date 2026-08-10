@@ -397,3 +397,27 @@ remember the raid" queries Memory and checks Needs). The component is
 `const`: a query reads, never mutates. Empty store or no match →
 empty vector. Stateless and pure: a query is a function of the
 registry and the predicate (ADR-0014).
+
+---
+
+## 0.5.0 — Seeded RNG + Determinism (shipped)
+
+`LCE::Simulation::Rng` — a splitmix64 generator whose **entire state
+is one 64-bit word**. That single word is the save/load contract: the
+adapter persists `State()` in its co-save record and a restored world
+resumes the exact same randomness. Same seed, same sequence, forever.
+
+The subtle piece is `Derive(key)`: it returns a **child stream** mixed
+from the current state and the key **without advancing the parent**.
+The tick derives each entity's personality jitter from its ID, so the
+unordered store iteration can never leak into the results — same seed
++ same entity = same jitter, every run, whatever order the store
+visits. `Decide` and `Update` take an optional `const Rng*` (defaulted
+— existing callers are untouched); nullptr keeps the deterministic
+id-hash fallback, so behaviour without a seed is unchanged.
+
+Why this matters: the tick is now deterministic *under a seed*. Two
+identical worlds with the same seed produce bit-identical intents
+(proven by the Rng suite); a different seed changes personality but
+never the action a hungry farmer chooses. This is the substrate
+save/load determinism and, later, 0.6.0 traits stand on.

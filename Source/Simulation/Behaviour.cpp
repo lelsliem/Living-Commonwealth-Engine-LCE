@@ -48,7 +48,9 @@ namespace
     //-------------------------------------------------------------------------
     // Small deterministic jitter so two identical farmers can choose
     // differently — personality from an ID. No global state: seeded by a
-    // golden-ratio hash of the entity's own value.
+    // golden-ratio hash of the entity's own value. This is the fallback
+    // when no Rng is provided (0.5.0); with an Rng, the jitter comes from
+    // a per-entity child stream instead (see Decide).
     //-------------------------------------------------------------------------
     float Noise(LCE::Simulation::EntityId id) noexcept
     {
@@ -59,6 +61,29 @@ namespace
         const auto units = static_cast<float>((hash >> 32) % 1000u);
 
         return (units / 1000.0f - 0.5f) * 2.0f * kNoise;
+    }
+
+    //-------------------------------------------------------------------------
+    // The jitter magnitude — the same ±5% personality band either way.
+    //-------------------------------------------------------------------------
+    constexpr float kNoise = 0.05f;
+
+    //-------------------------------------------------------------------------
+    // Personality jitter. With an Rng: a child stream derived from the
+    // entity's ID — same seed + same entity = same jitter, and iteration
+    // order can never leak into the stream (the parent is untouched).
+    // Without: the deterministic id-hash fallback.
+    //-------------------------------------------------------------------------
+    float Jitter(
+        LCE::Simulation::EntityId id,
+        const LCE::Simulation::Rng* rng) noexcept
+    {
+        if (rng != nullptr)
+        {
+            return rng->Derive(id.Value()).NextFloat(-kNoise, kNoise);
+        }
+
+        return Noise(id);
     }
 
     //-------------------------------------------------------------------------
@@ -205,7 +230,8 @@ namespace LCE::Simulation
 {
     std::optional<Intent> Decide(
         const EntityRegistry& registry,
-        EntityId id)
+        EntityId id,
+        const Rng* rng)
     {
         // No drives, no decision. Only minds act.
         const auto needs = registry.GetComponent<Needs>(id);
@@ -223,7 +249,7 @@ namespace LCE::Simulation
         }
 
         Intent intent;
-        intent.Confidence = (1.0f - urgent->Value) + Noise(id);
+        intent.Confidence = (1.0f - urgent->Value) + Jitter(id, rng);
 
         switch (urgent->Type)
         {

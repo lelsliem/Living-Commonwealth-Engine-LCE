@@ -112,7 +112,8 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         double deltaSeconds,
         const SimulationTuning& tuning,
-        LCE::Events::EventBus* events)
+        LCE::Events::EventBus* events,
+        const Rng* rng)
     {
         const auto delta = static_cast<float>(deltaSeconds);
 
@@ -197,9 +198,9 @@ namespace LCE::Simulation
         std::vector<std::pair<EntityId, std::optional<Intent>>> decisions;
 
         registry.ForEachWithComponent<Needs>(
-            [&registry, &decisions](EntityId id, const Needs&)
+            [&registry, &decisions, rng](EntityId id, const Needs&)
             {
-                decisions.emplace_back(id, Decide(registry, id));
+                decisions.emplace_back(id, Decide(registry, id, rng));
             });
 
         for (const auto& [id, intent] : decisions)

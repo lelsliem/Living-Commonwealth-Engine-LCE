@@ -50,6 +50,7 @@
 #include "LCE/Simulation/Memory.h"
 #include "LCE/Simulation/Needs.h"
 #include "LCE/Simulation/Relationships.h"
+#include "LCE/Simulation/Rng.h"
 
 #include <optional>
 
@@ -92,10 +93,15 @@ namespace LCE::Simulation
     //-------------------------------------------------------------------------
     // Reads the entity's components and returns the action it most wants,
     // or nullopt when it has no drives or no decision this tick.
-    // Stateless (ADR-0026): a pure function of data.
+    // Stateless (ADR-0026): a pure function of data. When an Rng is
+    // provided (0.5.0), the personality jitter comes from a child stream
+    // derived from the entity's ID — same seed + same entity = same
+    // jitter, regardless of iteration order. Nullptr keeps the
+    // deterministic id-hash noise; existing callers are untouched.
     //-------------------------------------------------------------------------
     [[nodiscard]]
     std::optional<Intent> Decide(
         const EntityRegistry& registry,
-        EntityId id);
+        EntityId id,
+        const Rng* rng = nullptr);
 }

@@ -180,8 +180,11 @@ The complete boundary contract — the loop the adapter walks:
     modder's knob. Known keys override defaults, broken values keep
     the default, unknown keys are ignored — one text file sets the
     world's personality (proven by the Tuning suite).
-[ ] Seeded RNG + determinism — randomness with a seed, snapshot-able,
-    so a restored save resumes the exact same world.
+[✓] Seeded RNG + determinism — Rng (splitmix64): one word of state,
+    so capture/restore is a single number in the co-save. Derive(key)
+    gives order-independent per-entity noise — the tick's iteration
+    order can never leak into results. Same seed resumes the exact
+    same world (proven by the Rng suite).
 [ ] World calendar + memory timestamps — memories anchored to world
     time (day counter, seasons, age of a fact). The substrate
     Legacy stands on.

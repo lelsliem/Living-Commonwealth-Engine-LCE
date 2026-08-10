@@ -28,6 +28,7 @@ add_executable(LCE.Core.Tests
     Core/OutcomeTest.cpp
     Core/ObservationTest.cpp
     Core/QueryTest.cpp
+    Core/RngTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

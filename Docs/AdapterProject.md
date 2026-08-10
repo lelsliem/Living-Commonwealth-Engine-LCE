@@ -241,6 +241,56 @@ a query never mutates what it reads. Empty store or no match → empty
 vector. This is the replacement for hand-rolled sweeps: read first,
 then act.
 
+## Seeded RNG (core stone 05, shipped — determinism a save can resume)
+
+`LCE::Simulation::Rng` — splitmix64 with **one word of state**: persist
+`rng.State()` in your co-save record and a restored world resumes the
+exact same randomness. `SetState` restores it.
+
+```cpp
+// World-level variation (your stream, you own it):
+LCE::Simulation::Rng rng{ seedFromConfigOrGame };
+const auto variation = rng.NextFloat(0.0f, 1.0f);
+
+// Per-entity personality (order-independent):
+LCE::Simulation::Update(registry, dt, tuning, &bus, &rng);
+// Decide derives each entity's jitter from its ID — iteration order
+// can never leak into results. Same seed, same world, every run.
+```
+
+Contract: `Derive(key)` never advances the parent, so the tick's
+unordered store iteration is safe by construction. Pass `nullptr` (or
+omit) to keep the deterministic id-hash fallback — behavior unchanged.
+
+## Animals are not settlers — a field finding for the translator
+
+In-game observation: junkyard dogs and brahmin get minds and walk to
+the market. Root cause in `SimRelevant.cpp`: the door into the sim is
+`IsSimRelevant` → `IsInFaction(SettlerFaction)` — and in Fallout 4,
+animal workshop actors carry **WorkshopNPCFaction too**, so they pass
+the same gate as settlers.
+
+This is the adapter's problem, and the core is already shaped for it:
+the game's notion of "animal" is game knowledge — the adapter owns the
+door. Two layers to fix:
+
+1. **At the door (translation).** `IsSimRelevant` should exclude
+   non-settler actors — e.g. check the actor's race/creature-ness
+   (`RE::Actor::race` is exposed in the clone; or the actor base's
+   creature data). A brahmin is not a settler.
+2. **Component shaping (the elegant part).** The core separates minds
+   from rocks *by components* — "a rock has no needs and is
+   untouched." An animal that gets only a Hunger need — no Social
+   need, no trade memories, no Prosper goal — is a *grazer*: it
+   explores when hungry and never heads to a trader. No core change
+   needed; the behaviour difference is what you attach at
+   translation time. If animals should be in the sim at all, give
+   them the animal-shaped mind; if not, don't create an entity for
+   them.
+
+Either way the core stays game-agnostic — it never needs to know what
+a dog is.
+
 ## Canonical Copy
 
 The Living Commonwealth Engine repo owns this document. The adapter

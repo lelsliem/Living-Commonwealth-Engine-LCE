@@ -172,7 +172,17 @@ with deterministic iteration order — ascending EntityId::Value(), so
 the same query returns the same result every run; cross-component
 filters by capturing the registry; const — a query reads, never
 mutates. "Everyone hungry" and "who remembers the raid" proven by
-test. 18/18 green.)
+test.)
+
+Stone 05 — Seeded RNG + determinism ✅ (Rng: splitmix64, one word of
+state — State/SetState makes save/load a single number. Derive(key)
+creates order-independent per-entity child streams without advancing
+the parent, so the tick's unordered iteration can never leak into
+results: same seed + same entity = same jitter, every run. Decide and
+Update take an optional Rng (defaulted — existing callers untouched);
+nullptr keeps the deterministic id-hash fallback. Proven by the Rng
+suite — including two identical worlds under one seed producing
+bit-identical intents. 19/19 green.)
 
 The complete boundary contract — the decide → act → observe → remember
 loop: outcome channel, observation events, query surface, seeded RNG +

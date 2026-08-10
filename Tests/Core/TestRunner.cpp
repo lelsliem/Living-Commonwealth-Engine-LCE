@@ -35,6 +35,7 @@
 #include "OutcomeTest.h"
 #include "ObservationTest.h"
 #include "QueryTest.h"
+#include "RngTest.h"
 
 #include <cstdio>
 
@@ -67,6 +68,7 @@ namespace
         { "Outcome",         LCE::Tests::OutcomeTest },
         { "Observation",     LCE::Tests::ObservationTest },
         { "Query",           LCE::Tests::QueryTest },
+        { "Rng",             LCE::Tests::RngTest },
     };
 
     constexpr int kSuiteCount =
