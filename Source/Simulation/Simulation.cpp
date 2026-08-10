@@ -48,6 +48,61 @@
 #include <utility>
 #include <vector>
 
+namespace
+{
+    //-------------------------------------------------------------------------
+    // The magnitude and direction an outcome gives its kind's effect:
+    // success counts fully, partial counts half, failure inverts the
+    // positive kinds (a failed trade loses trust).
+    //-------------------------------------------------------------------------
+    float ResultScale(LCE::Simulation::OutcomeResult result) noexcept
+    {
+        switch (result)
+        {
+        case LCE::Simulation::OutcomeResult::Success:
+            return 1.0f;
+
+        case LCE::Simulation::OutcomeResult::Partial:
+            return 0.5f;
+
+        case LCE::Simulation::OutcomeResult::Failure:
+            return -1.0f;
+        }
+
+        return 0.0f;
+    }
+
+    //-------------------------------------------------------------------------
+    // ServesGoal
+    //
+    // The table that turns outcomes into ambition: a trade feeds
+    // AcquireFood and Prosper, aid and company feed Socialize, danger
+    // feeds ReachSafety. A kind that serves nothing cannot satisfy a
+    // goal.
+    //-------------------------------------------------------------------------
+    bool ServesGoal(
+        LCE::Simulation::InteractionKind kind,
+        LCE::Simulation::GoalType goal) noexcept
+    {
+        switch (kind)
+        {
+        case LCE::Simulation::InteractionKind::Trade:
+            return goal == LCE::Simulation::GoalType::AcquireFood
+                || goal == LCE::Simulation::GoalType::Prosper;
+
+        case LCE::Simulation::InteractionKind::Aid:
+        case LCE::Simulation::InteractionKind::Social:
+            return goal == LCE::Simulation::GoalType::Socialize;
+
+        case LCE::Simulation::InteractionKind::Combat:
+        case LCE::Simulation::InteractionKind::Wronged:
+            return goal == LCE::Simulation::GoalType::ReachSafety;
+        }
+
+        return false;
+    }
+}
+
 namespace LCE::Simulation
 {
     void Update(
@@ -211,6 +266,104 @@ namespace LCE::Simulation
             relationship.Disposition -= tuning.DispositionLoss;
             break;
         }
+    }
+
+    void ReportOutcome(
+        EntityRegistry& registry,
+        EntityId id,
+        const Outcome& outcome,
+        const SimulationTuning& tuning)
+    {
+        if (!registry.IsAlive(id))
+        {
+            return;
+        }
+
+        //-------------------------------------------------------------------------
+        // 1. Record the memory — the experience itself.
+        //-------------------------------------------------------------------------
+        auto memory = registry.GetComponent<Memory>(id);
+
+        if (!memory)
+        {
+            registry.AddComponent<Memory>(id, Memory{});
+            memory = registry.GetComponent<Memory>(id);
+        }
+
+        memory->Events.push_back({ outcome.Other, outcome.Kind, outcome.Weight });
+
+        //-------------------------------------------------------------------------
+        // 2. Relationship effects, scaled by the result. World outcomes
+        //    name no one — nothing to trust, nothing to shape.
+        //-------------------------------------------------------------------------
+        if (outcome.Other.IsValid())
+        {
+            auto relationships = registry.GetComponent<Relationships>(id);
+
+            if (!relationships)
+            {
+                registry.AddComponent<Relationships>(id, Relationships{});
+                relationships = registry.GetComponent<Relationships>(id);
+            }
+
+            auto& relationship = relationships->ByEntity[outcome.Other];
+
+            switch (outcome.Kind)
+            {
+            case InteractionKind::Trade:
+                // A successful trade proves reliability; a failed one
+                // loses trust.
+                relationship.Trust += tuning.TrustGain * ResultScale(outcome.Result);
+                break;
+
+            case InteractionKind::Aid:
+            case InteractionKind::Social:
+                // Company and aid warm when they work and cool when
+                // they don't.
+                relationship.Disposition +=
+                    tuning.DispositionGain * ResultScale(outcome.Result);
+                break;
+
+            case InteractionKind::Wronged:
+            case InteractionKind::Combat:
+                // A wrong is a wrong, however it went — full loss.
+                relationship.Disposition -= tuning.DispositionLoss;
+                break;
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // 3. Serve or frustrate the active goal. Only a real interaction
+        //    with someone can satisfy ambition; a world outcome cannot.
+        //-------------------------------------------------------------------------
+        if (outcome.Other.IsValid())
+        {
+            auto goals = registry.GetComponent<Goals>(id);
+
+            if (goals && goals->Active
+                && ServesGoal(outcome.Kind, goals->Active->Type))
+            {
+                switch (outcome.Result)
+                {
+                case OutcomeResult::Success:
+                    goals->Active.reset();   // ambition served
+                    break;
+
+                case OutcomeResult::Partial:
+                    goals->Active->Urgency *= 0.5f;   // half served
+                    break;
+
+                case OutcomeResult::Failure:
+                    break;   // the tick's growth speaks for itself
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // 4. Consume the intent — the action concluded. The next tick
+        //    decides fresh, with the outcome's memory in place.
+        //-------------------------------------------------------------------------
+        registry.RemoveComponent<Intent>(id);
     }
 
     SimulationTuning SimulationTuning::FromConfiguration(

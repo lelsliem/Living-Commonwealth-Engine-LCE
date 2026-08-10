@@ -25,6 +25,7 @@ add_executable(LCE.Core.Tests
     Core/SimulationTickTest.cpp
     Core/SnapshotTest.cpp
     Core/TuningTest.cpp
+    Core/OutcomeTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

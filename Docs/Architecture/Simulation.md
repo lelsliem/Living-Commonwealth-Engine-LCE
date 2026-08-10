@@ -329,3 +329,33 @@ Agreed at the 0.3.0 review and proven by test, in the existing suites:
    The tick stays stateless — tuning is an argument, never global state
    (ADR-0014). Tests prove the wiring pattern with a real
    `Configuration` instance (Tuning suite, 0.5.0).
+
+---
+
+## 0.5.0 — The Outcome Channel (shipped)
+
+The living loop's final leg, agreed in the 0.5.0 design and proven by
+test:
+
+1. **`Outcome` is the structured report.** `OutcomeResult`
+   (`Success`/`Partial`/`Failure`) plus the counterparty and kind. The
+   adapter calls `ReportOutcome(registry, id, outcome, tuning)` after
+   acting on an `Intent` — it answers "how did it actually go?"
+2. **Relationships are scaled by result.** For the positive kinds
+   (Trade, Aid, Social) a Success builds trust/affection while a Failure
+   loses it — the merchant proved unreliable. For the negative kinds
+   (Wronged, Combat) a wrong is a wrong: full loss whatever the result
+   claims.
+3. **Goals get their first consumer.** A Success clears the active goal
+   the kind serves (Trade feeds AcquireFood/Prosper, Social/Aid feed
+   Socialize, Combat/Wronged feed ReachSafety); a Partial halves its
+   urgency; a Failure leaves it to the tick's natural growth.
+4. **The intent is consumed.** The executed action concludes; the next
+   tick decides fresh with the outcome's memory in place. The loop
+   closes: decide → act → observe → remember → decide.
+
+World outcomes (invalid `Other`) record memory only — no relationship
+is shaped, no goal is served, same rule as `Remember`'s facts. The
+money test in the Outcome suite proves the learning: a settler who
+trades well with one merchant prefers them; after being cheated twice,
+the decision function chooses the other stall. No script fired.

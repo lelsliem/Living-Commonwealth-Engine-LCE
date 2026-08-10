@@ -162,9 +162,12 @@ GitHub issues and Nexus comments, async and unsocial by design.
 
 The complete boundary contract — the loop the adapter walks:
 
-[ ] Outcome channel — the adapter reports what happened; the sim
-    turns results into memory and relationship changes.
-    Decide → Act → Observe → Remember → Decide.
+[✓] Outcome channel — ReportOutcome: the adapter reports how an
+    executed intent went; the sim records memory, scales
+    relationships by result (a failed trade loses trust), serves
+    the active goal, and consumes the intent.
+    Decide → Act → Observe → Remember → Decide (proven by the
+    Outcome suite — a cheated settler learns to trade elsewhere).
 [ ] Observation events — EntityCreated, EntityDestroyed,
     IntentProduced, FactRemembered, OutcomeRecorded on the EventBus:
     push, not poll.

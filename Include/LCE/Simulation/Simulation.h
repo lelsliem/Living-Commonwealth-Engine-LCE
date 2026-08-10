@@ -47,6 +47,7 @@
 #include "LCE/Simulation/Behaviour.h"
 #include "LCE/Simulation/EntityRegistry.h"
 #include "LCE/Simulation/Memory.h"
+#include "LCE/Simulation/Outcome.h"
 
 namespace LCE::Simulation
 {
@@ -110,5 +111,33 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         EntityId id,
         const MemoryEvent& event,
+        const SimulationTuning& tuning = {});
+
+    //-------------------------------------------------------------------------
+    // Reports how an executed intent actually went — the observe leg of
+    // the living loop (0.5.0). The adapter calls this after acting on an
+    // Intent; the simulation then:
+    //
+    //   1. Records the memory (weight carries, fades, reinforces).
+    //   2. Scales relationship effects by the result — for the positive
+    //      kinds (Trade, Aid, Social) a Success builds trust/affection
+    //      while a Failure loses it (the merchant proved unreliable); for
+    //      the negative kinds (Wronged, Combat) a wrong is a wrong, full
+    //      loss either way.
+    //   3. Serves or frustrates the active goal — a Success clears a goal
+    //      the kind serves (Trade feeds AcquireFood/Prosper, Social/Aid
+    //      feed Socialize, Combat/Wronged feed ReachSafety), a Partial
+    //      halves its urgency, a Failure leaves it to the tick's growth.
+    //   4. Consumes the intent, so the next tick decides fresh with the
+    //      outcome's memory in place.
+    //
+    // World outcomes (invalid Other) record memory only — no relationship
+    // is shaped, no goal is served. Stateless: outcome and tuning are
+    // inputs, never global state (ADR-0014).
+    //-------------------------------------------------------------------------
+    void ReportOutcome(
+        EntityRegistry& registry,
+        EntityId id,
+        const Outcome& outcome,
         const SimulationTuning& tuning = {});
 }

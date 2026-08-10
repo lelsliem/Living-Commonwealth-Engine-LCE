@@ -151,8 +151,15 @@ Next: Milestone 0.5.0 — SDK & Samples · "The Consumable Engine"
 Stone 01 — Tuning ergonomics ✅ (SimulationTuning::FromConfiguration;
 known keys override defaults, broken values keep the default, unknown
 keys ignored — the adapter's checklist item "tuning from the
-Configuration service" is now a one-liner. Proven by the Tuning suite,
-15/15 green.)
+Configuration service" is now a one-liner. Proven by the Tuning suite.)
+
+Stone 02 — Outcome channel ✅ (ReportOutcome: the observe leg of the
+living loop. Memory recorded; relationship effects scaled by result —
+Success builds trust, Failure loses it, a wrong is a wrong; the active
+goal is served by Success, halved by Partial; the intent is consumed so
+the next tick decides fresh. Proven by the Outcome suite — the money
+test: a settler who is cheated twice learns to trade with the other
+merchant, no script. 16/16 green.)
 
 The complete boundary contract — the decide → act → observe → remember
 loop: outcome channel, observation events, query surface, seeded RNG +
