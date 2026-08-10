@@ -206,22 +206,29 @@ The complete boundary contract — the loop the adapter walks:
 
 The SDK:
 
-[ ] Sample Host — a runnable non-game host driving the full loop:
-    the proof any game can embed LCE, and the sample every modder
-    reads first.
-[ ] Sample Modules — the teaching patterns: the farmer, a village,
-    a market; the seven mod-type patterns as samples.
-[ ] LCE Doctor (CLI) — point it at a project; it validates structure
-    and pinning against the SDK contract, prints a plain ✓/✗ log,
-    and detects the toolchain (CMake / xmake / MSVC), telling the
-    developer exactly what's missing.
-[ ] Packaging — install targets, find_package, the pinned
-    FetchContent recipe made official; a stable public header surface.
+[✓] Sample Host — Samples/SampleHost: a runnable non-game host driving
+    the full loop — the money test, live: one farmer, two merchants;
+    fair twice, cheated twice, then Bellamy. A save at Day 4 proves the
+    lesson survives the round-trip. Deterministic, host.ini wired.
+[✓] Sample Modules — Samples/Sample-Farmer, Sample-Village,
+    Sample-Market: the minimal mind; relationships with a grudge that
+    steers a villager; a day-stamped market with seasons and weather.
+[✓] LCE Doctor (CLI) — Tools/LCEDoctor: validates structure and
+    pinning against the SDK contract, prints a plain ✓/✗ log, detects
+    the toolchain (CMake / xmake / MSVC) — and reads the core's version
+    straight out of Version.h. Proven by the Doctor suite.
+[✓] Packaging — install targets + find_package(LCE), verified end to
+    end: a consumer project with one CMAKE_PREFIX_PATH configures,
+    links LCE::Core, and runs. The pinned FetchContent recipe is now
+    official (Docs/SDK/Embedding.md); the package is self-contained
+    (spdlog rides in the export set).
 [✓] First GitHub releases — engine (MIT) and mod (GPL), two repos,
     both live and public 2026-08-10 (Living-Commonwealth-Engine-LCE-
     and The-Commonwealth-Lives). v0.5.0 tags + release notes pending.
 
-[ ] Documentation Review — the LearningPath and samples teach.
+[✓] Documentation Review — Docs/SDK/Embedding.md is the embedding
+    course (both paths, what not to do, verified); the LearningPath
+    gains "The Samples Teach". The README tells the truth end to end.
 
 The adapter project (separate repo) is the living demo — complete
 through 0.5.0 and verified in-game: settlers walk to their own

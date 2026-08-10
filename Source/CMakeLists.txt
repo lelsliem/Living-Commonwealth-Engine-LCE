@@ -31,14 +31,27 @@ add_library(
     ${LCE_CORE_SOURCES}
 )
 
+# One name everywhere: consumers inside the tree (samples, tools,
+# adapters via FetchContent) and consumers of the installed package both
+# write LCE::Core. The alias keeps the in-tree and exported identities
+# identical.
+add_library(LCE::Core ALIAS LCE.Core)
+
 #------------------------------------------------------------------------------
 # Public Includes
+#
+# BUILD_INTERFACE points at the source tree while developing;
+# INSTALL_INTERFACE points at the installed headers so the exported
+# package never references a machine-specific source path.
 #------------------------------------------------------------------------------
+
+include(GNUInstallDirs)
 
 target_include_directories(
     LCE.Core
     PUBLIC
-        "${CMAKE_SOURCE_DIR}/Include"
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../Include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 #------------------------------------------------------------------------------

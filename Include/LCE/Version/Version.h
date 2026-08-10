@@ -61,29 +61,29 @@ namespace LCE::Version
     // Returns the major version number.
     //-------------------------------------------------------------------------
     [[nodiscard]]
-    constexpr int Major() noexcept;
+    constexpr int Major() noexcept { return MajorValue; }
 
     //-------------------------------------------------------------------------
     // Returns the minor version number.
     //-------------------------------------------------------------------------
     [[nodiscard]]
-    constexpr int Minor() noexcept;
+    constexpr int Minor() noexcept { return MinorValue; }
 
     //-------------------------------------------------------------------------
     // Returns the patch version number.
     //-------------------------------------------------------------------------
     [[nodiscard]]
-    constexpr int Patch() noexcept;
+    constexpr int Patch() noexcept { return PatchValue; }
 
     //-------------------------------------------------------------------------
     // Returns the complete version string.
     //-------------------------------------------------------------------------
     [[nodiscard]]
-    constexpr std::string_view String() noexcept;
+    constexpr std::string_view String() noexcept { return VersionString; }
 
     //-------------------------------------------------------------------------
     // Returns the engine name.
     //-------------------------------------------------------------------------
     [[nodiscard]]
-    constexpr std::string_view Name() noexcept;
+    constexpr std::string_view Name() noexcept { return EngineName; }
 }

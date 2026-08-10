@@ -119,3 +119,66 @@ endif()
 if(LCE_BUILD_TOOLS)
     add_subdirectory(Tools)
 endif()
+
+#------------------------------------------------------------------------------
+# Packaging (0.5.0 SDK)
+#
+# Install rules + an exported package, so consumers can find_package(LCE)
+# after cmake --install. The official embedding recipe stays FetchContent
+# (the primary path, documented in Docs/SDK/Embedding.md); find_package
+# is the installed-path option. The exported target is LCE::Core (the
+# in-tree target keeps its honest name, LCE.Core).
+#------------------------------------------------------------------------------
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+# The friendly public name: LCE::Core on the consumer side.
+set_target_properties(LCE.Core PROPERTIES EXPORT_NAME Core)
+
+# LCE.Core is a static library, so its private link to spdlog is part of
+# the consumer's link interface ($<LINK_ONLY:spdlog>). spdlog therefore
+# rides in the same export set and installs alongside the core — the
+# installed package is self-contained: find_package(LCE) needs nothing
+# else on the path. (The FetchContent embedding path is the alternative,
+# documented in Docs/SDK/Embedding.md.)
+install(TARGETS LCE.Core spdlog
+    EXPORT  LCETargets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+# spdlog's public headers, next to the core's.
+install(DIRECTORY ${spdlog_SOURCE_DIR}/include/spdlog
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# The stable public header surface — Include/LCE and nothing else.
+install(DIRECTORY Include/LCE
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(EXPORT LCETargets
+    FILE        LCETargets.cmake
+    NAMESPACE   LCE::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/LCE
+)
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/LCEConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/LCEConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/LCE
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/LCEConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/LCEConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/LCEConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/LCE
+)

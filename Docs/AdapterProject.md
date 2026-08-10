@@ -342,6 +342,48 @@ suite does). This is your co-save version seam's first real exercise:
 write the new field, bump your record format version, and migrate old
 saves on load. Save-compat is yours.
 
+## The adapter's 0.6.0 needs — life & emergent quests (hand-over 2026-08-10)
+
+The adapter's 0.5.0 is complete, in-game verified, and published
+(GitHub, tag `0.5.0-beta`). Its 0.6.0 plan — **"The Commonwealth
+Remembers"** — simulates birth, life, death, and good/bad relationships,
+with quests that emerge from sim state (feuds, grief, courtship,
+departure, famine). The full plan lives in the adapter repo
+(`C:\Fallout4Adaption\Docs\Design\Life.md`); this section is the
+adapter's ask of the core.
+
+**The honest headline: the 0.5.0 boundary contract suffices for nearly
+all of it.** The adapter builds lifecycle (arrival / death / departure),
+bonds (named relationship states), households, gossip, emergent arcs,
+and experimental births on the existing surface — `CreateEntity` /
+`DestroyEntity` / `Remember` / `Update`, `Relationships`, `Goals`,
+`Memory`, the `Outcome` channel, observation events, `WorldTime`, and
+the seeded `Rng`. No new core components are required to start.
+
+**Request A — `RelationshipChanged` observation event (candidate core
+stone 08).** The core owns disposition/trust dynamics (drift, outcome
+shifts). Let the core emit an observation event when a relationship
+crosses a configurable threshold — so bond formation is an **event** the
+adapter (and, through gossip, other minds) reacts to, instead of the
+adapter polling `Relationships` every tick. Payload: `subject`, `other`,
+disposition, trust, threshold name (from tuning, e.g.
+`sim.bond.threshold.*`), world day. The core stays world-agnostic: it
+knows nothing about marriage — only that a relationship crossed a line
+the world configured. This is a small, testable addition in the same
+shape as the shipped observation events (push, not poll).
+
+**Request B — optional, deferred: `GoalType` growth.** If the core wants
+arcs first-class (`FindPartner`, `Avenge`, `Lead`) rather than the
+adapter chaining the four generic intents, add them. **Not required for
+0.6.0** — the adapter chains `AcquireFood` / `ReachSafety` / `Socialize` /
+`Prosper`.
+
+**What the adapter will NOT ask for:** population logic, aging rules, or
+quest grammar in the core — those are world-specific and the adapter's
+job by design. The core stays a stateless, world-free tick.
+
+---
+
 ## Canonical Copy
 
 The Living Commonwealth Engine repo owns this document. The adapter

@@ -38,7 +38,7 @@ adapter executes intents in the game — and pushes world facts back in as
 memories. No quest script anywhere.
 
 The 0.5.0 boundary contract — the decide → act → observe → remember loop —
-is complete and proven (21/21 test suites green):
+is complete and proven (22/22 test suites green):
 
 - **Tuning** — the modder's knob: one text file sets the world's
   personality.
@@ -60,13 +60,15 @@ The Fallout 4 adapter — [The Commonwealth Lives](https://github.com/lelsliem/T
 a separate project — already translates settlers into entities, walks
 them to market, and saves 637 minds through the co-save.
 
-## What LCE will do
-
-**The rest of 0.5.0 — the SDK side:** the Sample Host (the non-game proof
-that any engine can embed LCE), Sample Modules (seven teaching patterns —
-one per mod type), LCE Doctor (CLI validation: point it at a project, get
-a clear pass/fail log), packaging, and the first public GitHub releases —
-two repos, tagged, source public.
+## What LCE will do**The 0.5.0 SDK side is done:** the Sample Host (`Samples/SampleHost` — a
+runnable non-game host: the money test live, fair twice then cheated
+twice, save at Day 4 and the lesson survives), Sample Modules (farmer,
+village with a grudge, day-stamped market), LCE Doctor (CLI validation:
+point it at a project, get a plain pass/fail log), and packaging —
+`cmake --install`, then a consumer links `LCE::Core` through
+`find_package(LCE)` with nothing else on the path. The official recipe is
+[Docs/SDK/Embedding.md](Docs/SDK/Embedding.md). The two GitHub repos are
+live; the v0.5.0 tags + release notes are the last chore of 0.5.0.
 
 **The ladder beyond:**
 
@@ -105,7 +107,7 @@ The harness reports every suite by name:
 [ RUN  ] SimulationTick
 [  OK  ] SimulationTick
 
-21/21 suites passed.
+22/22 suites passed.
 ```
 
 ## Repository map
@@ -145,7 +147,7 @@ each adapter's own project, never in the core.
 | 0.3.0 | Simulation | ✅ |
 | 0.3.1 | Simulation Polish | ✅ |
 | 0.4.0 | Platform Integration — Fallout 4 Adapter | ✅ |
-| 0.5.0 | SDK & Samples — "The Consumable Engine" | 🔄 core contract ✅, SDK side next |
+| 0.5.0 | SDK & Samples — "The Consumable Engine" | ✅ (v0.5.0 tags pending) |
 | 0.6.0 | Society — groups & traits | ⬜ |
 | 0.7.0 | Legacy — birth, death, inheritance | ⬜ |
 | 0.8.0 | Scale — a settlement, not a village | ⬜ |

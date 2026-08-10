@@ -206,14 +206,19 @@ bit-identical, and the knob demonstrably widens the gap. 21/21 green.)
 The core-side boundary contract is COMPLETE — the decide → act →
 observe → remember loop is closed and proven (tuning, outcome channel,
 observation events, query surface, seeded RNG + determinism, world
-calendar + memory timestamps, per-mind decay jitter; 21/21 suites
+calendar + memory timestamps, per-mind decay jitter; 22/22 suites
 green).
 
-What remains of 0.5.0 is the SDK side: Sample Host (the non-game
-proof), Sample Modules (the seven mod-type teaching patterns), LCE
-Doctor (CLI validation), packaging (install targets, find_package,
-pinned recipe), first GitHub releases for engine and mod — two repos,
-tagged, source public.
+The SDK side of 0.5.0 is DONE too: the Sample Host (Samples/SampleHost
+— the non-game proof; the money test runs live: fair twice, cheated
+twice, then Bellamy, and the save round-trip keeps the lesson), Sample
+Modules (farmer, village, market — Samples/), LCE Doctor
+(Tools/LCEDoctor — CLI validation of the SDK contract, 5/5 checks on a
+real target), and packaging (install targets + find_package(LCE),
+verified end to end by a consumer build; Docs/SDK/Embedding.md is the
+official recipe). Both GitHub repos are live and public.
+
+What remains of 0.5.0: the v0.5.0 tags + release notes on both repos.
 
 Then: 0.6.0 Society (groups + traits) · 0.7.0 Legacy (birth, death,
 inheritance) · 0.8.0 Scale (a settlement, not a village) · 0.9.0

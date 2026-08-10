@@ -1,0 +1,26 @@
+@PACKAGE_INIT@
+
+# LCE package config — found via find_package(LCE).
+#
+# The installed package is self-contained: spdlog (LCE.Core's private
+# logging dependency, a static library) ships in the same export set and
+# the same prefix, so nothing else needs to be on the path. The exported
+# target is LCE::Core.
+
+# LCE.Core is built with the static CRT; a consumer linking it must use
+# the same. Set it here so find_package(LCE) "just works" on MSVC.
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY
+        "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
+# spdlog's exported interface carries Threads::Threads (FindThreads),
+# so the consumer must find it before the targets file is read.
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+
+include("${CMAKE_CURRENT_LIST_DIR}/LCETargets.cmake")
+
+# The stable surface: LCE::Core, plus the version file already checked
+# by find_package.
+check_required_components(LCE)

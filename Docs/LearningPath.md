@@ -146,6 +146,31 @@ game's save file.
 
 ---
 
+## The Samples Teach (the 0.5.0 SDK)
+
+Reading teaches structure; running teaches behaviour. The samples in
+`Samples/` are the SDK's course, in three sizes:
+
+1. **Sample-Farmer** — the smallest complete mind: one entity, one need,
+   one goal, one loop. If a subsystem confuses you, this is where it is
+   alone and visible.
+2. **Sample-Village** — several minds and the relationships between them.
+   Watch a grudge steer a villager away from the neighbour who wronged
+   them — experience shapes behaviour, knowledge doesn't.
+3. **Sample-Market** — the world: day-stamped memories, seasons, weather
+   facts. The same market the Fallout 4 adapter runs for real.
+4. **SampleHost** — the whole loop embedded in a host with *no game at
+   all*: the money test live (cheated twice → trades elsewhere), the
+   observation bus, and a save that keeps the lesson. This is the proof
+   that any engine can embed LCE — read its `main.cpp` as the course.
+
+And when you are ready to embed LCE in something of your own,
+[Docs/SDK/Embedding.md](SDK/Embedding.md) is the recipe: the pinned
+FetchContent path and the installed `find_package(LCE)` path, both
+verified.
+
+---
+
 ## How a New Stone Gets Built
 
 The build rhythm (from the Development Charter):
