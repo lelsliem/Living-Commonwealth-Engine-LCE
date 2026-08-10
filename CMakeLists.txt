@@ -15,7 +15,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(
     LivingCommonwealthEngine
-    VERSION 0.4.0
+    VERSION 0.5.0
     DESCRIPTION "Living Commonwealth Engine"
     LANGUAGES CXX
 )

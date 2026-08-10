@@ -146,7 +146,9 @@ milestone: F4SE plugin · form translation · intent executor · co-save.
 
 ═══════════════════════════════════════════════
 
-Next: Milestone 0.5.0 — SDK & Samples · "The Consumable Engine"
+Milestone 0.5.0 — SDK & Samples · "The Consumable Engine"
+
+STATUS: IN PROGRESS 🔄 — engine now 0.5.0-alpha
 
 Stone 01 — Tuning ergonomics ✅ (SimulationTuning::FromConfiguration;
 known keys override defaults, broken values keep the default, unknown

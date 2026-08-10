@@ -12,11 +12,11 @@ Project Roadmap
 
 Status
 
-Current Version : 0.4.0-alpha
+Current Version : 0.5.0-alpha
 
-Current Stage   : Platform Integration — complete
+Current Stage   : SDK & Samples — core contract complete
 
-Next Milestone  : 0.5.0 — SDK & Samples
+Next Milestone  : 0.6.0 — Society
 
 ═══════════════════════════════════════════════
 
