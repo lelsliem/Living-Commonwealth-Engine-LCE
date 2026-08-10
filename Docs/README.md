@@ -28,14 +28,62 @@ simulation core with a game adapter. Only the adapter knows the game — the
 core never includes game headers, by compile-time guarantee (ADR-0003,
 ADR-0023).
 
-## How it works, in one breath
+## What LCE does today
 
 Entities are **IDs**, not objects, with **components** attached through the
-registry (0.2.0). The simulation gives a **mind** to any entity with
-*Needs*: memory fades, relationships drift, goals grow urgent, and a
-stateless `Decide` turns drives and experience into one **Intent** per tick
-(0.3.0). The adapter executes intents in the game — and pushes world facts
-back in as memories. No quest script anywhere.
+registry. The simulation gives a **mind** to any entity with *Needs*:
+memory fades, relationships drift, goals grow urgent, and a stateless
+`Decide` turns drives and experience into one **Intent** per tick. The
+adapter executes intents in the game — and pushes world facts back in as
+memories. No quest script anywhere.
+
+The 0.5.0 boundary contract — the decide → act → observe → remember loop —
+is complete and proven (20/20 test suites green):
+
+- **Tuning** — the modder's knob: one text file sets the world's
+  personality.
+- **Outcome channel** — `ReportOutcome`: the settler *learns* from what
+  actually happened (cheated twice → trades with the other merchant).
+- **Observation events** — push, not poll: hear creations, intents, and
+  outcomes without polling (a co-save load of 637 minds is one event, not
+  a flood).
+- **Query surface** — `QueryWhere<T>`: filtered reads with a guaranteed
+  iteration order — "everyone hungry", "who remembers the raid".
+- **Seeded RNG** — splitmix64, one word of state: a single number in the
+  save resumes the exact randomness.
+- **World calendar** — memories anchored to world days and seasons; the
+  substrate for 0.7.0 Legacy.
+
+The Fallout 4 adapter (a separate project) already translates settlers
+into entities, walks them to market, and saves 637 minds through the
+co-save.
+
+## What LCE will do
+
+**The rest of 0.5.0 — the SDK side:** the Sample Host (the non-game proof
+that any engine can embed LCE), Sample Modules (seven teaching patterns —
+one per mod type), LCE Doctor (CLI validation: point it at a project, get
+a clear pass/fail log), packaging, and the first public GitHub releases —
+two repos, tagged, source public.
+
+**The ladder beyond:**
+
+| Version | Milestone |
+|---------|-----------|
+| 0.6.0 | Society — groups and traits |
+| 0.7.0 | Legacy — birth, death, inheritance |
+| 0.8.0 | Scale — a settlement, not a village |
+| 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) |
+| 1.0.0 | Release — the promise, made good |
+
+**The point of it all — the mods this makes possible:** living economies
+(dynamic pricing, supply chains, trade routes), memory & legacy (entities
+remember decades; legends emerge), faction wars (territory, sieges,
+diplomacy), living weather (weather that shapes behaviour and travel),
+children of the Commonwealth (birth, inheritance, generational memory),
+disease & medicine (outbreaks, immunity, healers, cemeteries that grow),
+and living roads (caravans prefer maintained routes). Not scripts — the
+same simulated loop, turned up.
 
 ## Quick start
 
@@ -55,7 +103,7 @@ The harness reports every suite by name:
 [ RUN  ] SimulationTick
 [  OK  ] SimulationTick
 
-13/13 suites passed.
+20/20 suites passed.
 ```
 
 ## Repository map
@@ -66,8 +114,11 @@ Include/LCE/   public headers — the SDK surface: Config, Events, Logging,
 Source/        implementation, one folder per subsystem
 Tests/         the LCE test harness (a dev tool; it never ships)
 Docs/          philosophy, decisions, design documents, learning path
-Depends/       third-party: spdlog (used); F4SE, CommonLibF4, json (banked)
 ```
+
+Third-party: spdlog only, fetched at configure time via FetchContent
+(never vendored, never part of the public API). Game dependencies live in
+each adapter's own project, never in the core.
 
 ## Learn
 
@@ -75,7 +126,7 @@ Depends/       third-party: spdlog (used); F4SE, CommonLibF4, json (banked)
   each subsystem teaches, plus hands-on exercises.
 - [Design documents](Docs/Architecture/) — how each stone was designed and
   why.
-- [Decision Log](Docs/DecisionLog.md) — 34 ADRs; the why of everything.
+- [Decision Log](Docs/DecisionLog.md) — the ADRs; the why of everything.
 - [Philosophy](Docs/ProjectPhilosophy.md) and
   [Development Charter](Docs/DevelopmentCharter.md) — how LCE is built.
 - [Roadmap](Docs/Roadmap.md) and [Milestone log](Docs/milestone.md) —
@@ -90,9 +141,14 @@ Depends/       third-party: spdlog (used); F4SE, CommonLibF4, json (banked)
 | 0.1.0 | Core Runtime (Services) | ✅ |
 | 0.2.0 | Entity System | ✅ |
 | 0.3.0 | Simulation | ✅ |
-| 0.4.0 | Platform Integration — Fallout 4 Adapter | ⬜ next |
-| 0.5.0 | Public Beta (GitHub + Discord) | ⬜ |
-| 0.9.0 / 1.0.0 | Release Candidate / Living Worlds | ⬜ |
+| 0.3.1 | Simulation Polish | ✅ |
+| 0.4.0 | Platform Integration — Fallout 4 Adapter | ✅ |
+| 0.5.0 | SDK & Samples — "The Consumable Engine" | 🔄 core contract ✅, SDK side next |
+| 0.6.0 | Society — groups & traits | ⬜ |
+| 0.7.0 | Legacy — birth, death, inheritance | ⬜ |
+| 0.8.0 | Scale — a settlement, not a village | ⬜ |
+| 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
+| 1.0.0 | Release | ⬜ |
 
 ## License
 
