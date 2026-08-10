@@ -33,6 +33,7 @@
 #include "SnapshotTest.h"
 #include "TuningTest.h"
 #include "OutcomeTest.h"
+#include "ObservationTest.h"
 
 #include <cstdio>
 
@@ -63,6 +64,7 @@ namespace
         { "Snapshot",        LCE::Tests::SnapshotTest },
         { "Tuning",          LCE::Tests::TuningTest },
         { "Outcome",         LCE::Tests::OutcomeTest },
+        { "Observation",     LCE::Tests::ObservationTest },
     };
 
     constexpr int kSuiteCount =

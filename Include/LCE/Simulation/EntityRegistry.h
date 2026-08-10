@@ -55,6 +55,11 @@
 #include <utility>
 #include <vector>
 
+namespace LCE::Events
+{
+    class EventBus;   // forward declaration — the registry holds a sink pointer
+}
+
 namespace LCE::Simulation
 {
     //-------------------------------------------------------------------------
@@ -186,6 +191,18 @@ namespace LCE::Simulation
         EntityRegistry& operator=(const EntityRegistry&) = delete;
 
         //-------------------------------------------------------------------------
+        // Attaches an event bus the registry publishes observation events
+        // to (0.5.0). When set, CreateEntity publishes EntityCreatedEvent
+        // for every genuinely new entity. Snapshot restore uses a private
+        // path and does not publish — a loaded world is not a creation
+        // flood. The bus is an input, never global state (ADR-0014).
+        //-------------------------------------------------------------------------
+        void SetEventSink(LCE::Events::EventBus* bus) noexcept
+        {
+            m_EventSink = bus;
+        }
+
+        //-------------------------------------------------------------------------
         // Creates a new entity and returns its unique, valid ID.
         //-------------------------------------------------------------------------
         EntityId CreateEntity();
@@ -292,6 +309,8 @@ namespace LCE::Simulation
             std::uint32_t Generation = 0;
             bool Alive = false;
         };
+
+        LCE::Events::EventBus* m_EventSink = nullptr;
 
         // Looks up the store for T without creating one. Returns nullptr if
         // no component of type T has ever been attached. The returned

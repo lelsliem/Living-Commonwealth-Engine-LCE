@@ -42,6 +42,9 @@
 
 #include "LCE/Simulation/Simulation.h"
 
+#include "LCE/Events/EventBus.h"
+#include "LCE/Simulation/SimulationEvents.h"
+
 #include <exception>
 #include <string>
 #include <string_view>
@@ -108,7 +111,8 @@ namespace LCE::Simulation
     void Update(
         EntityRegistry& registry,
         double deltaSeconds,
-        const SimulationTuning& tuning)
+        const SimulationTuning& tuning,
+        LCE::Events::EventBus* events)
     {
         const auto delta = static_cast<float>(deltaSeconds);
 
@@ -203,6 +207,13 @@ namespace LCE::Simulation
             if (intent)
             {
                 registry.AddComponent<Intent>(id, *intent);
+
+                // Observation (0.5.0): every fresh decision is news — the
+                // adapter executes it without polling.
+                if (events != nullptr)
+                {
+                    events->Publish(IntentProducedEvent{ id, *intent });
+                }
             }
             else
             {
@@ -272,7 +283,8 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         EntityId id,
         const Outcome& outcome,
-        const SimulationTuning& tuning)
+        const SimulationTuning& tuning,
+        LCE::Events::EventBus* events)
     {
         if (!registry.IsAlive(id))
         {
@@ -364,6 +376,13 @@ namespace LCE::Simulation
         //    decides fresh, with the outcome's memory in place.
         //-------------------------------------------------------------------------
         registry.RemoveComponent<Intent>(id);
+
+        // Observation (0.5.0): the result is news — the adapter can react
+        // immediately (a robbed settler, a failed trade) without polling.
+        if (events != nullptr)
+        {
+            events->Publish(OutcomeRecordedEvent{ id, outcome });
+        }
     }
 
     SimulationTuning SimulationTuning::FromConfiguration(

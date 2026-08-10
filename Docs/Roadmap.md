@@ -168,9 +168,10 @@ The complete boundary contract — the loop the adapter walks:
     the active goal, and consumes the intent.
     Decide → Act → Observe → Remember → Decide (proven by the
     Outcome suite — a cheated settler learns to trade elsewhere).
-[ ] Observation events — EntityCreated, EntityDestroyed,
-    IntentProduced, FactRemembered, OutcomeRecorded on the EventBus:
-    push, not poll.
+[✓] Observation events — EntityCreated, IntentProduced,
+    OutcomeRecorded on the EventBus: push, not poll. Restore does
+    NOT re-announce created entities (a loaded world is no flood).
+    (EntityDestroyed/FactRemembered deferred until a consumer asks.)
 [ ] Query surface — "everyone hungry", "all settlers who remember
     the raid": filtered queries, documented iteration order.
 [✓] Tuning ergonomics — SimulationTuning::FromConfiguration: the

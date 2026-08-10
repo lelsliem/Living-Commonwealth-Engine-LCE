@@ -183,6 +183,32 @@ The remaining stones, and what they need from the core:
 
 ---
 
+## Observation events (core stone 03, shipped — push, not poll)
+
+The simulation now tells you what happened instead of waiting to be
+asked. Subscribe once at init:
+
+```cpp
+// EntityRegistry::SetEventSink(&bus) once — then CreateEntity publishes
+// EntityCreatedEvent for every genuinely NEW entity. Snapshot restore
+// does NOT publish: loading a co-save is a restore, not a creation
+// flood — you hear only the minds that actually appear.
+
+// Update(registry, dt, tuning, &bus) publishes IntentProducedEvent for
+// every fresh decision — the executor can react to new intents without
+// polling the registry.
+
+// ReportOutcome(registry, id, outcome, tuning, &bus) publishes
+// OutcomeRecordedEvent — react to results immediately.
+```
+
+Event types live in `LCE/Simulation/SimulationEvents.h`
+(`EntityCreatedEvent{ Id }`, `IntentProducedEvent{ Id, Intent }`,
+`OutcomeRecordedEvent{ Id, Outcome }`), all deriving
+`LCE::Events::Event`; subscribe by `typeid`. The bus is an input,
+never global state — pass it where you want it, omit it where you
+don't.
+
 ## Canonical Copy
 
 The Living Commonwealth Engine repo owns this document. The adapter

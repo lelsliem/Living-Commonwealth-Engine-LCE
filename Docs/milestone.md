@@ -157,9 +157,16 @@ Stone 02 — Outcome channel ✅ (ReportOutcome: the observe leg of the
 living loop. Memory recorded; relationship effects scaled by result —
 Success builds trust, Failure loses it, a wrong is a wrong; the active
 goal is served by Success, halved by Partial; the intent is consumed so
-the next tick decides fresh. Proven by the Outcome suite — the money
-test: a settler who is cheated twice learns to trade with the other
-merchant, no script. 16/16 green.)
+the next tick decides fresh. Proven by the Outcome suite —the money
+   test: a settler who is cheated twice learns to trade with the other
+   merchant, no script.)
+
+Stone 03 — Observation events ✅ (push, not poll: EntityCreated on
+CreateEntity — and deliberately NOT on snapshot restore, so a co-save
+load of 637 minds is no creation flood; IntentProduced on the tick's
+every fresh decision; OutcomeRecorded on ReportOutcome. The bus is an
+input, never global state (ADR-0014). Proven by the Observation suite,
+17/17 green.)
 
 The complete boundary contract — the decide → act → observe → remember
 loop: outcome channel, observation events, query surface, seeded RNG +

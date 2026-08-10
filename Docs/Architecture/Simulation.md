@@ -359,3 +359,23 @@ is shaped, no goal is served, same rule as `Remember`'s facts. The
 money test in the Outcome suite proves the learning: a settler who
 trades well with one merchant prefers them; after being cheated twice,
 the decision function chooses the other stall. No script fired.
+
+---
+
+## 0.5.0 — Observation Events (shipped)
+
+Push, not poll. Three event types on the EventBus
+(`LCE/Simulation/SimulationEvents.h`):
+
+- **`EntityCreatedEvent`** — published by `CreateEntity`. Snapshot
+  restore uses a private path and does **not** publish: loading a
+  637-entity co-save is a restore, not a creation flood.
+- **`IntentProducedEvent`** — published by the tick for every fresh
+  decision; the adapter executes it without polling.
+- **`OutcomeRecordedEvent`** — published by `ReportOutcome`; the
+  adapter can react immediately (a robbed settler, a failed trade).
+
+The bus is an *input*, never global state (ADR-0014): `Update` and
+`ReportOutcome` take an optional `EventBus*` (nullptr = silent),
+`EntityRegistry` holds a sink set via `SetEventSink`. All defaulted —
+existing callers are untouched.

@@ -44,10 +44,15 @@
 
 #include "LCE/Simulation/EntityRegistry.h"
 
+#include "LCE/Events/EventBus.h"
+#include "LCE/Simulation/SimulationEvents.h"
+
 namespace LCE::Simulation
 {
     EntityId EntityRegistry::CreateEntity()
     {
+        EntityId id{};
+
         // Prefer a reused slot: destroying an entity pushes its index onto
         // the free list, and memory stays bounded because slots are never
         // forgotten. Reuse bumps the generation, so old IDs for the slot
@@ -70,16 +75,28 @@ namespace LCE::Simulation
 
             slot.Alive = true;
 
-            return EntityId::Make(index, slot.Generation);
+            id = EntityId::Make(index, slot.Generation);
+        }
+        else
+        {
+            // No free slot: grow the slot array. Generations start at 1 so
+            // the invalid sentinel (value 0) can never be a live entity.
+            const auto index = static_cast<std::uint32_t>(m_Slots.size());
+
+            m_Slots.push_back({ 1, true });
+
+            id = EntityId::Make(index, 1);
         }
 
-        // No free slot: grow the slot array. Generations start at 1 so the
-        // invalid sentinel (value 0) can never be a live entity.
-        const auto index = static_cast<std::uint32_t>(m_Slots.size());
+        // Observation (0.5.0): a genuinely new entity is news. Restore and
+        // Clear use private paths and never publish — a loaded world is not
+        // a creation flood.
+        if (m_EventSink != nullptr)
+        {
+            m_EventSink->Publish(EntityCreatedEvent{ id });
+        }
 
-        m_Slots.push_back({ 1, true });
-
-        return EntityId::Make(index, 1);
+        return id;
     }
 
     void EntityRegistry::DestroyEntity(EntityId id)

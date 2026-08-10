@@ -43,6 +43,11 @@
 
 #pragma once
 
+namespace LCE::Events
+{
+    class EventBus;   // forward declaration — observation is an input, not a dependency
+}
+
 #include "LCE/Config/Configuration.h"
 #include "LCE/Simulation/Behaviour.h"
 #include "LCE/Simulation/EntityRegistry.h"
@@ -93,7 +98,8 @@ namespace LCE::Simulation
     void Update(
         EntityRegistry& registry,
         double deltaSeconds,
-        const SimulationTuning& tuning = {});
+        const SimulationTuning& tuning = {},
+        LCE::Events::EventBus* events = nullptr);
 
     //-------------------------------------------------------------------------
     // Records an experience for the entity: appends it to Memory and
@@ -112,6 +118,12 @@ namespace LCE::Simulation
         EntityId id,
         const MemoryEvent& event,
         const SimulationTuning& tuning = {});
+
+    //-------------------------------------------------------------------------
+    // Observation events (0.5.0): when a non-null EventBus is passed, the
+    // tick publishes IntentProducedEvent for every fresh decision. Push,
+    // not poll — the bus is an input, never global state (ADR-0014).
+    //-------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------
     // Reports how an executed intent actually went — the observe leg of
@@ -139,5 +151,6 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         EntityId id,
         const Outcome& outcome,
-        const SimulationTuning& tuning = {});
+        const SimulationTuning& tuning = {},
+        LCE::Events::EventBus* events = nullptr);
 }
