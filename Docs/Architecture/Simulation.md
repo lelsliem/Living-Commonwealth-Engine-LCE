@@ -379,3 +379,21 @@ The bus is an *input*, never global state (ADR-0014): `Update` and
 `ReportOutcome` take an optional `EventBus*` (nullptr = silent),
 `EntityRegistry` holds a sink set via `SetEventSink`. All defaulted —
 existing callers are untouched.
+
+---
+
+## 0.5.0 — Query Surface (shipped)
+
+`EntityRegistry::QueryWhere<T>(predicate)` — filtered reads with
+**documented iteration order**: the returned `std::vector<EntityId>` is
+sorted ascending by `EntityId::Value()`. The underlying store is an
+unordered map that promises nothing about order; the query promises
+everything, so the same query returns the same result on every run —
+the determinism hook seeded RNG and save-compat stand on.
+
+The predicate receives `(EntityId, const T&)` — the id lets
+cross-component filters reach the registry by capture ("settlers who
+remember the raid" queries Memory and checks Needs). The component is
+`const`: a query reads, never mutates. Empty store or no match →
+empty vector. Stateless and pure: a query is a function of the
+registry and the predicate (ADR-0014).

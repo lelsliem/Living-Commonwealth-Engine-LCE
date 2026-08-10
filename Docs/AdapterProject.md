@@ -209,6 +209,38 @@ Event types live in `LCE/Simulation/SimulationEvents.h`
 never global state — pass it where you want it, omit it where you
 don't.
 
+## Query surface (core stone 04, shipped — filtered reads, deterministic order)
+
+`EntityRegistry::QueryWhere<T>(predicate)` returns every entity with a
+component of type T that satisfies the predicate, as a
+`std::vector<EntityId>` **sorted ascending by ID** — the same query
+returns the same result every run, so your co-save round-trip and any
+future seeded randomness stay reproducible.
+
+```cpp
+// Everyone hungry:
+const auto hungry = registry.QueryWhere<LCE::Simulation::Needs>(
+    [](LCE::Simulation::EntityId, const LCE::Simulation::Needs& needs)
+    {
+        for (const auto& need : needs.List)
+            if (need.Value < 0.5f) return true;
+        return false;
+    });
+
+// Settlers who remember the raid — cross-component by capture:
+const auto witnesses = registry.QueryWhere<LCE::Simulation::Memory>(
+    [&registry](LCE::Simulation::EntityId id, const LCE::Simulation::Memory& m)
+    {
+        return registry.HasComponent<LCE::Simulation::Needs>(id)
+            && /* m recalls a Combat event */;
+    });
+```
+
+The predicate gets `(EntityId, const T&)` — the component is `const`,
+a query never mutates what it reads. Empty store or no match → empty
+vector. This is the replacement for hand-rolled sweeps: read first,
+then act.
+
 ## Canonical Copy
 
 The Living Commonwealth Engine repo owns this document. The adapter

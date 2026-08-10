@@ -172,8 +172,10 @@ The complete boundary contract — the loop the adapter walks:
     OutcomeRecorded on the EventBus: push, not poll. Restore does
     NOT re-announce created entities (a loaded world is no flood).
     (EntityDestroyed/FactRemembered deferred until a consumer asks.)
-[ ] Query surface — "everyone hungry", "all settlers who remember
-    the raid": filtered queries, documented iteration order.
+[✓] Query surface — QueryWhere<T>(predicate): "everyone hungry",
+    "all settlers who remember the raid". Filtered reads with
+    documented iteration order (ascending EntityId) — the
+    determinism hook seeded RNG and save-compat stand on.
 [✓] Tuning ergonomics — SimulationTuning::FromConfiguration: the
     modder's knob. Known keys override defaults, broken values keep
     the default, unknown keys are ignored — one text file sets the

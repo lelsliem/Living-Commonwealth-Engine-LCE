@@ -47,6 +47,7 @@
 #include "LCE/Simulation/EntityId.h"
 #include "LCE/Simulation/RegistrySnapshot.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -268,6 +269,54 @@ namespace LCE::Simulation
             }
 
             store->ForEach(std::forward<F>(function));
+        }
+
+        //-------------------------------------------------------------------------
+        // The query surface (0.5.0). Returns every entity that has a
+        // component of type T AND whose component satisfies the predicate,
+        // in deterministic order: ascending EntityId::Value(). The
+        // underlying store is unordered — it promises nothing about order;
+        // the query promises everything, so the same query returns the
+        // same result on every run (the determinism hook seeded RNG and
+        // save-compat stand on).
+        //
+        // The predicate receives (EntityId, const T&) so cross-component
+        // filters can reach the registry by capturing it — "settlers who
+        // remember the raid" is a query over Memory whose predicate also
+        // checks Needs. The component is const: a query reads, never
+        // mutates. An empty store or no match yields an empty vector.
+        //-------------------------------------------------------------------------
+        template <typename T, typename Pred>
+        [[nodiscard]]
+        std::vector<EntityId> QueryWhere(Pred&& predicate) const
+        {
+            std::vector<EntityId> ids;
+
+            const auto store = FindStore<T>();
+
+            if (store == nullptr)
+            {
+                return ids;
+            }
+
+            store->ForEach(
+                [&predicate, &ids](EntityId id, const T& component)
+                {
+                    if (predicate(id, component))
+                    {
+                        ids.push_back(id);
+                    }
+                });
+
+            std::sort(
+                ids.begin(),
+                ids.end(),
+                [](EntityId a, EntityId b)
+                {
+                    return a.Value() < b.Value();
+                });
+
+            return ids;
         }
 
         //-------------------------------------------------------------------------

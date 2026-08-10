@@ -165,8 +165,14 @@ Stone 03 — Observation events ✅ (push, not poll: EntityCreated on
 CreateEntity — and deliberately NOT on snapshot restore, so a co-save
 load of 637 minds is no creation flood; IntentProduced on the tick's
 every fresh decision; OutcomeRecorded on ReportOutcome. The bus is an
-input, never global state (ADR-0014). Proven by the Observation suite,
-17/17 green.)
+input, never global state (ADR-0014). Proven by the Observation suite.)
+
+Stone 04 — Query surface ✅ (QueryWhere<T>(predicate): filtered reads
+with deterministic iteration order — ascending EntityId::Value(), so
+the same query returns the same result every run; cross-component
+filters by capturing the registry; const — a query reads, never
+mutates. "Everyone hungry" and "who remembers the raid" proven by
+test. 18/18 green.)
 
 The complete boundary contract — the decide → act → observe → remember
 loop: outcome channel, observation events, query surface, seeded RNG +

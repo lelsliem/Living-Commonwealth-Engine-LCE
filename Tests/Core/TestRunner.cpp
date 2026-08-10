@@ -34,6 +34,7 @@
 #include "TuningTest.h"
 #include "OutcomeTest.h"
 #include "ObservationTest.h"
+#include "QueryTest.h"
 
 #include <cstdio>
 
@@ -65,6 +66,7 @@ namespace
         { "Tuning",          LCE::Tests::TuningTest },
         { "Outcome",         LCE::Tests::OutcomeTest },
         { "Observation",     LCE::Tests::ObservationTest },
+        { "Query",           LCE::Tests::QueryTest },
     };
 
     constexpr int kSuiteCount =
