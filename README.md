@@ -56,9 +56,9 @@ is complete and proven (21/21 test suites green):
 - **Per-mind decay jitter** — every mind has its own metabolism: no two
   settlers get hungry on the same clock (`sim.jitter` is the knob).
 
-The Fallout 4 adapter (a separate project) already translates settlers
-into entities, walks them to market, and saves 637 minds through the
-co-save.
+The Fallout 4 adapter — [The Commonwealth Lives](https://github.com/lelsliem/The-Commonwealth-Lives),
+a separate project — already translates settlers into entities, walks
+them to market, and saves 637 minds through the co-save.
 
 ## What LCE will do
 

@@ -20,8 +20,10 @@ the conversation that built the engine.
 Living Commonwealth Engine (LCE). Chosen because Fallout 4's setting *is*
 the Commonwealth, and this mod makes it live.
 
-**Repo naming:** `the-living-commonwealth` (or `lce-fallout4` — decide at
-scaffold time, then name the repo after the public name).
+**Repo naming:** decided 2026-08-10 — the adapter lives at
+`The-Commonwealth-Lives` (the mod's public name: The Living
+Commonwealth); the engine lives at `Living-Commonwealth-Engine-LCE-`.
+Both under the lelsliem GitHub account.
 
 **License:** GPL — the mod links CommonLibF4 (GPL-3.0 with modding/linking
 exceptions). The core stays MIT. This split is deliberate and physical: the
