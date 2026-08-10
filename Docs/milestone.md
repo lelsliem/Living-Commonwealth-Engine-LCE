@@ -194,14 +194,16 @@ suite: stamping, caller-priority, season boundaries, and the timestamp
 surviving a snapshot round trip. 20/20 green — the boundary contract
 is complete.)
 
-The complete boundary contract — the decide → act → observe → remember
-loop: outcome channel, observation events, query surface, seeded RNG +
-determinism, world calendar + memory timestamps.
+The core-side boundary contract is COMPLETE — the decide → act →
+observe → remember loop is closed and proven (tuning, outcome channel,
+observation events, query surface, seeded RNG + determinism, world
+calendar + memory timestamps; 20/20 suites green).
 
-The SDK: Sample Host (the non-game proof), Sample Modules (the seven
-mod-type teaching patterns), LCE Doctor (CLI validation), packaging
-(install targets, find_package, pinned recipe), first GitHub releases
-for engine and mod — two repos, tagged, source public.
+What remains of 0.5.0 is the SDK side: Sample Host (the non-game
+proof), Sample Modules (the seven mod-type teaching patterns), LCE
+Doctor (CLI validation), packaging (install targets, find_package,
+pinned recipe), first GitHub releases for engine and mod — two repos,
+tagged, source public.
 
 Then: 0.6.0 Society (groups + traits) · 0.7.0 Legacy (birth, death,
 inheritance) · 0.8.0 Scale (a settlement, not a village) · 0.9.0

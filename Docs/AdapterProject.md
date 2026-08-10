@@ -93,10 +93,16 @@ that matter to this project:
    The round-trip is proven by the core's Snapshot suite — the farmer
    still goes to market after a save and a load.
 
-## The core's 0.5.0 side is building — what the adapter gains
+## The core's 0.5.0 side is built — the complete boundary contract
 
-The core is at `0.5.0` stone 01 (15/15 suites green). The first stone
-of the boundary contract is live:
+The core is at `0.5.0` (20/20 suites green). All six stones of the
+boundary contract are live — each with its own section below (tuning,
+outcome channel, observation events, query surface, seeded RNG, world
+calendar):
+
+**Tuning ergonomics — `SimulationTuning::FromConfiguration(config)`.**
+The modder's knob. Build the world's tuning from the Configuration
+service in one call:
 
 **Tuning ergonomics — `SimulationTuning::FromConfiguration(config)`.**
 The modder's knob. Build the world's tuning from the Configuration
