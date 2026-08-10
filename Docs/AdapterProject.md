@@ -144,6 +144,12 @@ The remaining stones, and what they need from the core:
    memory events with an *invalid* Other. While the fact is remembered,
    the interaction is unavailable to the mind; when it fades, it
    reopens. The adapter controls duration by re-pushing.
+   **Weather memory (2026-08-10):** the core grew the `Weather*`
+   InteractionKinds (appended at the end — the adapter co-save writes
+   the raw ordinal, so old saves stay valid). The adapter now classifies
+   the sky and pushes day-stamped weather facts (`{ invalid,
+   WeatherRain, 1.0, day }`); Decide never gates them — they are labels,
+   not doors.
 2. **Tuning from Configuration** — ✅ core stone 01 (this section).
    One call, one text file.
 3. **The real test — a settler goes to market because they are hungry.**
