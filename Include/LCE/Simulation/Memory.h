@@ -62,7 +62,20 @@ namespace LCE::Simulation
         Combat,
         Aid,
         Social,
-        Wronged
+        Wronged,
+
+        // Weather memory facts (0.5.x): the sky on a given day, one kind
+        // per category so a fact is a label — "day 12 was rainy". These
+        // are facts, never doors: Decide gates only Trade and Social,
+        // and the Other is invalid, so no relationship is shaped.
+        // Ordinals are append-only — the adapter co-save writes the raw
+        // ordinal, so new kinds go at the end, never in the middle.
+        WeatherClear,
+        WeatherOvercast,
+        WeatherRain,
+        WeatherFog,
+        WeatherMisty,
+        WeatherRadstorm
     };
 
     //-------------------------------------------------------------------------

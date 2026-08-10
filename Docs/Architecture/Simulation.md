@@ -73,17 +73,27 @@ struct Needs
 ### 2. Memory — experience
 
 ```cpp
-enum class InteractionKind { Trade, Combat, Aid, Social, Wronged };
+enum class InteractionKind
+{
+    Trade, Combat, Aid, Social, Wronged,
+    // Weather facts (0.5.x): the sky on a given day — labels, never
+    // doors (Decide gates only Trade and Social; invalid Other, no
+    // relationship shaped).
+    WeatherClear, WeatherOvercast, WeatherRain,
+    WeatherFog, WeatherMisty, WeatherRadstorm
+};
 
 struct MemoryEvent
 {
     EntityId Other;          // who/what it was about (invalid = world fact)
     InteractionKind Kind;    // what happened — core reasons over these
     float Weight;            // how much it matters (salience)
+    std::uint64_t Day = 0;   // the world day remembered (0.5.0 WorldTime stamp)
 };
 
-// No timestamp in 0.3.0: salience (Weight) is the sole aging mechanism.
-// Time returns when "entities remember decades" needs it.
+// Day anchors facts in time ("day 12 was rainy") — the substrate the
+// Legacy stone ("entities remember decades") stands on. Until then the
+// tick fades uniformly: Day is a stamp, not a schedule.
 
 struct Memory
 {
