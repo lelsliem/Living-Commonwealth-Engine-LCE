@@ -466,7 +466,7 @@ persisted, queried, restored.
 Proven by the Groups suite (the rally: one wrong, every member's
 crossing fires; trust never echoing; inheritance means and
 boundaries) and the Traits suite (divergence, determinism, fallback,
-identity, round trip) — 28/28 suites total.
+identity, round trip) — 28/28 suites at 0.7.0, 30/30 today.
 
 ---
 

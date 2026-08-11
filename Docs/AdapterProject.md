@@ -58,7 +58,7 @@ The adapter is an F4SE plugin built on CommonLibF4 (`F4SE::Init`,
 ## The core's 0.4.0 side is built — what the adapter gains
 
 At 0.4.0 the core shipped `0.4.0-alpha` (14/14 suites then); the
-current core is 0.7.0-alpha, 28/28 suites green. Two things changed
+current core is 0.8.0-alpha, 30/30 suites green. Two things changed
 at 0.4.0 that still matter to this project:
 
 1. **The boundary is the public API only.** The old
@@ -99,7 +99,7 @@ at 0.4.0 that still matter to this project:
 ## The core's 0.5.0 side is built — the complete boundary contract
 
 At 0.5.0 the core shipped `0.5.0-alpha` (25/25 suites then); the
-current core is 0.7.0-alpha, 28/28 suites. All seven stones of the
+current core is 0.8.0-alpha, 30/30 suites. All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
 calendar, per-mind decay jitter) — and stone 08 (bond thresholds +
