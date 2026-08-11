@@ -38,6 +38,8 @@ add_executable(LCE.Core.Tests
     Core/BequeathTest.cpp
     Core/InheritanceTest.cpp
     Core/WorldLegacyTest.cpp
+    Core/ScaleTest.cpp
+    Core/SoakTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

@@ -46,6 +46,7 @@
 #include "LCE/Simulation/SimulationEvents.h"
 
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <exception>
 #include <string>
@@ -61,6 +62,44 @@ namespace
     // success counts fully, partial counts half, failure inverts the
     // positive kinds (a failed trade loses trust).
     //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    // AppendMemory (0.8.0 stone 14a)
+    //
+    // Pushes one event and, when sim.memory.cap is set, evicts the
+    // lowest-weight event (oldest wins ties) once the store exceeds the
+    // cap — a mind can only hold so much, and the hot path (ChooseTarget,
+    // IsUnavailable, FindThreat, fade) stays bounded by it. Deterministic:
+    // ties resolve to the earliest remembered, and the store is append
+    // ordered. Cap 0 = unbounded (the default, behavior unchanged).
+    // Snapshot restore never goes through here — a loaded world is the
+    // truth, not a fresh experience.
+    //-------------------------------------------------------------------------
+    void AppendMemory(
+        LCE::Simulation::Memory& memory,
+        LCE::Simulation::MemoryEvent event,
+        std::size_t cap)
+    {
+        memory.Events.push_back(event);
+
+        if (cap == 0 || memory.Events.size() <= cap)
+        {
+            return;
+        }
+
+        std::size_t weakest = 0;
+
+        for (std::size_t i = 1; i < memory.Events.size(); ++i)
+        {
+            if (memory.Events[i].Weight < memory.Events[weakest].Weight)
+            {
+                weakest = i;
+            }
+        }
+
+        memory.Events.erase(
+            memory.Events.begin() + static_cast<std::ptrdiff_t>(weakest));
+    }
+
     float ResultScale(LCE::Simulation::OutcomeResult result) noexcept
     {
         switch (result)
@@ -249,9 +288,19 @@ namespace LCE::Simulation
         double deltaSeconds,
         const SimulationTuning& tuning,
         LCE::Events::EventBus* events,
-        const Rng* rng)
+        const Rng* rng,
+        TickReport* report)
     {
         const auto delta = static_cast<float>(deltaSeconds);
+
+        // Measurement (0.8.0 stone 13): a local report accumulates every
+        // pass; only when a caller asked for one does the tick read the
+        // clock or copy it out — the default path (nullptr) is untouched.
+        TickReport local;
+
+        const auto started = (report != nullptr)
+            ? std::chrono::steady_clock::now()
+            : std::chrono::steady_clock::time_point{};
 
         //-------------------------------------------------------------------------
         // Needs decay. Only entities WITH a Needs component are simulated —
@@ -266,8 +315,10 @@ namespace LCE::Simulation
         // existing caller is affected.
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Needs>(
-            [delta, rng, &tuning](EntityId id, Needs& needs)
+            [delta, rng, &tuning, &local](EntityId id, Needs& needs)
             {
+                ++local.Entities;
+
                 const auto rate = (rng != nullptr)
                     ? rng->Derive(id.Value()).NextFloat(
                           1.0f - tuning.NeedJitter,
@@ -285,14 +336,22 @@ namespace LCE::Simulation
                 }
             });
 
+        if (report != nullptr)
+        {
+            local.NeedsMs = std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - started).count();
+        }
+
         //-------------------------------------------------------------------------
         // Memory fades. Salience erodes each second; forgotten below the
         // threshold. Erase-while-iterating: safe because we never touch the
         // store inside the loop (same rule as the Scheduler).
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Memory>(
-            [delta, &tuning](EntityId, Memory& memory)
+            [delta, &tuning, &local](EntityId, Memory& memory)
             {
+                local.MemoryEvents += memory.Events.size();
+
                 for (auto iterator = memory.Events.begin();
                      iterator != memory.Events.end();)
                 {
@@ -309,13 +368,21 @@ namespace LCE::Simulation
                 }
             });
 
+        if (report != nullptr)
+        {
+            local.MemoryMs = std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - started).count();
+        }
+
         //-------------------------------------------------------------------------
         // Relationships drift toward neutral — feelings cool over time
         // unless experience refreshes them.
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Relationships>(
-            [delta, &tuning](EntityId, Relationships& relationships)
+            [delta, &tuning, &local](EntityId, Relationships& relationships)
             {
+                local.Relationships += relationships.ByEntity.size();
+
                 for (auto& entry : relationships.ByEntity)
                 {
                     auto& relationship = entry.second;
@@ -326,6 +393,12 @@ namespace LCE::Simulation
                         (0.0f - relationship.Trust) * tuning.DriftRate * delta;
                 }
             });
+
+        if (report != nullptr)
+        {
+            local.RelationshipsMs = std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - started).count();
+        }
 
         //-------------------------------------------------------------------------
         // Goals grow urgent while they go unserved.
@@ -338,6 +411,12 @@ namespace LCE::Simulation
                     goals.Active->Urgency += tuning.GoalUrgencyRate * delta;
                 }
             });
+
+        if (report != nullptr)
+        {
+            local.GoalsMs = std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - started).count();
+        }
 
         //-------------------------------------------------------------------------
         // Decide: one Intent per mind. Two-phase on purpose — deciding may
@@ -353,6 +432,12 @@ namespace LCE::Simulation
                 decisions.emplace_back(
                     id, Decide(registry, id, rng, tuning.HungerDesperate));
             });
+
+        if (report != nullptr)
+        {
+            local.DecideMs = std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - started).count();
+        }
 
         for (const auto& [id, intent] : decisions)
         {
@@ -371,6 +456,13 @@ namespace LCE::Simulation
             {
                 registry.RemoveComponent<Intent>(id);
             }
+        }
+
+        if (report != nullptr)
+        {
+            local.TotalMs = std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - started).count();
+            *report = local;
         }
     }
 
@@ -405,7 +497,8 @@ namespace LCE::Simulation
             stamped.Day = time.Day;
         }
 
-        memory->Events.push_back(stamped);
+        // Bounded memory (0.8.0 stone 14a): a mind can only hold so much.
+        AppendMemory(*memory, stamped, tuning.MemoryCap);
 
         // World facts have no other entity; they shape nothing here.
         if (!event.Other.IsValid())
@@ -495,7 +588,8 @@ namespace LCE::Simulation
             stamped.Day = time.Day;
         }
 
-        memory->Events.push_back(stamped);
+        // Bounded memory (0.8.0 stone 14a).
+        AppendMemory(*memory, stamped, tuning.MemoryCap);
 
         //-------------------------------------------------------------------------
         // 2. Relationship effects, scaled by the result. World outcomes
@@ -741,6 +835,25 @@ namespace LCE::Simulation
             }
         }
 
+        // A count, not a rate — its own reader (0.8.0 stone 14a). 0 = a
+        // mind remembers everything (the default, unchanged behavior).
+        {
+            const auto raw = config.Get("sim.memory.cap");
+
+            if (!raw.empty())
+            {
+                try
+                {
+                    tuning.MemoryCap = static_cast<std::size_t>(
+                        std::stoull(std::string(raw)));
+                }
+                catch (const std::exception&)
+                {
+                    // not a number — the default stands
+                }
+            }
+        }
+
         // The bond watch-list (0.6.0 stone 08): every
         // sim.bond.threshold.<name> key adds one line the world drew
         // across disposition. A broken value is ignored — a bad line must
@@ -837,7 +950,8 @@ namespace LCE::Simulation
                 auto inherited = event;
                 inherited.Weight = event.Weight * tuning.InheritanceScale;
 
-                heirMemory->Events.push_back(inherited);
+                // Bounded memory (0.8.0 stone 14a).
+                AppendMemory(*heirMemory, inherited, tuning.MemoryCap);
                 ++count;
             }
         }
@@ -897,10 +1011,33 @@ namespace LCE::Simulation
             auto inherited = event;
             inherited.Weight = event.Weight * tuning.InheritanceScale;
 
-            heirMemory->Events.push_back(inherited);
+            // Bounded memory (0.8.0 stone 14a).
+            AppendMemory(*heirMemory, inherited, tuning.MemoryCap);
             ++count;
         }
 
         return count;
+    }
+
+    std::size_t FixedStep::Advance(
+        double frameDelta,
+        EntityRegistry& registry,
+        const SimulationTuning& tuning,
+        LCE::Events::EventBus* events,
+        const Rng* rng,
+        TickReport* report)
+    {
+        std::size_t steps = 0;
+
+        Remaining += frameDelta;
+
+        while (Remaining >= Step)
+        {
+            Update(registry, Step, tuning, events, rng, report);
+            Remaining -= Step;
+            ++steps;
+        }
+
+        return steps;
     }
 }

@@ -45,6 +45,8 @@
 #include "BequeathTest.h"
 #include "InheritanceTest.h"
 #include "WorldLegacyTest.h"
+#include "ScaleTest.h"
+#include "SoakTest.h"
 
 #include <cstdio>
 
@@ -87,6 +89,8 @@ namespace
         { "Bequeath",        LCE::Tests::BequeathTest },
         { "Inheritance",     LCE::Tests::InheritanceTest },
         { "WorldLegacy",     LCE::Tests::WorldLegacyTest },
+        { "Scale",           LCE::Tests::ScaleTest },
+        { "Soak",            LCE::Tests::SoakTest },
     };
 
     constexpr int kSuiteCount =

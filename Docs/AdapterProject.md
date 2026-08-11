@@ -440,8 +440,11 @@ no sign parameter.
 
 ## The core's 0.7.0 side is built — Legacy (hand-over 2026-08-11)
 
-Engine side of 0.7.0 is done and waiting (28/28 suites; design in
-Docs/Design/Legacy.md). The world names the people; the core owns
+Engine side of 0.7.0 shipped that day (28/28 suites; design in
+Docs/Design/Legacy.md) and was verified in-game by the adapter's
+0.7.0 release — the feud chain ran end to end (shut stall → blame →
+rival → mediated). What follows is the hand-over as written then,
+kept as the record. The world names the people; the core owns
 the mechanics. Three one-liners for the adapter's death and birth
 paths:
 
@@ -526,6 +529,37 @@ minutes of game time after session start (open 00:00, close 20:30),
 with high hunger decay — the close lands mid-flow, in-flight walks
 finish to the shut bench, and the log shows `is shut … and blames
 the keeper`, a rival bond, and the feud arc.
+
+## The core's 0.8.0 side is built — Scale (hand-over 2026-08-11)
+
+Engine side of 0.8.0 is done and waiting (30/30 suites; design in
+Docs/Design/Scale.md). No new components, no schema change — the
+co-save record stays v2. Four moves for the adapter:
+
+1. **sim.memory.cap** — a tuning key (default 0 = a mind remembers
+   everything, unchanged behavior). Set it in the INI once you've
+   measured your in-game memory growth; below it the lowest-weight
+   event is evicted on insert, bounding Decide's scans and the fade
+   pass. The engine's own soak tests use 64 (decade) and 32 (hour).
+2. **FixedStep** — the timing-independent tick. Feed it your real
+   frame deltas; it advances whole fixed steps (default 0.1s) and
+   returns how many ran. Same seed + same steps = same world
+   whatever your frame rate — that's what makes "a year without
+   drift" provable on your side too. Update(delta) is unchanged if
+   you prefer the raw loop.
+3. **TickReport** — pass a non-null pointer to Update (or through
+   FixedStep) and get per-pass counts + wall time: minds swept,
+   events faded, pairs drifted, ms per pass. Log it once a minute
+   in-game to see the cost of your settlement — the engine proves
+   the shape, you own the number.
+4. **Co-save: nothing to do.** The cap lives in tuning and the
+   tick, not the record. Your existing serializers, versioning, and
+   v2 record all stand.
+
+The boundary reminder stays: the core is single-threaded and
+deterministic by construction. If you take the tick off the game
+thread, FixedStep's fixed cadence is what makes that safe — the sim
+no longer depends on when you call it, only on how many steps ran.
 
 ## Canonical Copy
 

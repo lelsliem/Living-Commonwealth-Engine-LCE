@@ -50,7 +50,7 @@ namespace LCE::Version
     //-------------------------------------------------------------------------
 
     inline constexpr int MajorValue = 0;
-    inline constexpr int MinorValue = 7;
+    inline constexpr int MinorValue = 8;
     inline constexpr int PatchValue = 0;
 
     inline constexpr std::string_view VersionString = "0.7.0-alpha";

@@ -2,6 +2,33 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.0] — 2026-08-11 — Scale · "The Settlement Survives"
+
+Engine side shipped (design locked the same day —
+Docs/Design/Scale.md); the adapter's in-game verification is the
+remaining gate.
+
+- TickReport (stone 13) — the cost of a settlement is knowable:
+  per-pass counts and wall time, opt-in; nullptr (the default)
+  measures nothing. The documented model: per tick ~Σ over minds of
+  (O(events) + O(relationships)) + O(population).
+- sim.memory.cap (stone 14a) — a mind can only hold so much: the
+  lowest-weight event is evicted on insert (ties → oldest),
+  bounding Decide's scans and the fade pass. Default 0 = unbounded,
+  unchanged behavior; the world tunes it.
+- FixedStep (stone 14b) — the timing-independent tick: real frame
+  deltas in, whole fixed steps out. Same seed + same steps = same
+  world at any frame rate. Update(delta) stays the raw primitive.
+- Soak tests (stone 15) — a decade at day-steps and an hour at the
+  real cadence: no NaN, no entity creep, memory bounded.
+- Save/load at scale (stone 16) — 5000 minds round-trip
+  byte-exactly; 207 bytes per mind documented.
+- Determinism at scale (stone 17) — two worlds, same seed, 1000
+  minds: flattened snapshots byte-for-byte identical.
+- 30/30 test suites green. Backward compatible: Update gained a
+  defaulted TickReport* parameter; every existing caller builds
+  untouched.
+
 ## [0.7.0] — 2026-08-11 — Legacy · "The Debt to the Past"
 
 Engine and adapter shipped together and verified in-game

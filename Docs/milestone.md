@@ -287,3 +287,38 @@ cooled it (23 feuds, 127 mediation attempts in one stressed session;
 673 minds, 78 bonds, 10 stall-keepers, 4 children restored with zero
 errors). The engine's field-fix for the same chain — desperate hunger
 ignores the closed sign (core 509a54d) — is verified in the wild.
+
+Milestone 0.8.0 — Scale · "The Settlement Survives"
+
+STATUS: IN PROGRESS 🔄 — engine side shipped 2026-08-11 (30/30
+suites green); the adapter's in-game verification is the remaining
+gate.
+
+Stone 13 — Tick budgets and profiling ✅ (engine side): TickReport —
+per-pass counts and wall time, opt-in, the default path untouched.
+The cost model is documented in Docs/Design/Scale.md: per tick
+~Σ over minds of (O(events) + O(relationships)) + O(population),
+bounded only by the memory cap.
+
+Stone 14 — Iteration efficiency ✅ (engine side): sim.memory.cap
+(default 0 = unbounded) bounds the hot path by evicting the
+lowest-weight event (ties → oldest); FixedStep makes the tick
+timing-independent — same seed + same steps = same world at any
+frame rate, the property the milestone's proof demands.
+
+Stone 15 — Soak tests ✅ (engine side): a decade at day-steps and
+an hour at the real cadence — stable so far; the finding is the
+point and goes back into the design doc.
+
+Stone 16 — Save/load at population scale ✅ (engine side): 5000
+minds round-trip byte-exactly, 207 bytes per mind documented.
+
+Stone 17 — Determinism at scale ✅ (engine side): two worlds, same
+seed, 1000 minds — flattened snapshots byte-for-byte identical.
+
+Design: Docs/Design/Scale.md (locked 2026-08-11). The adapter's
+0.8.0 wires the four moves: sim.memory.cap in the INI, FixedStep in
+the tick loop, a TickReport when it wants per-frame costs, and the
+co-save unchanged (schema v2 — the cap lives in tuning and tick, not
+the record).
+

@@ -98,6 +98,9 @@ namespace LCE::Simulation
         float GroupInheritance = 0.5f;   // how strongly a feeling reaches group-mates
         float HungerDesperate = 0.0f;    // below this hunger the closed sign is ignored
 
+        // 0.8.0 Scale — bounding the hot path (stone 14a).
+        std::size_t MemoryCap = 0;       // max events per mind; 0 = unbounded
+
         // 0.7.0 Legacy — what survives the entity (stones 10-12).
         float BequestFloor = 0.5f;       // salience below which a fact stays with the dead
         float InheritanceScale = 0.5f;   // secondhand stories are fainter than lived experience
@@ -123,20 +126,74 @@ namespace LCE::Simulation
     };
 
     //-------------------------------------------------------------------------
+    // TickReport (0.8.0 stone 13)
+    //
+    // A lightweight, opt-in measurement of one Update call: per-pass
+    // counts and wall time, so the cost of a settlement is knowable
+    // instead of guessed. The adapter passes a pointer when it wants the
+    // numbers; nullptr (the default) means the tick measures nothing —
+    // every existing caller is untouched.
+    //-------------------------------------------------------------------------
+    struct TickReport
+    {
+        std::uint64_t Entities = 0;        // minds swept by the decay pass
+        std::uint64_t MemoryEvents = 0;    // events examined by the fade pass
+        std::uint64_t Relationships = 0;   // pairs drifted toward neutral
+        double NeedsMs = 0.0;
+        double MemoryMs = 0.0;
+        double RelationshipsMs = 0.0;
+        double GoalsMs = 0.0;
+        double DecideMs = 0.0;
+        double TotalMs = 0.0;
+    };
+
+    //-------------------------------------------------------------------------
     // Advances the world by deltaSeconds: decays needs, fades memory,
     // drifts relationships toward neutral, grows goal urgency, then
     // decides one Intent per mind.
     //
     // Stateless: time and tuning are inputs, never global state
     // (ADR-0014). The adapter calls this each game tick (0.4.0); tests
-    // call it directly.
+    // call it directly. When a non-null TickReport* is passed (0.8.0), the
+    // per-pass counts and wall time are filled; nullptr measures nothing.
     //-------------------------------------------------------------------------
     void Update(
         EntityRegistry& registry,
         double deltaSeconds,
         const SimulationTuning& tuning = {},
         LCE::Events::EventBus* events = nullptr,
-        const Rng* rng = nullptr);
+        const Rng* rng = nullptr,
+        TickReport* report = nullptr);
+
+    //-------------------------------------------------------------------------
+    // FixedStep (0.8.0 stone 14b)
+    //
+    // The timing-independent tick. The adapter feeds real frame deltas
+    // (which vary); the sim advances in whole fixed steps (which don't) —
+    // same seed + same steps = same world, whatever the frame rate. This
+    // is what makes "a year of sim time passes without drift" provable:
+    // variable frame deltas were the #1 drift source, and fixed steps
+    // remove them by construction.
+    //
+    // Update(delta) remains the raw primitive — every existing caller is
+    // untouched. This is an opt-in composition helper; the host chooses
+    // the cadence (Step, default 0.1s) and feeds it a frame delta each
+    // frame. Advance returns how many whole steps ran, so the caller
+    // knows how many intents were produced this frame.
+    //-------------------------------------------------------------------------
+    struct FixedStep
+    {
+        double Remaining = 0.0;   // partial step carried over
+        double Step = 0.1;        // sim cadence, in seconds
+
+        std::size_t Advance(
+            double frameDelta,
+            EntityRegistry& registry,
+            const SimulationTuning& tuning = {},
+            LCE::Events::EventBus* events = nullptr,
+            const Rng* rng = nullptr,
+            TickReport* report = nullptr);
+    };
 
     //-------------------------------------------------------------------------
     // Records an experience for the entity: appends it to Memory and

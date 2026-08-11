@@ -6,7 +6,7 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.7.0--alpha-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.8.0--alpha-emerald.svg)](#roadmap)
 [![Changelog](https://img.shields.io/badge/Changelog-Docs%2FCHANGELOG.md-emerald.svg)](Docs/CHANGELOG.md)
 
 ---
