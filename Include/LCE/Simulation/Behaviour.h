@@ -98,10 +98,17 @@ namespace LCE::Simulation
     // derived from the entity's ID — same seed + same entity = same
     // jitter, regardless of iteration order. Nullptr keeps the
     // deterministic id-hash noise; existing callers are untouched.
+    //
+    // desperateHunger (0.7.0 field finding): below this hunger value a
+    // remembered Trade world fact no longer blocks the trip — a starving
+    // mind pushes the shut door anyway, so an arrival can land on a
+    // closed market and the refusal can happen. 0.0 (the default) means
+    // no mind is ever desperate: existing behavior, untouched.
     //-------------------------------------------------------------------------
     [[nodiscard]]
     std::optional<Intent> Decide(
         const EntityRegistry& registry,
         EntityId id,
-        const Rng* rng = nullptr);
+        const Rng* rng = nullptr,
+        float desperateHunger = 0.0f);
 }

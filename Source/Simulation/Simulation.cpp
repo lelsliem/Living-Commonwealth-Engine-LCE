@@ -348,9 +348,10 @@ namespace LCE::Simulation
         std::vector<std::pair<EntityId, std::optional<Intent>>> decisions;
 
         registry.ForEachWithComponent<Needs>(
-            [&registry, &decisions, rng](EntityId id, const Needs&)
+            [&registry, &decisions, rng, &tuning](EntityId id, const Needs&)
             {
-                decisions.emplace_back(id, Decide(registry, id, rng));
+                decisions.emplace_back(
+                    id, Decide(registry, id, rng, tuning.HungerDesperate));
             });
 
         for (const auto& [id, intent] : decisions)
@@ -717,6 +718,7 @@ namespace LCE::Simulation
         tuning.DispositionLoss = read("sim.disposition.loss", tuning.DispositionLoss);
         tuning.NeedJitter = read("sim.jitter", tuning.NeedJitter);
         tuning.GroupInheritance = read("sim.group.inheritance", tuning.GroupInheritance);
+        tuning.HungerDesperate = read("sim.hunger.desperate", tuning.HungerDesperate);
         tuning.BequestFloor = read("sim.legacy.bequestFloor", tuning.BequestFloor);
         tuning.InheritanceScale = read("sim.legacy.inheritanceScale", tuning.InheritanceScale);
 

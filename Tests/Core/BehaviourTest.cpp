@@ -137,6 +137,76 @@ namespace LCE::Tests
             return false;   // the world fact must have blocked the trip
         }
 
+        // Desperate hunger (0.7.0 field finding): below sim.hunger.desperate
+        // the closed sign is ignored — a starving mind walks to the shut
+        // market anyway, so the arrival can land and the refusal happen.
+        // A moderate mind still respects the shut door.
+        const auto desperate = registry.CreateEntity();
+
+        registry.AddComponent<Simulation::Needs>(
+            desperate,
+            Simulation::Needs{
+                { Simulation::Need{ Simulation::NeedType::Hunger, 0.15f, 0.1f } }
+            });
+
+        Simulation::Remember(
+            registry, desperate, { merchant, Simulation::InteractionKind::Trade, 1.0f });
+        Simulation::Remember(
+            registry, desperate,
+            { Simulation::EntityId{}, Simulation::InteractionKind::Trade, 1.0f });
+
+        Simulation::SimulationTuning tuning;
+        tuning.HungerDesperate = 0.2f;
+
+        Simulation::Update(registry, 0.0, tuning);
+
+        const auto desperateIntent =
+            registry.GetComponent<Simulation::Intent>(desperate);
+
+        if (!desperateIntent)
+        {
+            return false;
+        }
+
+        if (desperateIntent->Action != Simulation::ActionType::MoveTo)
+        {
+            return false;   // desperate hunger pushes the shut door
+        }
+
+        if (desperateIntent->Target != merchant)
+        {
+            return false;   // and it still walks to the remembered trader
+        }
+
+        const auto moderate = registry.CreateEntity();
+
+        registry.AddComponent<Simulation::Needs>(
+            moderate,
+            Simulation::Needs{
+                { Simulation::Need{ Simulation::NeedType::Hunger, 0.3f, 0.1f } }
+            });
+
+        Simulation::Remember(
+            registry, moderate, { merchant, Simulation::InteractionKind::Trade, 1.0f });
+        Simulation::Remember(
+            registry, moderate,
+            { Simulation::EntityId{}, Simulation::InteractionKind::Trade, 1.0f });
+
+        Simulation::Update(registry, 0.0, tuning);
+
+        const auto moderateIntent =
+            registry.GetComponent<Simulation::Intent>(moderate);
+
+        if (!moderateIntent)
+        {
+            return false;
+        }
+
+        if (moderateIntent->Action == Simulation::ActionType::MoveTo)
+        {
+            return false;   // moderate hunger still respects the shut door
+        }
+
         // Danger awareness: safety is urgent and a fight is remembered —
         // the mind flees the one it fought.
         const auto wary = registry.CreateEntity();

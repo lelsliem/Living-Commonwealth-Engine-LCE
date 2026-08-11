@@ -231,7 +231,8 @@ namespace LCE::Simulation
     std::optional<Intent> Decide(
         const EntityRegistry& registry,
         EntityId id,
-        const Rng* rng)
+        const Rng* rng,
+        float desperateHunger)
     {
         // No drives, no decision. Only minds act.
         const auto needs = registry.GetComponent<Needs>(id);
@@ -258,10 +259,14 @@ namespace LCE::Simulation
             // The farmer goes to market: hunger is urgent, memory says the
             // merchant trades, and trust favours them. No script fired.
             // Unless the world is shut: a remembered Trade world fact
-            // (invalid Other) blocks the trip while it lasts.
+            // (invalid Other) blocks the trip while it lasts — except for
+            // the desperate (0.7.0 field finding): below the desperate
+            // threshold the closed sign is ignored, so a starving mind
+            // walks to the shut door anyway and the refusal can happen.
             const auto memory = registry.GetComponent<Memory>(id);
+            const bool desperate = urgent->Value < desperateHunger;
 
-            if (memory && IsUnavailable(*memory, InteractionKind::Trade))
+            if (!desperate && memory && IsUnavailable(*memory, InteractionKind::Trade))
             {
                 intent.Action = ActionType::Explore;   // market closed
             }

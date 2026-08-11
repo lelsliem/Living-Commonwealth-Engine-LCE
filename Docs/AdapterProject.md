@@ -470,12 +470,17 @@ optional blob (registered via `RegisterLegacySerializer`), absent
 in old records — a Restore simply starts with no legacies. The
 adapter's own record versioning still layers on top, as always.
 
-## The conflict source is blocked — a field finding (2026-08-11)
+## The conflict source was blocked — a field finding, now fixed (2026-08-11)
 
 Proving 0.7.0 in-game surfaced a real blocker in the core's Decide:
-**the slight can never fire, so feuds cannot begin.** The adapter
-requests one engine change — "desperate hunger ignores the closed
-sign."
+**the slight could never fire, so feuds could not begin.** The adapter
+requested one engine change — "desperate hunger ignores the closed
+sign." **Shipped (engine commit `1b82478`):** `sim.hunger.desperate`
+(default 0.0 = never desperate, unchanged behavior; the adapter sets
+0.2 in its INI). Below the threshold a mind still chooses MoveTo to
+the remembered market while the Trade fact is unavailable; moderate
+hunger still respects the shut door. Awaiting the adapter's in-game
+verification against the verify sentence below.
 
 **The finding (verified in-game, not theory):** the adapter refreshes
 the market-closed world fact (`{ invalid, Trade }`) to full weight

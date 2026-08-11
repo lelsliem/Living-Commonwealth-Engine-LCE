@@ -22,6 +22,13 @@ remaining gate.
   LeaveLegacy/ReadLegacy/ForgetLegacy, permanent until the world
   deletes, riding the co-save through the world's serializer
   (snapshot schema v2). Proven by the WorldLegacy suite.
+- sim.hunger.desperate (field fix, the adapter's handover `81cfe48`)
+  — below the threshold a remembered Trade world fact no longer
+  blocks the trip: a starving mind pushes the shut door, so an
+  arrival can land on a closed market and the refusal can happen.
+  Default 0.0 = never desperate, existing behavior untouched; the
+  adapter sets 0.2 in its INI. Proven by the Behaviour and Tuning
+  suites. Awaiting the adapter's in-game verification.
 - 28/28 test suites green.
 Each entry is a released milestone — see Docs/Roadmap.md for the full
 arc and Docs/milestone.md for the in-flight story.

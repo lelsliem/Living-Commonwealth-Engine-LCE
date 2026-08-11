@@ -96,6 +96,7 @@ namespace LCE::Simulation
         float DispositionLoss = 0.25f;   // wrongs and fights sour them
         float NeedJitter = 0.15f;        // per-mind metabolism spread (±15%)
         float GroupInheritance = 0.5f;   // how strongly a feeling reaches group-mates
+        float HungerDesperate = 0.0f;    // below this hunger the closed sign is ignored
 
         // 0.7.0 Legacy — what survives the entity (stones 10-12).
         float BequestFloor = 0.5f;       // salience below which a fact stays with the dead

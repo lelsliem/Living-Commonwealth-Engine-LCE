@@ -39,7 +39,8 @@ namespace LCE::Tests
                 tuning.GoalUrgencyRate != 0.1f ||
                 tuning.TrustGain != 0.15f ||
                 tuning.DispositionGain != 0.1f ||
-                tuning.DispositionLoss != 0.25f)
+                tuning.DispositionLoss != 0.25f ||
+                tuning.HungerDesperate != 0.0f)
             {
                 return false;
             }
@@ -58,6 +59,7 @@ namespace LCE::Tests
             config.Set("sim.trust.gain", "0.5");
             config.Set("sim.disposition.gain", "0.3");
             config.Set("sim.disposition.loss", "0.1");
+            config.Set("sim.hunger.desperate", "0.2");
 
             const auto tuning = Simulation::SimulationTuning::FromConfiguration(config);
 
@@ -67,7 +69,8 @@ namespace LCE::Tests
                 tuning.GoalUrgencyRate != 0.2f ||
                 tuning.TrustGain != 0.5f ||
                 tuning.DispositionGain != 0.3f ||
-                tuning.DispositionLoss != 0.1f)
+                tuning.DispositionLoss != 0.1f ||
+                tuning.HungerDesperate != 0.2f)
             {
                 return false;
             }
