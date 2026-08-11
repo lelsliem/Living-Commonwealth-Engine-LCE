@@ -407,6 +407,36 @@ job by design. The core stays a stateless, world-free tick.
 
 ---
 
+## Negative social weighting — decided: kind and result, never a sign (2026-08-11)
+
+The adapter asked whether Remember can write a negative social effect, or
+whether the core wants a sign parameter. Decided: as-is — no hand-over,
+no sign parameter.
+
+- In Remember the direction lives in the Kind, and event.Weight is never
+  consulted for relationship effects — weight is memory salience only
+  (fade). Aid/Social always add DispositionGain (+0.1); Wronged/Combat
+  always subtract DispositionLoss (-0.25); Trade always gains TrustGain
+  (+0.15). A negative weight would cool nothing and be a memory that
+  starts below the forget threshold — instantly forgotten.
+- Valence belongs to the kind of experience; salience to how strongly it
+  is remembered. A sign on the weight would fuse the two axes and change
+  the meaning of every existing kind.
+- The two designed channels for "negative social":
+  1. Executed intents that went badly -> ReportOutcome(Other, Social,
+     Failure). ResultScale: Success +1.0, Partial +0.5, Failure -1.0, so
+     a failed social costs -0.1 disposition and the group echo carries
+     the same sign. This also serves/frustrates the goal and consumes
+     the intent — right for an attempted interaction.
+  2. Unprompted negative experiences -> Remember(Other, Wronged), -0.25.
+- Footgun: Remember with Kind=Trade always gains trust — a failed trade
+  recorded as a memory would wrongly build trust. Executed interactions
+  go through ReportOutcome; experiences go through Remember.
+- If a distinctly social negative is ever needed (a courtship snub that
+  cools by less than a wrong), the tool is a new InteractionKind
+  (append-only ordinal, the Death precedent), not a sign parameter. Ask
+  with the concrete beat and the core will add it.
+
 ## Canonical Copy
 
 The Living Commonwealth Engine repo owns this document. The adapter

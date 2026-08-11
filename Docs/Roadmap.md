@@ -291,12 +291,28 @@ Birth, death, inheritance — what survives the entity. The stone
 Memory & Legacy stands on, and the calendar makes it real: entities
 remember decades.
 
-[ ] Death lifecycle — what an entity bequeaths as it goes
-[ ] Generational handoff — descendants inherit memory, selectively
-[ ] Legacy as world fact — the promise that outlives its maker
+Design locked 2026-08-11 — Docs/Design/Legacy.md: bequest floor 0.5 /
+inheritance scale 0.5 / permanent legacies with explicit ForgetLegacy,
+the predicate seam, and the grandson proof as the Inheritance suite's
+integration block.
+
+[ ] Stone 10 — Death lifecycle: Bequeath — the world names the heirs,
+    the core keeps what salience merits (sim.legacy.bequestFloor);
+    the dead's facts pass to the living, scaled, their own age intact
+[ ] Stone 11 — Generational handoff: InheritMemory — the world's
+    predicate selects, the core scales (sim.legacy.inheritanceScale)
+    and ages (sim.legacy.maxAgeDays); the story travels on the memory
+    channel, the grudge rides InheritGroupAttitudes
+[ ] Stone 12 — Legacy as world fact: LeaveLegacy / ReadLegacy /
+    ForgetLegacy — the promise that outlives its maker; a
+    registry-level store with its own snapshot section (schema v2),
+    permanent until the world deletes (decay is a 0.8.0 Scale
+    question, per-fact when it arrives)
 
 Proof: a settler's grandson carries the feud to the market and
-refuses the merchant — the memory outlived its owner.
+refuses the merchant — the memory outlived its owner (the Inheritance
+suite's integration block: wrong -> family echo -> inherited story +
+seeded grudge -> Decide refuses).
 
 ═══════════════════════════════════════════════
 
