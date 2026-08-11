@@ -12,11 +12,11 @@ Project Roadmap
 
 Status
 
-Current Version : 0.5.0-alpha
+Current Version : 0.6.0-alpha
 
-Current Stage   : SDK & Samples — core contract complete
+Current Stage   : Society — bonds, groups & traits complete
 
-Next Milestone  : 0.6.0 — Society
+Next Milestone  : 0.7.0 — Legacy
 
 ═══════════════════════════════════════════════
 
@@ -160,6 +160,9 @@ milestone, all verified in-game):
 
 ═══════════════════════════════════════════════
 
+STATUS: COMPLETE ✅ — both repos live, tagged, and released; the
+adapter verified the full loop in-game.
+
 The engine becomes something a developer can actually pick up.
 An internal milestone — the doors open to GitHub, not to testers.
 Public beta is 0.9.0. Discord is dropped; feedback runs through
@@ -224,7 +227,8 @@ The SDK:
     (spdlog rides in the export set).
 [✓] First GitHub releases — engine (MIT) and mod (GPL), two repos,
     both live and public 2026-08-10 (Living-Commonwealth-Engine-LCE-
-    and The-Commonwealth-Lives). v0.5.0 tags + release notes pending.
+    and The-Commonwealth-Lives). v0.5.0 tags pushed on both repos;
+    release notes live on the adapter (0.5.0-beta and 0.6.0-beta).
 
 [✓] Documentation Review — Docs/SDK/Embedding.md is the embedding
     course (both paths, what not to do, verified); the LearningPath
@@ -242,6 +246,10 @@ survives save/load.
 0.6.0 — Society · "The Bonds Between Minds"
 
 ═══════════════════════════════════════════════
+
+STATUS: COMPLETE ✅ — core and adapter shipped together; the adapter
+released 0.6.0-beta 2026-08-11 and verified bonds, households, gossip,
+grief, and births in-game. The feud arc waits on 0.7.0's conflicts.
 
 [✓] Bond thresholds + RelationshipChanged (stone 08, SHIPPED
     2026-08-10) — the watch-list the world names

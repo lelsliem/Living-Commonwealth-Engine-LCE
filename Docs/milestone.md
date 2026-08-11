@@ -219,11 +219,15 @@ real target), and packaging (install targets + find_package(LCE),
 verified end to end by a consumer build; Docs/SDK/Embedding.md is the
 official recipe). Both GitHub repos are live and public.
 
-What remains of 0.5.0: the formal GitHub release notes (the v0.5.0
-tags are pushed on both repos).
+0.5.0 is CLOSED: the v0.5.0 tags are pushed on both repos and the
+release notes are live — the adapter ships 0.5.0-beta and 0.6.0-beta
+on GitHub.
 
-0.6.0 — Society is in full swing. Stone 08 — Bond thresholds +
-RelationshipChangedEvent (the adapter's Request A) — is SHIPPED: the
+0.6.0 — Society is DONE: the adapter released 0.6.0-beta
+(2026-08-11) and verified the milestone in-game — bonds form, couples
+marry into households, deaths spread as gossip, sim-only children are
+born and grow. Stone 08 — Bond thresholds + RelationshipChangedEvent
+(the adapter's Request A) — is SHIPPED: the
 world names its own bond lines (sim.bond.threshold.*); an experience
 crossing one publishes the moment, edge-triggered and drift-quiet;
 proven by the BondThreshold suite. Stone 09 — Society: Groups &
@@ -233,7 +237,8 @@ at sim.group.inheritance — one wrong, a settlement turns cold);
 InheritGroupAttitudes (feelings inherit from the group's
 experiences, then diverge); and the Traits substrate
 (JitteredTraits, deterministic under the seeded RNG, influence
-adapter-side). 25/25 suites green. Then 0.7.0 Legacy (birth, death,
-inheritance) · 0.8.0 Scale (a settlement, not a village) · 0.9.0
-Release Candidate + Public Beta (the freeze; Nexus + GitHub, no
-Discord) · 1.0.0 Release (the promise, made good).
+adapter-side). 25/25 suites green. The feud arc waits on 0.7.0's
+conflicts. 0.7.0 Legacy (birth, death, inheritance) · 0.8.0 Scale (a
+settlement, not a village) · 0.9.0 Release Candidate + Public Beta
+(the freeze; Nexus + GitHub, no Discord) · 1.0.0 Release (the
+promise, made good).

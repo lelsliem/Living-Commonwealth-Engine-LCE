@@ -6,7 +6,7 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.5.0--alpha-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.6.0--alpha-emerald.svg)](#roadmap)
 
 ---
 
@@ -68,10 +68,11 @@ point it at a project, get a plain pass/fail log), and packaging —
 `cmake --install`, then a consumer links `LCE::Core` through
 `find_package(LCE)` with nothing else on the path. The official recipe is
 [Docs/SDK/Embedding.md](Docs/SDK/Embedding.md). The two GitHub repos are
-live and tagged v0.5.0. The 0.6.0 Society milestone is underway — bond
+live and tagged v0.5.0. The 0.6.0 Society milestone is done — bond
 thresholds + `RelationshipChangedEvent` (the adapter's ask, stone 08)
 and the Society layer (groups, the settlement rally, inherited
-attitudes, the traits substrate, stone 09) are in.
+attitudes, the traits substrate, stone 09) — and the adapter released
+0.6.0-beta (2026-08-11), verified in-game.
 
 **The ladder beyond:**
 
@@ -150,8 +151,8 @@ each adapter's own project, never in the core.
 | 0.3.0 | Simulation | ✅ |
 | 0.3.1 | Simulation Polish | ✅ |
 | 0.4.0 | Platform Integration — Fallout 4 Adapter | ✅ |
-| 0.5.0 | SDK & Samples — "The Consumable Engine" | ✅ (v0.5.0 tags pending) |
-| 0.6.0 | Society — groups & traits | ⬜ |
+| 0.5.0 | SDK & Samples — "The Consumable Engine" | ✅ |
+| 0.6.0 | Society — groups & traits | ✅ |
 | 0.7.0 | Legacy — birth, death, inheritance | ⬜ |
 | 0.8.0 | Scale — a settlement, not a village | ⬜ |
 | 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
