@@ -72,11 +72,15 @@ point it at a project, get a plain pass/fail log), and packaging —
 `cmake --install`, then a consumer links `LCE::Core` through
 `find_package(LCE)` with nothing else on the path. The official recipe is
 [Docs/SDK/Embedding.md](Docs/SDK/Embedding.md). The two GitHub repos are
-live and tagged (v0.5.0, v0.6.0). The 0.6.0 Society milestone is done — bond
-thresholds + `RelationshipChangedEvent` (the adapter's ask, stone 08)
-and the Society layer (groups, the settlement rally, inherited
-attitudes, the traits substrate, stone 09) — and the adapter released
-0.6.0-beta (2026-08-11), verified in-game.
+live and tagged (v0.5.0, v0.6.0, v0.7.0). The 0.6.0 Society
+milestone is done — bond thresholds + `RelationshipChangedEvent`
+(the adapter's ask, stone 08) and the Society layer (groups, the
+settlement rally, inherited attitudes, the traits substrate, stone
+09) — and the adapter released 0.6.0-beta (2026-08-11), verified
+in-game. The 0.7.0 Legacy milestone is done too — Bequeath,
+InheritMemory, the legacy store, and the desperate-hunger gate —
+with the feud chain (shut stall → blame → rival → mediated grudge)
+verified in-game by the adapter's 0.7.0 release.
 
 **The ladder beyond:**
 
@@ -157,7 +161,7 @@ each adapter's own project, never in the core.
 | 0.4.0 | Platform Integration — Fallout 4 Adapter | ✅ |
 | 0.5.0 | SDK & Samples — "The Consumable Engine" | ✅ |
 | 0.6.0 | Society — groups & traits | ✅ |
-| 0.7.0 | Legacy — birth, death, inheritance | ⬜ |
+| 0.7.0 | Legacy — birth, death, inheritance | ✅ |
 | 0.8.0 | Scale — a settlement, not a village | ⬜ |
 | 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
 | 1.0.0 | Release | ⬜ |

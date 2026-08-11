@@ -14,7 +14,7 @@ Status
 
 Current Version : 0.7.0-alpha
 
-Current Stage   : Legacy — engine side shipped; adapter verification pending
+Current Stage   : Legacy — complete (core + adapter, verified in-game)
 
 Next Milestone  : 0.8.0 — Scale
 
@@ -317,10 +317,16 @@ integration block.
 Proof: a settler's grandson carries the feud to the market and
 refuses the merchant — the memory outlived its owner (the Inheritance
 suite's integration block: wrong -> family echo -> inherited story +
-seeded grudge -> Decide refuses). The engine side is complete
-(28/28 suites); the adapter's in-game verification is the remaining
-gate — Bequeath in its death path, InheritMemory in Birth::Create,
-LeaveLegacy on death.
+seeded grudge -> Decide refuses).
+
+STATUS: COMPLETE ✅ — engine 28/28 suites; the adapter wired the
+three into its death/birth paths and verified the whole chain
+in-game: the desperate-hunger gate (sim.hunger.desperate, core
+509a54d) let an arrival land on a shut bench, the refusal fired
+(ReportOutcome {keeper, Social, Failure}), the settlement echo
+spread it, rival bonds formed, and feuds were mediated by neighbors
+(23 feuds, 127 mediation attempts in one stressed session; 673 minds
+restored with zero errors).
 
 ═══════════════════════════════════════════════
 

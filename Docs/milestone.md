@@ -254,9 +254,9 @@ Nexus + GitHub, no Discord) · 1.0.0 Release (the promise, made good).
 
 Milestone 0.7.0 — Legacy · "The Debt to the Past"
 
-STATUS: IN PROGRESS 🔄 — engine side shipped 2026-08-11 (28/28
-suites green); the adapter's in-game verification is the remaining
-gate.
+STATUS: COMPLETE ✅ — engine 28/28 suites; the adapter's 0.7.0
+verified in-game the same day (names on actors, the feud chain from
+shut stall to mediated grudge, the news feed and radio).
 
 Stone 10 — Bequeath ✅ (engine side): the world names the heirs, the
 core keeps what salience merits — the dead's facts pass to the
@@ -279,5 +279,11 @@ Proven by the WorldLegacy suite, including the save/load round-trip
 and the world-teaches seam.
 
 Design: Docs/Design/Legacy.md (locked 2026-08-11). The adapter's
-0.7.0 wires the three: Bequeath in the death path, InheritMemory in
-Birth::Create, LeaveLegacy on death.
+0.7.0 wired the three — Bequeath in the death path, InheritMemory in
+Birth::Create, LeaveLegacy on death — and proved the feud end to end
+in-game: shut stalls -> desperate arrivals (sim.hunger.desperate 0.2)
+-> the keeper blamed -> rival bonds -> feud gossip -> a neighbor
+cooled it (23 feuds, 127 mediation attempts in one stressed session;
+673 minds, 78 bonds, 10 stall-keepers, 4 children restored with zero
+errors). The engine's field-fix for the same chain — desperate hunger
+ignores the closed sign (core 509a54d) — is verified in the wild.

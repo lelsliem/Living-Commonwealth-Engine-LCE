@@ -4,9 +4,9 @@ All notable changes to the Living Commonwealth Engine (LCE).
 
 ## [0.7.0] — 2026-08-11 — Legacy · "The Debt to the Past"
 
-Engine side shipped (design locked the same day —
-Docs/Design/Legacy.md); the adapter's in-game verification is the
-remaining gate.
+Engine and adapter shipped together and verified in-game
+(2026-08-11): the feud chain ran in the wild — shut stalls, desperate
+arrivals, blame, rival bonds, mediated grudges.
 
 - Bequeath (stone 10) — what an entity bequeaths as it goes: the
   world names the heirs; the core keeps facts at or above
@@ -28,7 +28,8 @@ remaining gate.
   arrival can land on a closed market and the refusal can happen.
   Default 0.0 = never desperate, existing behavior untouched; the
   adapter sets 0.2 in its INI. Proven by the Behaviour and Tuning
-  suites. Awaiting the adapter's in-game verification.
+  suites and verified in-game by the adapter (the feud's gate, now
+  live).
 - 28/28 test suites green.
 Each entry is a released milestone — see Docs/Roadmap.md for the full
 arc and Docs/milestone.md for the in-flight story.
