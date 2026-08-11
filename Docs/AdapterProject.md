@@ -475,12 +475,25 @@ adapter's own record versioning still layers on top, as always.
 Proving 0.7.0 in-game surfaced a real blocker in the core's Decide:
 **the slight could never fire, so feuds could not begin.** The adapter
 requested one engine change — "desperate hunger ignores the closed
-sign." **Shipped (engine commit `1b82478`):** `sim.hunger.desperate`
+sign." **Shipped (engine commit `509a54d`):** `sim.hunger.desperate`
 (default 0.0 = never desperate, unchanged behavior; the adapter sets
 0.2 in its INI). Below the threshold a mind still chooses MoveTo to
 the remembered market while the Trade fact is unavailable; moderate
-hunger still respects the shut door. Awaiting the adapter's in-game
-verification against the verify sentence below.
+hunger still respects the shut door.
+
+**Verified in-game by the adapter (2026-08-11).** With the market
+forced shut and hunger high, the whole chain ran in the wild: `the
+stall at 00054BAE is shut — Paladin Danse went hungry and blames the
+keeper` → rival bonds (the direct −0.1 plus the settlement echo) →
+`X is feuding with Y` → feud gossip → `arcs: Titus Pratt cooled the
+feud between …` (23 feuds and 127 mediation attempts in one stressed
+session; a clean build restored 673 minds, 78 bonds, 10 stall-keepers,
+4 children with zero errors). Two adapter-side fixes were needed on
+top of the gate — the feud headline now fires on any crossing into
+Enemy, and the feud is mediated at formation (the adapter's gossip
+dies in ~4.5 s at its sim.memory.fade 0.2, so its once-per-day pass
+could never find a mediator) — both adapter commits, no further core
+changes needed. The verify sentence below is met.
 
 **The finding (verified in-game, not theory):** the adapter refreshes
 the market-closed world fact (`{ invalid, Trade }`) to full weight
