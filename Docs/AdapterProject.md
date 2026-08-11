@@ -470,6 +470,45 @@ optional blob (registered via `RegisterLegacySerializer`), absent
 in old records — a Restore simply starts with no legacies. The
 adapter's own record versioning still layers on top, as always.
 
+## The conflict source is blocked — a field finding (2026-08-11)
+
+Proving 0.7.0 in-game surfaced a real blocker in the core's Decide:
+**the slight can never fire, so feuds cannot begin.** The adapter
+requests one engine change — "desperate hunger ignores the closed
+sign."
+
+**The finding (verified in-game, not theory):** the adapter refreshes
+the market-closed world fact (`{ invalid, Trade }`) to full weight
+**every second** while the market is shut, and Decide's Trade branch
+suppresses MoveTo while that fact is remembered (`IsUnavailable` →
+Explore). The suppression propagates within a second of the close —
+and because Explore executes as a new game command, it *replaces* a
+walk in flight: the settler stops approaching and wanders instead.
+The design's "a walk already in flight still arrives" does not hold;
+the straggler window is effectively zero. Observed in-game: after the
+close, 555 walk sessions ended with closest-approach 200–1900 u and
+zero arrivals; 47 arrivals occurred, all before the close.
+
+**The ask — one line in Decide's Trade branch:** a mind whose hunger
+is critical still chooses MoveTo to the remembered market even when
+the Trade fact is unavailable. The arrival then lands on the closed
+bench, the adapter reports `ReportOutcome({keeper, Social, Failure})`
+(−0.1), the settlement echo spreads it, and the feud becomes real
+and testable. This is the designed famine machinery too: when the
+market cannot feed the settlement, refusals multiply and slights
+compound.
+
+**Suggested gate:** a hunger threshold, e.g. `sim.hunger.desperate`
+(adapter default 0.2 — below ~20% hunger the closed sign is
+ignored), input to Decide like the other tuning. Moderate hunger
+still respects the shut door; only desperate minds push it.
+
+**Verify sentence after the change:** set the market to close ~30
+minutes of game time after session start (open 00:00, close 20:30),
+with high hunger decay — the close lands mid-flow, in-flight walks
+finish to the shut bench, and the log shows `is shut … and blames
+the keeper`, a rival bond, and the feud arc.
+
 ## Canonical Copy
 
 The Living Commonwealth Engine repo owns this document. The adapter
