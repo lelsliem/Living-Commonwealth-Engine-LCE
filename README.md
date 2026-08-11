@@ -6,7 +6,7 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.6.0--alpha-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.7.0--alpha-emerald.svg)](#roadmap)
 [![Changelog](https://img.shields.io/badge/Changelog-Docs%2FCHANGELOG.md-emerald.svg)](Docs/CHANGELOG.md)
 
 ---
@@ -39,7 +39,7 @@ adapter executes intents in the game — and pushes world facts back in as
 memories. No quest script anywhere.
 
 The 0.5.0 boundary contract — the decide → act → observe → remember loop —
-is complete and proven (25/25 test suites green):
+is complete and proven (28/28 test suites green):
 
 - **Tuning** — the modder's knob: one text file sets the world's
   personality.
@@ -52,8 +52,9 @@ is complete and proven (25/25 test suites green):
   iteration order — "everyone hungry", "who remembers the raid".
 - **Seeded RNG** — splitmix64, one word of state: a single number in the
   save resumes the exact randomness.
-- **World calendar** — memories anchored to world days and seasons; the
-  substrate for 0.7.0 Legacy.
+- **World calendar** — memories anchored to world days and seasons — the
+  substrate 0.7.0 Legacy now stands on (Bequeath, InheritMemory, the
+  legacy store).
 - **Per-mind decay jitter** — every mind has its own metabolism: no two
   settlers get hungry on the same clock (`sim.jitter` is the knob).
 
@@ -114,7 +115,7 @@ The harness reports every suite by name:
 [ RUN  ] SimulationTick
 [  OK  ] SimulationTick
 
-25/25 suites passed.
+28/28 suites passed.
 ```
 
 ## Repository map

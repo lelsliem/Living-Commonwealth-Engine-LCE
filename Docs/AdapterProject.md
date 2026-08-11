@@ -58,7 +58,7 @@ The adapter is an F4SE plugin built on CommonLibF4 (`F4SE::Init`,
 ## The core's 0.4.0 side is built — what the adapter gains
 
 At 0.4.0 the core shipped `0.4.0-alpha` (14/14 suites then); the
-current core is 0.6.0-alpha, 25/25 suites green. Two things changed
+current core is 0.7.0-alpha, 28/28 suites green. Two things changed
 at 0.4.0 that still matter to this project:
 
 1. **The boundary is the public API only.** The old
@@ -98,7 +98,8 @@ at 0.4.0 that still matter to this project:
 
 ## The core's 0.5.0 side is built — the complete boundary contract
 
-The core is at `0.5.0` (25/25 suites green). All seven stones of the
+At 0.5.0 the core shipped `0.5.0-alpha` (25/25 suites then); the
+current core is 0.7.0-alpha, 28/28 suites. All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
 calendar, per-mind decay jitter) — and stone 08 (bond thresholds +
@@ -436,6 +437,38 @@ no sign parameter.
   cools by less than a wrong), the tool is a new InteractionKind
   (append-only ordinal, the Death precedent), not a sign parameter. Ask
   with the concrete beat and the core will add it.
+
+## The core's 0.7.0 side is built — Legacy (hand-over 2026-08-11)
+
+Engine side of 0.7.0 is done and waiting (28/28 suites; design in
+Docs/Design/Legacy.md). The world names the people; the core owns
+the mechanics. Three one-liners for the adapter's death and birth
+paths:
+
+1. **Bequeath** — `Bequeath(registry, dying, heirs)` before
+   `DestroyEntity`: the dead's facts at or above
+   sim.legacy.bequestFloor pass to the heirs, scaled by
+   sim.legacy.inheritanceScale, their own world day intact. Heirs
+   fall out of the adapter's household bonds. Append, never
+   overwrite; heir order is deterministic.
+2. **InheritMemory** — `InheritMemory(registry, child, parent,
+   tuning, time, predicate)` in Birth::Create where the child is
+   seeded blank: the world's predicate selects (parents' memories
+   about people the child can know), the core scales and ages
+   (sim.legacy.maxAgeDays). The grudge still rides
+   InheritGroupAttitudes — the story travels on the memory
+   channel, the feud on the group echo.
+3. **Legacy as world fact** — `registry.LeaveLegacy({ owner, day,
+   name, weight })` on death ("the miller's pledge"), read with
+   `ReadLegacy`, retired with `ForgetLegacy`; teach a mind by
+   `Remember`-ing it as a world fact when the mind reaches the
+   place. Permanent until the world deletes — decay is a 0.8.0
+   Scale question.
+
+Snapshot schema is v2: the registry-level Legacy section is an
+optional blob (registered via `RegisterLegacySerializer`), absent
+in old records — a Restore simply starts with no legacies. The
+adapter's own record versioning still layers on top, as always.
 
 ## Canonical Copy
 

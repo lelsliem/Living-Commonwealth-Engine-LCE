@@ -12,11 +12,11 @@ Project Roadmap
 
 Status
 
-Current Version : 0.6.0-alpha
+Current Version : 0.7.0-alpha
 
-Current Stage   : Society — bonds, groups & traits complete
+Current Stage   : Legacy — engine side shipped; adapter verification pending
 
-Next Milestone  : 0.7.0 — Legacy
+Next Milestone  : 0.8.0 — Scale
 
 ═══════════════════════════════════════════════
 
