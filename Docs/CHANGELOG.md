@@ -1,6 +1,28 @@
 # Changelog
 
 All notable changes to the Living Commonwealth Engine (LCE).
+
+## [0.7.0] — 2026-08-11 — Legacy · "The Debt to the Past"
+
+Engine side shipped (design locked the same day —
+Docs/Design/Legacy.md); the adapter's in-game verification is the
+remaining gate.
+
+- Bequeath (stone 10) — what an entity bequeaths as it goes: the
+  world names the heirs; the core keeps facts at or above
+  sim.legacy.bequestFloor, scaled by sim.legacy.inheritanceScale,
+  their own world day intact. Append, never overwrite;
+  deterministic heir order. Proven by the Bequeath suite.
+- InheritMemory (stone 11) — descendants inherit memory,
+  selectively: the world's predicate selects; the core scales and
+  ages (sim.legacy.maxAgeDays). The grandson proof is the
+  Inheritance suite's integration block — the feud outlived its
+  owner.
+- Legacy as world fact (stone 12) — LegacyFact + LegacyStore:
+  LeaveLegacy/ReadLegacy/ForgetLegacy, permanent until the world
+  deletes, riding the co-save through the world's serializer
+  (snapshot schema v2). Proven by the WorldLegacy suite.
+- 28/28 test suites green.
 Each entry is a released milestone — see Docs/Roadmap.md for the full
 arc and Docs/milestone.md for the in-flight story.
 

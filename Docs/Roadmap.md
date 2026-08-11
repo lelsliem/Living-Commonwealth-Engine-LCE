@@ -296,15 +296,20 @@ inheritance scale 0.5 / permanent legacies with explicit ForgetLegacy,
 the predicate seam, and the grandson proof as the Inheritance suite's
 integration block.
 
-[ ] Stone 10 — Death lifecycle: Bequeath — the world names the heirs,
-    the core keeps what salience merits (sim.legacy.bequestFloor);
-    the dead's facts pass to the living, scaled, their own age intact
-[ ] Stone 11 — Generational handoff: InheritMemory — the world's
-    predicate selects, the core scales (sim.legacy.inheritanceScale)
-    and ages (sim.legacy.maxAgeDays); the story travels on the memory
-    channel, the grudge rides InheritGroupAttitudes
-[ ] Stone 12 — Legacy as world fact: LeaveLegacy / ReadLegacy /
-    ForgetLegacy — the promise that outlives its maker; a
+[✓] Stone 10 — Death lifecycle: Bequeath (engine side SHIPPED
+    2026-08-11, proven by the Bequeath suite) — the world names the
+    heirs, the core keeps what salience merits
+    (sim.legacy.bequestFloor); the dead's facts pass to the living,
+    scaled, their own age intact
+[✓] Stone 11 — Generational handoff: InheritMemory (engine side
+    SHIPPED 2026-08-11, proven by the Inheritance suite) — the
+    world's predicate selects, the core scales
+    (sim.legacy.inheritanceScale) and ages (sim.legacy.maxAgeDays);
+    the story travels on the memory channel, the grudge rides
+    InheritGroupAttitudes
+[✓] Stone 12 — Legacy as world fact: LeaveLegacy / ReadLegacy /
+    ForgetLegacy (engine side SHIPPED 2026-08-11, proven by the
+    WorldLegacy suite) — the promise that outlives its maker; a
     registry-level store with its own snapshot section (schema v2),
     permanent until the world deletes (decay is a 0.8.0 Scale
     question, per-fact when it arrives)
@@ -312,7 +317,10 @@ integration block.
 Proof: a settler's grandson carries the feud to the market and
 refuses the merchant — the memory outlived its owner (the Inheritance
 suite's integration block: wrong -> family echo -> inherited story +
-seeded grudge -> Decide refuses).
+seeded grudge -> Decide refuses). The engine side is complete
+(28/28 suites); the adapter's in-game verification is the remaining
+gate — Bequeath in its death path, InheritMemory in Birth::Create,
+LeaveLegacy on death.
 
 ═══════════════════════════════════════════════
 

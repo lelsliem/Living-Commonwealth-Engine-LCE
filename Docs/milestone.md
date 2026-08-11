@@ -251,3 +251,33 @@ grow. The feud arc waits on 0.7.0's conflicts. 25/25 suites green.
 0.7.0 Legacy (birth, death, inheritance) · 0.8.0 Scale (a settlement,
 not a village) · 0.9.0 Release Candidate + Public Beta (the freeze;
 Nexus + GitHub, no Discord) · 1.0.0 Release (the promise, made good).
+
+Milestone 0.7.0 — Legacy · "The Debt to the Past"
+
+STATUS: IN PROGRESS 🔄 — engine side shipped 2026-08-11 (28/28
+suites green); the adapter's in-game verification is the remaining
+gate.
+
+Stone 10 — Bequeath ✅ (engine side): the world names the heirs, the
+core keeps what salience merits — the dead's facts pass to the
+living, scaled, their own age intact (the story's age survives the
+transfer). Proven by the Bequeath suite, including the
+settlement-remembers-the-miller proof (feelings toward the dead
+live in survivors' relationship stores and outlive DestroyEntity).
+
+Stone 11 — InheritMemory ✅ (engine side): the world's predicate
+selects, the core scales and ages. The integration block is the
+roadmap's proof: a settler's grandson carries the feud to the
+market and refuses the merchant — the memory outlived its owner,
+the story on the memory channel and the grudge on the group echo.
+
+Stone 12 — Legacy as world fact ✅ (engine side): LeaveLegacy /
+ReadLegacy / ForgetLegacy — the promise that outlives its maker;
+the registry-level store rides the co-save (snapshot schema v2),
+permanent until the world deletes, decay a 0.8.0 Scale question.
+Proven by the WorldLegacy suite, including the save/load round-trip
+and the world-teaches seam.
+
+Design: Docs/Design/Legacy.md (locked 2026-08-11). The adapter's
+0.7.0 wires the three: Bequeath in the death path, InheritMemory in
+Birth::Create, LeaveLegacy on death.
