@@ -61,7 +61,9 @@ The Fallout 4 adapter — [The Commonwealth Lives](https://github.com/lelsliem/T
 a separate project — already translates settlers into entities, walks
 them to market, and saves 637 minds through the co-save.
 
-## What LCE will do**The 0.5.0 SDK side is done:** the Sample Host (`Samples/SampleHost` — a
+## What LCE will do
+
+**The 0.5.0 SDK side is done:** the Sample Host (`Samples/SampleHost` — a
 runnable non-game host: the money test live, fair twice then cheated
 twice, save at Day 4 and the lesson survives), Sample Modules (farmer,
 village with a grudge, day-stamped market), LCE Doctor (CLI validation:
@@ -69,7 +71,7 @@ point it at a project, get a plain pass/fail log), and packaging —
 `cmake --install`, then a consumer links `LCE::Core` through
 `find_package(LCE)` with nothing else on the path. The official recipe is
 [Docs/SDK/Embedding.md](Docs/SDK/Embedding.md). The two GitHub repos are
-live and tagged v0.5.0. The 0.6.0 Society milestone is done — bond
+live and tagged (v0.5.0, v0.6.0). The 0.6.0 Society milestone is done — bond
 thresholds + `RelationshipChangedEvent` (the adapter's ask, stone 08)
 and the Society layer (groups, the settlement rally, inherited
 attitudes, the traits substrate, stone 09) — and the adapter released

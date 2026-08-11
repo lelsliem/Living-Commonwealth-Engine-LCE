@@ -57,8 +57,9 @@ The adapter is an F4SE plugin built on CommonLibF4 (`F4SE::Init`,
 
 ## The core's 0.4.0 side is built — what the adapter gains
 
-The core is now `0.4.0-alpha`, 14/14 suites green. Two things changed
-that matter to this project:
+At 0.4.0 the core shipped `0.4.0-alpha` (14/14 suites then); the
+current core is 0.6.0-alpha, 25/25 suites green. Two things changed
+at 0.4.0 that still matter to this project:
 
 1. **The boundary is the public API only.** The old
    `Include/LCE/Interfaces/` stubs (`IGameAdapter`, `IWorld`, `IEntity`)

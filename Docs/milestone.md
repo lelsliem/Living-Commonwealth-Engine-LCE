@@ -148,7 +148,7 @@ milestone: F4SE plugin · form translation · intent executor · co-save.
 
 Milestone 0.5.0 — SDK & Samples · "The Consumable Engine"
 
-STATUS: IN PROGRESS 🔄 — engine now 0.5.0-alpha
+STATUS: COMPLETE ✅ — engine 0.5.0-alpha; tags and release notes live on both repos
 
 Stone 01 — Tuning ergonomics ✅ (SimulationTuning::FromConfiguration;
 known keys override defaults, broken values keep the default, unknown
@@ -159,8 +159,7 @@ Stone 02 — Outcome channel ✅ (ReportOutcome: the observe leg of the
 living loop. Memory recorded; relationship effects scaled by result —
 Success builds trust, Failure loses it, a wrong is a wrong; the active
 goal is served by Success, halved by Partial; the intent is consumed so
-the next tick decides fresh. Proven by the Outcome suite —the money
-   test: a settler who is cheated twice learns to trade with the other
+the next tick decides fresh. Proven by the Outcome suite — the money test: a settler who is cheated twice learns to trade with the other
    merchant, no script.)
 
 Stone 03 — Observation events ✅ (push, not poll: EntityCreated on
@@ -182,7 +181,7 @@ creates order-independent per-entity child streams without advancing
 the parent, so the tick's unordered iteration can never leak into
 results: same seed + same entity = same jitter, every run. Decide and
 Update take an optional Rng (defaulted — existing callers untouched);
-nullptr keeps the deterministic id-hash fallback.Proven by the Rng
+nullptr keeps the deterministic id-hash fallback. Proven by the Rng
    suite — including two identical worlds under one seed producing
    bit-identical intents.)
 
@@ -191,7 +190,7 @@ counter the adapter drives from the game clock, and SeasonOf — four
 90-day seasons. MemoryEvent::Day anchors a memory to the world day it
 happened; Remember/ReportOutcome stamp it from the passed WorldTime
 and a caller-set day wins. The age of a fact is now.Day - event.Day —
-the substrate 0.7.0 Legacy stands on. Proven by the WorldCalendar    suite: stamping, caller-priority, season boundaries, and the timestamp
+the substrate 0.7.0 Legacy stands on. Proven by the WorldCalendar suite: stamping, caller-priority, season boundaries, and the timestamp
     surviving a snapshot round trip. 20/20 green.)
 
 Stone 07 — Per-mind decay jitter ✅ (the herd, broken at the source:
@@ -223,22 +222,32 @@ official recipe). Both GitHub repos are live and public.
 release notes are live — the adapter ships 0.5.0-beta and 0.6.0-beta
 on GitHub.
 
-0.6.0 — Society is DONE: the adapter released 0.6.0-beta
-(2026-08-11) and verified the milestone in-game — bonds form, couples
-marry into households, deaths spread as gossip, sim-only children are
-born and grow. Stone 08 — Bond thresholds + RelationshipChangedEvent
-(the adapter's Request A) — is SHIPPED: the
-world names its own bond lines (sim.bond.threshold.*); an experience
-crossing one publishes the moment, edge-triggered and drift-quiet;
-proven by the BondThreshold suite. Stone 09 — Society: Groups &
-Traits — is SHIPPED: GroupId + the Groups membership component; the
-echo (trust is earned personally, disposition travels to group-mates
-at sim.group.inheritance — one wrong, a settlement turns cold);
-InheritGroupAttitudes (feelings inherit from the group's
-experiences, then diverge); and the Traits substrate
-(JitteredTraits, deterministic under the seeded RNG, influence
-adapter-side). 25/25 suites green. The feud arc waits on 0.7.0's
-conflicts. 0.7.0 Legacy (birth, death, inheritance) · 0.8.0 Scale (a
-settlement, not a village) · 0.9.0 Release Candidate + Public Beta
-(the freeze; Nexus + GitHub, no Discord) · 1.0.0 Release (the
-promise, made good).
+Milestone 0.6.0 — Society · "The Bonds Between Minds"
+
+STATUS: COMPLETE ✅ — engine 0.6.0-alpha; shipped with
+The-Commonwealth-Lives 0.6.0-beta and verified in-game 2026-08-11.
+
+Stone 08 — Bond thresholds + RelationshipChangedEvent ✅ (the
+adapter's Request A): the world names its own bond lines
+(sim.bond.threshold.*); an experience crossing one publishes the
+moment, edge-triggered and drift-quiet. Proven by the BondThreshold
+suite.)
+
+Stone 09 — Society: Groups & Traits ✅ (GroupId + the Groups membership
+component; the echo — trust is earned personally, disposition travels
+to group-mates at sim.group.inheritance — one wrong, a settlement
+turns cold; InheritGroupAttitudes — feelings inherit from the group's
+experiences, then diverge; and the Traits substrate — JitteredTraits,
+deterministic under the seeded RNG, influence adapter-side. Proven by
+the Groups + Traits suites.)
+
+The death fact ✅ — InteractionKind::Death lets adapters record deaths
+in memory; a fact, never a door (Decide gates only Trade and Social).
+
+The adapter's side, verified in-game: bonds form, couples marry into
+households, deaths spread as gossip, sim-only children are born and
+grow. The feud arc waits on 0.7.0's conflicts. 25/25 suites green.
+
+0.7.0 Legacy (birth, death, inheritance) · 0.8.0 Scale (a settlement,
+not a village) · 0.9.0 Release Candidate + Public Beta (the freeze;
+Nexus + GitHub, no Discord) · 1.0.0 Release (the promise, made good).

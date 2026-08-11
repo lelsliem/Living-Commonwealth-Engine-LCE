@@ -1,7 +1,8 @@
 # Platform Integration (0.4.0) — The Handshake
 
 **Milestone:** 0.4.0 — Alpha · Platform Integration
-**Status:** Implemented and tested (core side); adapter in progress
+**Status:** Implemented and tested (core side); adapter shipped —
+The-Commonwealth-Lives 0.6.0-beta (2026-08-11), verified in-game
 (separate project)
 **Related ADRs:** ADR-0023 (the core never includes game headers — now a
 build fact), ADR-0024 (adapters translate, don't simulate), ADR-0014 (no
