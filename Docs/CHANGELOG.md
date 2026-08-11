@@ -2,7 +2,7 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
-## [0.8.0] — 2026-08-11 — Scale · "The Settlement Survives"
+## [0.8.0] — 2026-08-11 — Scale · "The Settlement Survives" — 2026-08-11 — Scale · "The Settlement Survives"
 
 Engine side shipped (design locked the same day —
 Docs/Design/Scale.md); the adapter's in-game verification is the

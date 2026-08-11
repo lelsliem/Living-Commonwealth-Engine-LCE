@@ -561,65 +561,47 @@ deterministic by construction. If you take the tick off the game
 thread, FixedStep's fixed cadence is what makes that safe — the sim
 no longer depends on when you call it, only on how many steps ran.
 
-## The endgame plan — proposed cuts, the adapter's call (2026-08-11)
+## The endgame plan — cuts verdicted, plan locked (2026-08-11)
 
-The engine's path to 1.0.0 (drafted in the core's Docs/Design/
-Endgame.md, pending): prove the seven mod-type patterns as lean
-samples, freeze the API mechanically, finish the docs, beta, release.
-The discipline is "no new engine surface unless a pattern or an
-adapter finding names a real need" (the Death precedent). Before the
-cuts are final, the adapter gets the deciding voice. Each candidate
-below is a question: **does the adapter need this for 1.0.0, or can
-it wait past 1.0.0?** Answer in this doc (or in the adapter repo's
-hand-off) and the plan locks accordingly.
+The engine's path to 1.0.0 is locked (Docs/Design/Endgame.md): prove
+the seven mod-type patterns as lean samples, freeze the API
+mechanically, finish the docs, beta, release. The discipline is "no
+new engine surface unless a pattern or an adapter finding names a
+real need" (the Death precedent). The adapter's verdicts (from its
+own repo's hand-off, same day):
 
-**Proposed cuts (candidate — awaiting adapter verdict):**
+1. **Threading the tick off the game thread** — VERDICT: measure
+   first, thread only if the number says so (a TickReport log once a
+   minute in-game decides it). Likely: the game thread stays.
+2. **C ABI / Papyrus natives** — VERDICT: not before 1.0.0; the C++
+   API is the surface.
+3. **Networking / replication** — VERDICT: not needed (single-player).
+4. **Multi-agent negotiation / deep planning** — VERDICT: deferred.
+5. **LCE Studio (GUI)** — VERDICT: post-1.0; the CLI Doctor and the
+   log are enough.
+6. **Per-fact legacy decay** — VERDICT: only if the soak data or a
+   mechanic demands it; nothing in the 0.9.0 plan needs fading
+   legacies.
+7. **MCM / radio audio** — VERDICT: both deferred past 1.0.0 (the
+   INI delivers tuning; captions deliver the radio).
+8. **New engine surface** — VERDICT: the disease/health mechanic
+   needs **no engine change**. Health is adapter-owned: a co-save
+   component (additive, like `name`), hold-then-recover driven by the
+   adapter's own tick, the cost expressed through the existing
+   Fatigue need (sick minds tire faster and rest). No NeedType::Health,
+   no new goals — health is not a drive; every cause (radstorm, bad
+   food, wounds, contagion) is already an edge read. The engine's
+   Disease & Medicine sample (0.8.3) therefore proves the
+   fact-plus-tick recipe with zero new surface.
 
-1. **Threading the tick off the game thread** — the core stays
-   single-threaded and deterministic; FixedStep (0.8.0) is what makes
-   game-thread ticking cheap and timing-independent. F4SE's
-   TaskInterface was named in the 0.8.0 proof as "already waiting" —
-   but if the adapter has run hundreds of minds on the game thread
-   without a frame hit, the ask is: **measure first, thread only if
-   the number says so.** Does the adapter want threading before 1.0.0,
-   or is a TickReport log enough?
-2. **C ABI / Papyrus natives** — the adapter is the only consumer and
-   talks to the core through the C++ API. Any plan for Papyrus-facing
-   surface? (Lean: no, not before 1.0.0.)
-3. **Networking / replication** — single-player mod; assumed not
-   needed. Confirm.
-4. **Multi-agent negotiation / deep planning AI** — beyond the
-   engine's promise; assumed deferred. Confirm.
-5. **LCE Studio (GUI)** — the CLI Doctor exists; a window is
-   post-1.0. Confirm the adapter is fine without it.
-6. **Per-fact legacy decay** (0.8.0's back-pocket: some promises
-   fade, some endure) — only if the soak data or an adapter mechanic
-   demands it. Ask: does the 0.9.0+ plan need fading legacies?
-7. **MCM UI page / radio audio** — the adapter already deferred both
-   (the INI delivers tuning; audio after 0.9.0). Confirm they stay
-   deferred past 1.0.0.
-8. **New InteractionKinds / components / events** — added only when
-   a pattern or a finding names a real need. The one current
-   candidate: the **disease/health mechanic** (0.8.3 pattern).
-
-**Locked answers from the adapter's side (given 2026-08-11):**
-
-- **Disease mechanic (the adapter's shape):** the sim keeps health at
-  a reduced amount while ill, and after the recovery time elapses,
-  health increases at a rate until healed. This is a real need the
-  0.8.3 Disease & Medicine pattern names — the engine should plan a
-  health fact or Health-like value with hold-then-recover semantics,
-  not assume disease is facts-only. Whether it is a new NeedType or
-  a fact-plus-tick rule is the 0.8.3 design question; the mechanic
-  itself is accepted.
-- **The seven patterns: all core-side as lean samples** (the engine
-  owns the proof; the adapter keeps living in-game as the real test).
-- **Point releases: one at a time** — 0.8.1, then 0.8.2, and so on;
-  each a verifiable tag, no folding.
-
-**Still open:** the freeze gate (does the 0.8.4 surface-stability
- test prevent API change during 0.9.0, or only record it?) and the
- remaining cut verdicts above.
+**Locked from the adapter side:** the seven patterns are all core-side
+lean samples (the engine owns the proof; the adapter lives in-game);
+point releases run one at a time (0.8.1, then 0.8.2, …), each a
+verifiable tag. The adapter's own mod-side plan (its ReleasePlan.md)
+versions independently, as always: 0.7.1 Talk, 0.7.2 Rows, 0.7.3
+Fights, 0.8.0 Trade with anyone, 0.8.1 Illness & Medicine, 0.9.0 its
+release gate, 1.0.0 freeze and ship. The two tracks cross-sync only
+through this document and the shared milestones (0.9.0 RC, 1.0.0).
 
 ## Canonical Copy
 
