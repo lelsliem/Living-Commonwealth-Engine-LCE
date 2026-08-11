@@ -56,6 +56,8 @@ namespace LCE::Events
 #include "LCE/Simulation/Outcome.h"
 #include "LCE/Simulation/WorldTime.h"
 
+#include <cstdint>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -94,6 +96,11 @@ namespace LCE::Simulation
         float DispositionLoss = 0.25f;   // wrongs and fights sour them
         float NeedJitter = 0.15f;        // per-mind metabolism spread (±15%)
         float GroupInheritance = 0.5f;   // how strongly a feeling reaches group-mates
+
+        // 0.7.0 Legacy — what survives the entity (stones 10-12).
+        float BequestFloor = 0.5f;       // salience below which a fact stays with the dead
+        float InheritanceScale = 0.5f;   // secondhand stories are fainter than lived experience
+        std::uint64_t LegacyMaxAgeDays = 0;  // inheritance age limit; 0 = any age
 
         // The bond watch-list (0.6.0 stone 08). Empty by default — the
         // world must name its own lines; a default here would invent
@@ -207,4 +214,46 @@ namespace LCE::Simulation
         EntityRegistry& registry,
         EntityId id,
         GroupId group);
+
+    //-------------------------------------------------------------------------
+    // Bequeath (0.7.0 stone 10 — death lifecycle)
+    //
+    // What an entity bequeaths as it goes. The world names the heirs
+    // (the adapter knows family, household, settlement); the core keeps
+    // what salience merits: the dying entity's MemoryEvents at or above
+    // tuning.BequestFloor are copied into each heir's Memory, scaled by
+    // tuning.InheritanceScale, carrying their original world day — the
+    // story's age survives the transfer ("the feud is decades old").
+    //
+    // Append, never overwrite: the heir's own memories are untouched.
+    // Deterministic: heirs are processed in ascending EntityId order,
+    // so the caller's list order can never leak into results (the
+    // QueryWhere discipline). Returns how many facts were bequeathed;
+    // no event — the world called the death, it needs no announcement
+    // back.
+    //-------------------------------------------------------------------------
+    std::size_t Bequeath(
+        EntityRegistry& registry,
+        EntityId dying,
+        std::span<const EntityId> heirs,
+        const SimulationTuning& tuning = {});
+
+    //-------------------------------------------------------------------------
+    // InheritMemory (0.7.0 stone 11 — generational handoff)
+    //
+    // Descendants inherit memory, selectively. The world's predicate
+    // chooses which facts travel (nullptr = all); the core scales
+    // (tuning.InheritanceScale — a story heard is fainter than a life
+    // lived) and ages (tuning.LegacyMaxAgeDays filters facts older
+    // than the world's patience; 0 keeps everything; unstamped or
+    // future-dated facts pass — age is a property of the story, not
+    // the hearer). The heir's own memories are never touched.
+    //-------------------------------------------------------------------------
+    std::size_t InheritMemory(
+        EntityRegistry& registry,
+        EntityId heir,
+        EntityId ancestor,
+        const SimulationTuning& tuning = {},
+        WorldTime time = {},
+        bool (*accept)(const MemoryEvent&) = nullptr);
 }

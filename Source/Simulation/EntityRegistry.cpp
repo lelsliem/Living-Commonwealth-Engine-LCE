@@ -229,6 +229,15 @@ namespace LCE::Simulation
             snapshot.Entities.push_back(std::move(entity));
         }
 
+        // The legacy store rides the co-save too (0.7.0 stone 12): the
+        // promise that outlives its maker must survive a save and a
+        // load. Absent when empty or unserialized — like a component
+        // type with no serializer, it simply is not part of the record.
+        if (const auto legacy = m_Legacy.Serialize())
+        {
+            snapshot.Legacy = *legacy;
+        }
+
         return snapshot;
     }
 
@@ -257,6 +266,14 @@ namespace LCE::Simulation
                 iterator->second->Deserialize(entity.Id, component.Data);
             }
         }
+
+        // Legacy (0.7.0 stone 12): the world's records return too. A
+        // snapshot taken before the section existed simply starts with
+        // none.
+        if (snapshot.Legacy)
+        {
+            m_Legacy.Deserialize(*snapshot.Legacy);
+        }
     }
 
     void EntityRegistry::Clear()
@@ -268,5 +285,8 @@ namespace LCE::Simulation
         // for the next game's Restore.
         m_Slots.clear();
         m_FreeIndices.clear();
+
+        // The world's records die with the world, not with the entities.
+        m_Legacy.Clear();
     }
 }

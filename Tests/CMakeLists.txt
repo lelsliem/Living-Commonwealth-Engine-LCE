@@ -35,6 +35,9 @@ add_executable(LCE.Core.Tests
     Core/BondThresholdTest.cpp
     Core/GroupsTest.cpp
     Core/TraitsTest.cpp
+    Core/BequeathTest.cpp
+    Core/InheritanceTest.cpp
+    Core/WorldLegacyTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

@@ -45,6 +45,7 @@
 #pragma once
 
 #include "LCE/Simulation/EntityId.h"
+#include "LCE/Simulation/Legacy.h"
 #include "LCE/Simulation/RegistrySnapshot.h"
 
 #include <algorithm>
@@ -352,6 +353,35 @@ namespace LCE::Simulation
         //-------------------------------------------------------------------------
         void Clear();
 
+        //-------------------------------------------------------------------------
+        // The legacy store (0.7.0 stone 12) — the promise that outlives
+        // its maker. Registry-level: facts keyed by name, permanent
+        // until the world forgets them. LeaveLegacy/ReadLegacy/
+        // ForgetLegacy; RegisterLegacySerializer rides the co-save
+        // (the same serializer contract as the component stores).
+        //-------------------------------------------------------------------------
+        void LeaveLegacy(LegacyFact fact)
+        {
+            m_Legacy.Leave(std::move(fact));
+        }
+
+        [[nodiscard]]
+        std::optional<LegacyFact> ReadLegacy(std::string_view name) const
+        {
+            return m_Legacy.Read(name);
+        }
+
+        void ForgetLegacy(std::string_view name)
+        {
+            m_Legacy.Forget(name);
+        }
+
+        void RegisterLegacySerializer(
+            ComponentSerializer<std::unordered_map<std::string, LegacyFact>> serializer)
+        {
+            m_Legacy.SetSerializer(std::move(serializer));
+        }
+
     private:
         struct Slot
         {
@@ -405,6 +435,7 @@ namespace LCE::Simulation
 
         std::vector<Slot> m_Slots;
         std::vector<std::uint32_t> m_FreeIndices;
+        LegacyStore m_Legacy;
         std::unordered_map<
             std::type_index,
             std::shared_ptr<Detail::IComponentStore>> m_Stores;

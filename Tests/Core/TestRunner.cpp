@@ -42,6 +42,9 @@
 #include "BondThresholdTest.h"
 #include "GroupsTest.h"
 #include "TraitsTest.h"
+#include "BequeathTest.h"
+#include "InheritanceTest.h"
+#include "WorldLegacyTest.h"
 
 #include <cstdio>
 
@@ -81,6 +84,9 @@ namespace
         { "BondThreshold",   LCE::Tests::BondThresholdTest },
         { "Groups",          LCE::Tests::GroupsTest },
         { "Traits",          LCE::Tests::TraitsTest },
+        { "Bequeath",        LCE::Tests::BequeathTest },
+        { "Inheritance",     LCE::Tests::InheritanceTest },
+        { "WorldLegacy",     LCE::Tests::WorldLegacyTest },
     };
 
     constexpr int kSuiteCount =
@@ -94,15 +100,18 @@ int main()
     for (const auto& suite : Suites)
     {
         std::printf("[ RUN  ] %s\n", suite.Name);
+        std::fflush(stdout);   // pipe-buffered otherwise — progress must show
 
         if (suite.Run())
         {
             std::printf("[  OK  ] %s\n", suite.Name);
+            std::fflush(stdout);
             ++passed;
         }
         else
         {
             std::printf("[ FAIL ] %s\n", suite.Name);
+            std::fflush(stdout);
         }
     }
 

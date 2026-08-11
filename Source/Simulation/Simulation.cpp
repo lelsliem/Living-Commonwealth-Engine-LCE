@@ -46,6 +46,7 @@
 #include "LCE/Simulation/SimulationEvents.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <exception>
 #include <string>
 #include <string_view>
@@ -716,6 +717,27 @@ namespace LCE::Simulation
         tuning.DispositionLoss = read("sim.disposition.loss", tuning.DispositionLoss);
         tuning.NeedJitter = read("sim.jitter", tuning.NeedJitter);
         tuning.GroupInheritance = read("sim.group.inheritance", tuning.GroupInheritance);
+        tuning.BequestFloor = read("sim.legacy.bequestFloor", tuning.BequestFloor);
+        tuning.InheritanceScale = read("sim.legacy.inheritanceScale", tuning.InheritanceScale);
+
+        // A day count, not a rate — its own reader (0.7.0 stone 11).
+        // Same rule as every knob: a broken value keeps the default.
+        {
+            const auto raw = config.Get("sim.legacy.maxAgeDays");
+
+            if (!raw.empty())
+            {
+                try
+                {
+                    tuning.LegacyMaxAgeDays = static_cast<std::uint64_t>(
+                        std::stoull(std::string(raw)));
+                }
+                catch (const std::exception&)
+                {
+                    // not a number — the default stands
+                }
+            }
+        }
 
         // The bond watch-list (0.6.0 stone 08): every
         // sim.bond.threshold.<name> key adds one line the world drew
@@ -754,5 +776,129 @@ namespace LCE::Simulation
             });
 
         return tuning;
+    }
+
+    std::size_t Bequeath(
+        EntityRegistry& registry,
+        EntityId dying,
+        std::span<const EntityId> heirs,
+        const SimulationTuning& tuning)
+    {
+        if (!registry.IsAlive(dying))
+        {
+            return 0;
+        }
+
+        const auto memory = registry.GetComponent<Memory>(dying);
+
+        if (!memory)
+        {
+            return 0;
+        }
+
+        // Deterministic (the QueryWhere discipline): the caller's list
+        // order can never leak into results — process heirs ascending.
+        std::vector<EntityId> ordered(heirs.begin(), heirs.end());
+
+        std::sort(
+            ordered.begin(),
+            ordered.end(),
+            [](EntityId left, EntityId right)
+            {
+                return left.Value() < right.Value();
+            });
+
+        std::size_t count = 0;
+
+        for (const auto heir : ordered)
+        {
+            if (!registry.IsAlive(heir) || heir == dying)
+            {
+                continue;
+            }
+
+            auto heirMemory = registry.GetComponent<Memory>(heir);
+
+            if (!heirMemory)
+            {
+                registry.AddComponent<Memory>(heir, Memory{});
+                heirMemory = registry.GetComponent<Memory>(heir);
+            }
+
+            for (const auto& event : memory->Events)
+            {
+                if (event.Weight < tuning.BequestFloor)
+                {
+                    continue;   // faint enough to die with the owner
+                }
+
+                auto inherited = event;
+                inherited.Weight = event.Weight * tuning.InheritanceScale;
+
+                heirMemory->Events.push_back(inherited);
+                ++count;
+            }
+        }
+
+        return count;
+    }
+
+    std::size_t InheritMemory(
+        EntityRegistry& registry,
+        EntityId heir,
+        EntityId ancestor,
+        const SimulationTuning& tuning,
+        WorldTime time,
+        bool (*accept)(const MemoryEvent&))
+    {
+        if (!registry.IsAlive(heir) || !registry.IsAlive(ancestor)
+            || heir == ancestor)
+        {
+            return 0;
+        }
+
+        const auto ancestorMemory = registry.GetComponent<Memory>(ancestor);
+
+        if (!ancestorMemory)
+        {
+            return 0;
+        }
+
+        auto heirMemory = registry.GetComponent<Memory>(heir);
+
+        if (!heirMemory)
+        {
+            registry.AddComponent<Memory>(heir, Memory{});
+            heirMemory = registry.GetComponent<Memory>(heir);
+        }
+
+        std::size_t count = 0;
+
+        for (const auto& event : ancestorMemory->Events)
+        {
+            if (accept != nullptr && !accept(event))
+            {
+                continue;
+            }
+
+            // The world's patience (0.7.0): facts older than
+            // LegacyMaxAgeDays do not travel. Age is the story's, not
+            // the hearer's — unstamped or future-dated facts pass.
+            if (tuning.LegacyMaxAgeDays != 0
+                && event.Day != 0 && time.Day != 0
+                && time.Day > event.Day
+                && time.Day - event.Day > tuning.LegacyMaxAgeDays)
+            {
+                continue;
+            }
+
+            auto inherited = event;
+            inherited.Weight = event.Weight * tuning.InheritanceScale;
+
+            heirMemory->Events.push_back(inherited);
+            ++count;
+        }
+
+        return count;
     }
 }

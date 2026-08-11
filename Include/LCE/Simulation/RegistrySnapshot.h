@@ -49,6 +49,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <optional>
 #include <typeindex>
 #include <vector>
 
@@ -59,8 +60,12 @@ namespace LCE::Simulation
     // OWN versioning on top of this when writing the durable co-save
     // record — save-compatibility is the adapter's job (it names the
     // component types, it migrates old saves).
+    //
+    // v2 (0.7.0 stone 12): the snapshot gains the registry-level Legacy
+    // section. Old snapshots without it restore fine — the world simply
+    // starts with no legacies.
     //-------------------------------------------------------------------------
-    inline constexpr std::uint32_t kSnapshotVersion = 1;
+    inline constexpr std::uint32_t kSnapshotVersion = 2;
 
     //-------------------------------------------------------------------------
     // ComponentBlob
@@ -124,5 +129,10 @@ namespace LCE::Simulation
     {
         std::uint32_t Version = kSnapshotVersion;
         std::vector<SnapshotEntity> Entities;
+
+        // Registry-level state (0.7.0 stone 12): the legacy store as
+        // opaque bytes. Absent in snapshots from before the section
+        // existed — a Restore simply starts with no legacies.
+        std::optional<ComponentBlob> Legacy;
     };
 }
