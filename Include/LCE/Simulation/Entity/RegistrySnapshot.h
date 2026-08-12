@@ -44,7 +44,7 @@
 
 #pragma once
 
-#include "LCE/Simulation/EntityId.h"
+#include "LCE/Simulation/Entity/EntityId.h"
 
 #include <cstddef>
 #include <cstdint>

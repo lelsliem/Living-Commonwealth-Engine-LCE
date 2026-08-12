@@ -23,7 +23,7 @@
 #include "LCE/Events/EventBus.h"
 #include "LCE/Simulation/Simulation.h"
 #include "LCE/Simulation/SimulationEvents.h"
-#include "LCE/Simulation/WorldTime.h"
+#include "LCE/Simulation/Substrate/WorldTime.h"
 
 #include <string>
 #include <typeindex>

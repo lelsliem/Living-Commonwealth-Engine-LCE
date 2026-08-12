@@ -45,9 +45,9 @@
 #pragma once
 
 #include "LCE/Events/Event.h"
-#include "LCE/Simulation/Behaviour.h"
-#include "LCE/Simulation/EntityId.h"
-#include "LCE/Simulation/Outcome.h"
+#include "LCE/Simulation/Decision/Behaviour.h"
+#include "LCE/Simulation/Entity/EntityId.h"
+#include "LCE/Simulation/Decision/Outcome.h"
 
 #include <cstdint>
 #include <string>

@@ -41,7 +41,7 @@
 //      (c) 2026-present LCE Contributors
 //=============================================================================//
 
-#include "LCE/Simulation/Rng.h"
+#include "LCE/Simulation/Substrate/Rng.h"
 
 namespace LCE::Simulation
 {

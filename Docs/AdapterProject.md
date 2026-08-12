@@ -66,7 +66,7 @@ at 0.4.0 that still matter to this project:
    are **deleted**. The adapter is a client of the core — nothing to
    implement, nothing to include.
 2. **Save/load has its substrate.** The core now ships `RegistrySnapshot`
-   (`Include/LCE/Simulation/RegistrySnapshot.h`) and four registry
+   (`Include/LCE/Simulation/Entity/RegistrySnapshot.h`) and four registry
    operations the co-save stone will use:
    - `RegisterSerializer<T>({ serialize, deserialize })` — required for a
      component type to appear in a snapshot. Register once at init for
@@ -593,6 +593,21 @@ the "decides" lines for it should stop being a per-frame flood. The
 engine's proof is the new Jitter suite block: two same-seed worlds,
 one whose parent advances three draws between every tick, stay
 bit-identical in decay AND decision.
+
+## Include-path reorganization (2026-08-12) — the Simulation folder grew subcategories
+
+The flat `Include/LCE/Simulation/` pile (16 headers, 4 sources) was
+split into category folders matching the engine's vocabulary —
+`Entity/` (EntityId, EntityRegistry, RegistrySnapshot), `Mind/`
+(Needs, Memory, Relationships, Goals), `Society/` (Groups, Traits),
+`Decision/` (Behaviour, Outcome, Legacy), and `Substrate/` (Rng,
+WorldTime). `Simulation.h` and `SimulationEvents.h` stay at the
+Simulation root (the tick and its events — the paths everyone
+includes stay put). **Every include path to a moved header changed**
+— if your checkout predates this, the adapter's includes were
+re-synced in the same change (src/ and Tests/main.cpp); the namespaces
+are unchanged, only the file locations. The adapter builds green
+(21/21) against the reorganized core.
 
 ## The endgame plan — cuts verdicted, plan locked (2026-08-11)
 

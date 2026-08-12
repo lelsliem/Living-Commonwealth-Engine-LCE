@@ -41,7 +41,7 @@
 //      (c) 2026-present LCE Contributors
 //=============================================================================//
 
-#include "LCE/Simulation/Behaviour.h"
+#include "LCE/Simulation/Decision/Behaviour.h"
 
 namespace
 {

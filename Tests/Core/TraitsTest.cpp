@@ -20,9 +20,9 @@
 //
 //=============================================================================//
 
-#include "LCE/Simulation/EntityRegistry.h"
-#include "LCE/Simulation/Rng.h"
-#include "LCE/Simulation/Traits.h"
+#include "LCE/Simulation/Entity/EntityRegistry.h"
+#include "LCE/Simulation/Substrate/Rng.h"
+#include "LCE/Simulation/Society/Traits.h"
 
 #include <bit>
 #include <cstddef>

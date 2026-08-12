@@ -47,8 +47,8 @@
 
 #pragma once
 
-#include "LCE/Simulation/EntityId.h"
-#include "LCE/Simulation/Rng.h"
+#include "LCE/Simulation/Entity/EntityId.h"
+#include "LCE/Simulation/Substrate/Rng.h"
 
 #include <cstdint>
 #include <string>

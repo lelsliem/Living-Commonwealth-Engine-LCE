@@ -288,7 +288,7 @@ namespace LCE::Tests
         {
             Simulation::Rng parent{ 31415 };
 
-            const auto before = parent.StableDerive(7000);
+            auto before = parent.StableDerive(7000);
 
             // The parent advances — the adapter's births draw between
             // ticks. The anchored child must be untouched.
@@ -297,7 +297,7 @@ namespace LCE::Tests
                 parent.Next();
             }
 
-            const auto after = parent.StableDerive(7000);
+            auto after = parent.StableDerive(7000);
 
             for (int i = 0; i < 16; ++i)
             {

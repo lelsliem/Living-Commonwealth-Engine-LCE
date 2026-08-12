@@ -49,12 +49,12 @@ namespace LCE::Events
 }
 
 #include "LCE/Config/Configuration.h"
-#include "LCE/Simulation/Behaviour.h"
-#include "LCE/Simulation/EntityRegistry.h"
-#include "LCE/Simulation/Groups.h"
-#include "LCE/Simulation/Memory.h"
-#include "LCE/Simulation/Outcome.h"
-#include "LCE/Simulation/WorldTime.h"
+#include "LCE/Simulation/Decision/Behaviour.h"
+#include "LCE/Simulation/Entity/EntityRegistry.h"
+#include "LCE/Simulation/Society/Groups.h"
+#include "LCE/Simulation/Mind/Memory.h"
+#include "LCE/Simulation/Decision/Outcome.h"
+#include "LCE/Simulation/Substrate/WorldTime.h"
 
 #include <cstdint>
 #include <span>

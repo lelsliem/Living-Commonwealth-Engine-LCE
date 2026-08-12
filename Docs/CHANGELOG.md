@@ -2,6 +2,18 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.1] — 2026-08-12 — Housekeeping: Simulation folder reorganized
+
+The flat `Include/LCE/Simulation/` and `Source/Simulation/` piles
+were split into category subfolders: `Entity/` (EntityId, EntityRegistry,
+RegistrySnapshot), `Mind/` (Needs, Memory, Relationships, Goals),
+`Society/` (Groups, Traits), `Decision/` (Behaviour, Outcome, Legacy),
+and `Substrate/` (Rng, WorldTime). `Simulation.h` / `SimulationEvents.h`
+stay at the Simulation root — the tick and its events keep their paths.
+No namespaces changed, no API changed — only file locations and the
+include paths to them. Every engine and adapter reference re-synced;
+30/30 engine suites and 21/21 adapter suites green.
+
 ## [0.8.1] — 2026-08-12 — The re-roll fix (field finding from the adapter)
 
 The adapter's 0.7.4 in-game hunt (ADR-0029) found the tick's

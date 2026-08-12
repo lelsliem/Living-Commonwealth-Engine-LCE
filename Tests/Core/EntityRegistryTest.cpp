@@ -28,7 +28,7 @@
 //      (c) 2026-present LCE Contributors
 //=============================================================================//
 
-#include "LCE/Simulation/EntityRegistry.h"
+#include "LCE/Simulation/Entity/EntityRegistry.h"
 
 #include <string>
 

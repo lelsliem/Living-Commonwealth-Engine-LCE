@@ -44,9 +44,9 @@
 
 #pragma once
 
-#include "LCE/Simulation/EntityId.h"
-#include "LCE/Simulation/Legacy.h"
-#include "LCE/Simulation/RegistrySnapshot.h"
+#include "LCE/Simulation/Entity/EntityId.h"
+#include "LCE/Simulation/Decision/Legacy.h"
+#include "LCE/Simulation/Entity/RegistrySnapshot.h"
 
 #include <algorithm>
 #include <cstdint>

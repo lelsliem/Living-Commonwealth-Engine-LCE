@@ -28,10 +28,10 @@
 // SPDX-License-Identifier: MIT
 //=============================================================================//
 
-#include "LCE/Simulation/Behaviour.h"
-#include "LCE/Simulation/EntityRegistry.h"
-#include "LCE/Simulation/Needs.h"
-#include "LCE/Simulation/Outcome.h"
+#include "LCE/Simulation/Decision/Behaviour.h"
+#include "LCE/Simulation/Entity/EntityRegistry.h"
+#include "LCE/Simulation/Mind/Needs.h"
+#include "LCE/Simulation/Decision/Outcome.h"
 #include "LCE/Simulation/Simulation.h"
 
 #include <cstdio>
