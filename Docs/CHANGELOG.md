@@ -2,44 +2,19 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
-## [0.8.1] — 2026-08-12 — Housekeeping: the surface is now guarded
+## [0.8.1] — 2026-08-12 — Housekeeping & the re-roll fix
 
-Three additions that make the SDK's public surface self-checking —
-the kind of housekeeping that teaches a newcomer the layout and
-catches a mistake before it reaches a downstream build.
+Three field fixes and housekeeping changes landed after 0.8.0, each
+verified before the next began; the version is bumped to 0.8.1-alpha.
 
-- **HeaderMapTest (new suite, 31/31)** — the canonical public-header
-  map is now frozen in the harness. Any header moved, deleted, or
-  added without updating the map fails the run with the exact path
-  named; a second sweep resolves every `LCE/...` include referenced
-  anywhere in the engine. This is the mechanical teeth the 0.8.4 API
-  freeze stands on.
-- **LCE Doctor: include layout check** — the doctor now verifies that
-  every `LCE/...` include a project references resolves to a real
-  header in the core it pins (a moved header is a build break the
-  doctor names first). The SDK contract grew to six checks.
-
-## [0.8.1] — 2026-08-12 — Housekeeping: Simulation folder reorganized
-
-The flat `Include/LCE/Simulation/` and `Source/Simulation/` piles
-were split into category subfolders: `Entity/` (EntityId, EntityRegistry,
-RegistrySnapshot), `Mind/` (Needs, Memory, Relationships, Goals),
-`Society/` (Groups, Traits), `Decision/` (Behaviour, Outcome, Legacy),
-and `Substrate/` (Rng, WorldTime). `Simulation.h` / `SimulationEvents.h`
-stay at the Simulation root — the tick and its events keep their paths.
-No namespaces changed, no API changed — only file locations and the
-include paths to them. Every engine and adapter reference re-synced;
-30/30 engine suites and 21/21 adapter suites green.
-
-## [0.8.1] — 2026-08-12 — The re-roll fix (field finding from the adapter)
-
-The adapter's 0.7.4 in-game hunt (ADR-0029) found the tick's
-per-entity noise followed the Rng's LIVE state, so its births —
-legitimately drawn from the same Rng it passes to Update — re-rolled
-every mind's metabolism and confidence every frame. A near-tied
-Rest/Explore mind flipped its intent every tick (22k log lines in
-three minutes, the drag behind the frame hang). The adapter throttled
-its log; the engine fixed the root cause.
+**The re-roll fix (field finding from the adapter).** The adapter's
+in-game hunt (ADR-0029) found the tick's per-entity noise followed the
+Rng's LIVE state, so its births — legitimately drawn from the same
+Rng it passes to Update — re-rolled every mind's metabolism and
+confidence every frame. A near-tied Rest/Explore mind flipped its
+intent every tick (22k log lines in three minutes, the drag behind
+the frame hang). The adapter throttled its log; the engine fixed the
+root cause.
 
 - `Rng::StableDerive(key)` — a child stream anchored to the SEED,
   never the live state. Same seed + same entity = same noise every
@@ -49,10 +24,34 @@ its log; the engine fixed the root cause.
   jitter) now use `StableDerive` — a settled mind rests, not
   re-rolls. Backward compatible: with a parent that never advances
   (all engine tests) the two are byte-identical.
-- Version string corrected to 0.8.0-alpha (the 0.8.0 commit bumped
-  the integer but not the string).
-- 30/30 suites green (RngTest gains the StableDerive block; JitterTest
-  gains the advancing-parent determinism proof).
+- Proven by the new Jitter block: two same-seed worlds, one whose
+  parent advances three draws between every tick, stay bit-identical
+  in decay AND decision. 30/30 suites green at the time.
+
+**Simulation folder reorganized.** The flat `Include/LCE/Simulation/`
+and `Source/Simulation/` piles were split into category subfolders:
+`Entity/` (EntityId, EntityRegistry, RegistrySnapshot), `Mind/`
+(Needs, Memory, Relationships, Goals), `Society/` (Groups, Traits),
+`Decision/` (Behaviour, Outcome, Legacy), and `Substrate/` (Rng,
+WorldTime). `Simulation.h` / `SimulationEvents.h` stay at the
+Simulation root — the tick and its events keep their paths. No
+namespaces changed, no API changed — only file locations and the
+include paths to them. Every engine and adapter reference re-synced;
+the adapter rebuilt green (21/21) against the reorganized core.
+
+**The surface is now guarded.** Two additions make the SDK's public
+surface self-checking — the mechanical teeth the 0.8.4 API freeze
+stands on:
+
+- **HeaderMapTest (new suite, 31/31)** — the canonical public-header
+  map is now frozen in the harness. Any header moved, deleted, or
+  added without updating the map fails the run with the exact path
+  named; a second sweep resolves every `LCE/...` include referenced
+  anywhere in the engine.
+- **LCE Doctor: include layout check** — the doctor now verifies that
+  every `LCE/...` include a project references resolves to a real
+  header in the core it pins (a moved header is a build break the
+  doctor names first). The SDK contract grew to six checks.
 
 ## [0.8.0] — 2026-08-11 — Scale · "The Settlement Survives"
 

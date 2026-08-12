@@ -30,12 +30,19 @@ The endgame plan is locked (Docs/Design/Endgame.md); the adapter
 verdicted every cut (AdapterProject.md) — six of the seven patterns
 need zero new engine work and disease needs none either.
 
-[~] 0.8.1 — adapter verifies 0.8.0 Scale in-game; the engine lands
-    whatever that surfaces (field-fixes only). First field fix landed
-    2026-08-12: `Rng::StableDerive` — per-entity noise anchors to the
-    seed, not the live state, so the adapter's births between ticks
-    can no longer re-roll a settled mind (ADR-0029). Adapter
-    verification of 0.8.0 Scale is still the open gate.
+[~] 0.8.1 — Housekeeping & the re-roll fix (engine side done,
+    2026-08-12; version bumped to 0.8.1-alpha). Three items landed:
+    (1) the field fix for ADR-0029 — `Rng::StableDerive` anchors
+    per-entity noise to the seed, never the live state, so the
+    adapter's births between ticks can no longer re-roll a settled
+    mind; (2) the Simulation folders reorganized into category
+    subfolders (Entity/Mind/Society/Decision/Substrate — every
+    include re-synced, engine + adapter both green); (3) the public
+    surface now guarded — HeaderMapTest (the canonical header map
+    frozen in the harness) + an LCE Doctor include-layout check.
+    31/31 engine suites. The open gate is still the adapter's
+    in-game verification of 0.8.0 Scale (its Illness & Medicine
+    plan is next on its side).
 [ ] 0.8.2 — the four proven patterns as lean samples: Economy,
     Legacy, Weather, Children
 [ ] 0.8.3 — the three harder patterns: Faction Wars, Disease

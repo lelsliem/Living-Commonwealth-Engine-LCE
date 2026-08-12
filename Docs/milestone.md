@@ -291,8 +291,8 @@ ignores the closed sign (core 509a54d) — is verified in the wild.
 Milestone 0.8.0 — Scale · "The Settlement Survives"
 
 STATUS: IN PROGRESS 🔄 — engine side shipped 2026-08-11 (30/30
-suites green); the adapter's in-game verification is the remaining
-gate.
+suites green, pushed as 0.8.0-alpha); the adapter's in-game
+verification is the remaining gate, now tracked under 0.8.1.
 
 Stone 13 — Tick budgets and profiling ✅ (engine side): TickReport —
 per-pass counts and wall time, opt-in, the default path untouched.
@@ -329,4 +329,31 @@ re-roll a settled mind's metabolism or decision. Both engine call
 sites (needs decay, Decide jitter) switched; `Derive` is unchanged.
 Proven by the new Jitter block: two same-seed worlds, one whose
 parent advances three draws between every tick, stay bit-identical.
+
+═══════════════════════════════════════════════
+
+Milestone 0.8.1 — Housekeeping & the re-roll fix
+
+STATUS: IN PROGRESS 🔄 — engine side done 2026-08-12 (31/31 suites,
+0.8.1-alpha); the adapter's in-game verification of 0.8.0 Scale
+(plus this fix) is the remaining gate.
+
+• Field fix from the adapter's ADR-0029 — `Rng::StableDerive`: per-entity
+  noise (needs-decay rate, Decide jitter) anchors to the seed, never
+  the live state, so the adapter's births between ticks can no longer
+  re-roll a settled mind. `Derive` unchanged; backward compatible.
+• Simulation folders reorganized — the flat `Include/LCE/Simulation/`
+  and `Source/Simulation/` piles split into category subfolders
+  (Entity, Mind, Society, Decision, Substrate); `Simulation.h` and
+  `SimulationEvents.h` keep their root paths. No API change; every
+  engine and adapter include re-synced (adapter rebuilt 21/21).
+• Surface guards — HeaderMapTest freezes the canonical public-header
+  map in the harness (a header moved, deleted, or added without the
+  map update fails the run); LCE Doctor gains an include-layout
+  check (every `LCE/...` include resolves against the pinned core).
+  The mechanical teeth the 0.8.4 API freeze stands on.
+
+Design: the three changes are documented in Docs/CHANGELOG.md and
+Docs/AdapterProject.md; the ladder (0.8.2 samples onward) is in
+Docs/Roadmap.md and Docs/Design/Endgame.md.
 

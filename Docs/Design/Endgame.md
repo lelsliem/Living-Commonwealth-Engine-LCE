@@ -53,9 +53,13 @@ keeps living in-game as the real test. Mapping to shipped substrate:
 
 ## The point-release ladder (one at a time, each a verifiable tag)
 
-- **0.8.1** — the adapter verifies 0.8.0 Scale in-game; the engine
-  lands whatever that surfaces (field-fixes, like the feud gate).
-  Engine side: nothing new.
+- **0.8.1** — Housekeeping & the re-roll fix (landed 2026-08-12,
+  engine side done, 31/31): the ADR-0029 field fix
+  (`Rng::StableDerive` — per-entity noise anchors to the seed, never
+  the live state), the Simulation folders reorganized into category
+  subfolders, and the public surface guarded (HeaderMapTest + LCE
+  Doctor include-layout check). Remaining gate: the adapter's
+  in-game verification of 0.8.0 Scale.
 - **0.8.2** — the four proven patterns as samples: Economy, Legacy,
   Weather, Children.
 - **0.8.3** — the three harder patterns: Faction Wars, Disease

@@ -82,6 +82,18 @@ InheritMemory, the legacy store, and the desperate-hunger gate —
 with the feud chain (shut stall → blame → rival → mediated grudge)
 verified in-game by the adapter's 0.7.0 release.
 
+**The 0.8.0 Scale side is shipped** (engine side, 2026-08-11, pushed
+as 0.8.0-alpha): TickReport (the cost of a settlement is knowable),
+sim.memory.cap (a mind can only hold so much), FixedStep (same seed
++ same steps = same world at any frame rate), soak and save/load
+proofs at 5000 minds. The adapter's in-game verification is the
+remaining gate. **0.8.1 (current)**: the field fix for the adapter's
+ADR-0029 finding — `Rng::StableDerive` anchors per-entity noise to
+the seed, so the adapter's births between ticks can no longer re-roll
+a settled mind — plus the Simulation folders reorganized into
+category subfolders and the SDK surface now guarded by HeaderMapTest
+and an LCE Doctor include-layout check (31/31 suites).
+
 **The ladder beyond:**
 
 | Version | Milestone |
@@ -162,7 +174,8 @@ each adapter's own project, never in the core.
 | 0.5.0 | SDK & Samples — "The Consumable Engine" | ✅ |
 | 0.6.0 | Society — groups & traits | ✅ |
 | 0.7.0 | Legacy — birth, death, inheritance | ✅ |
-| 0.8.0 | Scale — a settlement, not a village | ⬜ |
+| 0.8.0 | Scale — a settlement, not a village (engine side) | ✅ |
+| 0.8.1 | Housekeeping — field fix + reorg + surface guards | ⬜ |
 | 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
 | 1.0.0 | Release | ⬜ |
 
