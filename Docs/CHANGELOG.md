@@ -2,6 +2,23 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.1] — 2026-08-12 — Housekeeping: the surface is now guarded
+
+Three additions that make the SDK's public surface self-checking —
+the kind of housekeeping that teaches a newcomer the layout and
+catches a mistake before it reaches a downstream build.
+
+- **HeaderMapTest (new suite, 31/31)** — the canonical public-header
+  map is now frozen in the harness. Any header moved, deleted, or
+  added without updating the map fails the run with the exact path
+  named; a second sweep resolves every `LCE/...` include referenced
+  anywhere in the engine. This is the mechanical teeth the 0.8.4 API
+  freeze stands on.
+- **LCE Doctor: include layout check** — the doctor now verifies that
+  every `LCE/...` include a project references resolves to a real
+  header in the core it pins (a moved header is a build break the
+  doctor names first). The SDK contract grew to six checks.
+
 ## [0.8.1] — 2026-08-12 — Housekeeping: Simulation folder reorganized
 
 The flat `Include/LCE/Simulation/` and `Source/Simulation/` piles

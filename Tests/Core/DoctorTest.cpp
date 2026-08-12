@@ -208,6 +208,67 @@ namespace LCE::Tests
         }
 
         //-------------------------------------------------------------------------
+        // CheckHeaderLayout: every LCE include the project references
+        // must resolve against the core's Include tree — a moved header
+        // is a build break the doctor names before the compiler does.
+        //-------------------------------------------------------------------------
+        {
+            // A core with one header in a known place.
+            const auto core = scratch.Dir("layout-core");
+            const auto header =
+                core / "Include" / "LCE" / "Simulation" / "Simulation.h";
+
+            fs::create_directories(header.parent_path());
+            std::ofstream{ header } << "// the tick\n";
+
+            // A project whose include resolves.
+            const auto good = scratch.Dir("layout-good");
+            fs::create_directories(good);
+            std::ofstream{ good / "main.cpp" }
+                << "#include \"LCE/Simulation/Simulation.h\"\n";
+
+            const auto goodReport = CheckHeaderLayout(good, core);
+
+            if (!goodReport.Passed
+                || goodReport.Detail.find("all resolve") == std::string::npos)
+            {
+                return false;
+            }
+
+            // A project referencing a header the core no longer has —
+            // the stale path must be named.
+            const auto bad = scratch.Dir("layout-bad");
+            fs::create_directories(bad);
+            std::ofstream{ bad / "main.cpp" }
+                << "#include \"LCE/Simulation/Behaviour.h\"\n"
+                << "#include \"LCE/Simulation/Simulation.h\"\n";
+
+            const auto badReport = CheckHeaderLayout(bad, core);
+
+            if (badReport.Passed
+                || badReport.Detail.find("Behaviour.h") == std::string::npos)
+            {
+                return false;
+            }
+
+            // A project with no LCE includes at all — the doctor says so.
+            const auto none = scratch.Dir("layout-none");
+            fs::create_directories(none);
+            std::ofstream{ none / "main.cpp" } << "int main() {}\n";
+
+            if (CheckHeaderLayout(none, core).Passed)
+            {
+                return false;
+            }
+
+            // No local core (FetchContent) — nothing to check against.
+            if (!CheckHeaderLayout(good, fs::path{}).Passed)
+            {
+                return false;
+            }
+        }
+
+        //-------------------------------------------------------------------------
         // CheckToolchain: whatever this environment is, the check must
         // answer — and the PATH half must match what the environment
         // actually has (MSVC visibility depends on the shell; the

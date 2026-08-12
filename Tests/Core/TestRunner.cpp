@@ -47,6 +47,7 @@
 #include "WorldLegacyTest.h"
 #include "ScaleTest.h"
 #include "SoakTest.h"
+#include "HeaderMapTest.h"
 
 #include <cstdio>
 
@@ -91,6 +92,7 @@ namespace
         { "WorldLegacy",     LCE::Tests::WorldLegacyTest },
         { "Scale",           LCE::Tests::ScaleTest },
         { "Soak",            LCE::Tests::SoakTest },
+        { "HeaderMap",       LCE::Tests::HeaderMapTest },
     };
 
     constexpr int kSuiteCount =

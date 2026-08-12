@@ -40,6 +40,7 @@ add_executable(LCE.Core.Tests
     Core/WorldLegacyTest.cpp
     Core/ScaleTest.cpp
     Core/SoakTest.cpp
+    Core/HeaderMapTest.cpp
 )
 
 target_link_libraries(LCE.Core.Tests

@@ -99,10 +99,19 @@ int main(int argc, char** argv)
         ++total;
         passed += wiring.Passed ? 1 : 0;
 
-        const Report core = CheckCoreCheckout(ResolveCorePath(target));
+        const auto corePath = ResolveCorePath(target);
+
+        const Report core = CheckCoreCheckout(corePath);
         print("core checkout", core);
         ++total;
         passed += core.Passed ? 1 : 0;
+
+        // A project's LCE includes must all resolve against the core it
+        // pins — a moved header is a build break the doctor names first.
+        const Report layout = CheckHeaderLayout(target, corePath);
+        print("include layout", layout);
+        ++total;
+        passed += layout.Passed ? 1 : 0;
     }
 
     const Report toolchain = CheckToolchain();

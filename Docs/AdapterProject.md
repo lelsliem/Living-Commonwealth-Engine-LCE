@@ -609,6 +609,22 @@ re-synced in the same change (src/ and Tests/main.cpp); the namespaces
 are unchanged, only the file locations. The adapter builds green
 (21/21) against the reorganized core.
 
+## The surface is now guarded (2026-08-12)
+
+Two additions protect the SDK surface you build against:
+
+1. **HeaderMapTest** — the engine harness now carries the canonical
+   public-header map. A header moved, deleted, or added without
+   updating the map fails the harness with the exact path named, and
+   every `LCE/...` include referenced anywhere in the engine must
+   resolve. Your checkout includes against this map — if the engine's
+   layout ever changes again, the harness fails first and the map
+   tells you exactly what moved.
+2. **LCE Doctor include-layout check** — point the doctor at the
+   adapter and it verifies every `LCE/...` include resolves against
+   the core it pins. Run it after a core upgrade to catch stale paths
+   before the build does.
+
 ## The endgame plan — cuts verdicted, plan locked (2026-08-11)
 
 The engine's path to 1.0.0 is locked (Docs/Design/Endgame.md): prove

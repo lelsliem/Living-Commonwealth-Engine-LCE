@@ -25,19 +25,25 @@
 //   2. It has a build system (CMakeLists.txt or xmake.lua).
 //   3. It wires LCE (FetchContent / find_package / the lce.core rule).
 //   4. The core checkout it points at is present (when local).
-//   5. The toolchain is visible (CMake / xmake / MSVC).
+//   5. Every LCE/... include the project references resolves to a real
+//      header in that core — a moved header is a build break the
+//      doctor names before the compiler does.
+//   6. The toolchain is visible (CMake / xmake / MSVC).
 //
 // SPDX-License-Identifier: MIT
 //=============================================================================//
 
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <string_view>
+#include <utility>
+#include <vector>
 
 namespace LCE::Doctor
 {
@@ -243,7 +249,154 @@ namespace LCE::Doctor
     }
 
     //-------------------------------------------------------------------------
-    // 5. The toolchain is visible: CMake and xmake on PATH, MSVC via the
+    // Collect every LCE include referenced under a directory: all
+    // #include "LCE/..." and #include <LCE/...> lines in .h/.cpp files.
+    // Sorted, deduplicated — a set, so the doctor can name each stale
+    // reference once.
+    //-------------------------------------------------------------------------
+    inline std::vector<std::string> CollectLceIncludes(const fs::path& root)
+    {
+        std::vector<std::string> found;
+
+        if (root.empty() || !fs::exists(root))
+        {
+            return found;
+        }
+
+        for (const auto& entry : fs::recursive_directory_iterator(root))
+        {
+            if (!entry.is_regular_file())
+            {
+                continue;
+            }
+
+            const auto ext = entry.path().extension().string();
+
+            if (ext != ".h" && ext != ".hpp" && ext != ".cpp")
+            {
+                continue;
+            }
+
+            std::istringstream stream{ ReadText(entry.path()) };
+            std::string line;
+
+            while (std::getline(stream, line))
+            {
+                // Only a real #include line counts — a directive is the
+                // first token on the line. Include-like text inside
+                // string literals (test data) is not a reference.
+                const auto first = line.find_first_not_of(" \t");
+
+                if (first == std::string::npos
+                    || line.compare(first, 8, "#include") != 0)
+                {
+                    continue;
+                }
+
+                // #include "LCE/Simulation/..." or #include <LCE/...>
+                const auto open = line.find("LCE/", first);
+
+                if (open == std::string::npos)
+                {
+                    continue;
+                }
+
+                const auto quote = line.find('"', open);
+                const auto angle = line.find('>', open);
+
+                std::size_t end = std::string::npos;
+
+                if (quote != std::string::npos && angle != std::string::npos)
+                {
+                    end = (quote < angle) ? quote : angle;
+                }
+                else
+                {
+                    end = (quote != std::string::npos) ? quote : angle;
+                }
+
+                if (end == std::string::npos)
+                {
+                    continue;
+                }
+
+                // The include path starts at the LCE/ marker and ends at
+                // the closing quote or bracket.
+                found.push_back(line.substr(open, end - open));
+            }
+        }
+
+        std::sort(found.begin(), found.end());
+        found.erase(std::unique(found.begin(), found.end()), found.end());
+
+        return found;
+    }
+
+    //-------------------------------------------------------------------------
+    // 5b. Include layout: every LCE/... include a project references must
+    //     resolve to a real header in the core's Include tree. A stale
+    //     path (a moved header, a typo) is a build break waiting — the
+    //     doctor names each one before the compiler gets the chance.
+    //-------------------------------------------------------------------------
+    inline Report CheckHeaderLayout(const fs::path& project, const fs::path& core)
+    {
+        if (core.empty())
+        {
+            return { true, "no local core to check against — FetchContent pins the headers" };
+        }
+
+        const auto includeRoot = core / "Include";
+
+        if (!fs::is_directory(includeRoot))
+        {
+            return { false, "core has no Include/ tree: " + includeRoot.string() };
+        }
+
+        const auto references = CollectLceIncludes(project);
+
+        if (references.empty())
+        {
+            return { false, "no LCE/... includes found under " + project.string() };
+        }
+
+        std::vector<std::string> stale;
+
+        for (const auto& include : references)
+        {
+            if (!fs::exists(includeRoot / include))
+            {
+                stale.push_back(include);
+            }
+        }
+
+        if (!stale.empty())
+        {
+            std::string detail = "stale include path"
+                + (stale.size() == 1 ? std::string{ "" } : std::string{ "s" })
+                + ": " + stale.front();
+
+            for (std::size_t i = 1; i < stale.size() && i < 5; ++i)
+            {
+                detail += ", " + stale[i];
+            }
+
+            if (stale.size() > 5)
+            {
+                detail += " (+ " + std::to_string(stale.size() - 5) + " more)";
+            }
+
+            detail += " — does not exist under " + includeRoot.string();
+
+            return { false, std::move(detail) };
+        }
+
+        return { true,
+            std::to_string(references.size())
+                + " LCE includes, all resolve under " + includeRoot.string() };
+    }
+
+    //-------------------------------------------------------------------------
+    // 6. The toolchain is visible: CMake and xmake on PATH, MSVC via the
     //    developer-environment variables.
     //-------------------------------------------------------------------------
     inline bool OnPath(std::string_view name)
