@@ -764,3 +764,20 @@ resolves the road.
 4. Then the real stones: entity ↔ form translation, intent executor,
    co-save, and the real test: *a settler goes to market because they are
    hungry — no script.*
+
+## Adapter 0.7.6 → 0.8.0 — zero new surface (hand-over 2026-08-12)
+
+The adapter closed 0.7.5 (fights + the subtitle path) and designed its
+run to Illness (adapter repo, `Docs/Design/FutureStones.md`). The audit
+against this repo's public surface is complete: **no Request D.** Five
+stones — 0.7.6 fight-feel bug pass, 0.7.7 the birth lifecycle
+(pregnancy → birth → growth as edge components on the existing
+surface), 0.7.8 baby & kid items via an external mod (usable now,
+editable on the author's permission), 0.7.9 bugs & polish, 0.8.0
+Illness (the fact-plus-tick `Health` component already answered in the
+adapter's Illness.md) — all ride `CreateEntity` / `DestroyEntity` /
+`Remember` / `Update` / `GetComponent`, `ReportOutcome`, the EventBus,
+Groups/Traits, Legacy, Rng, and WorldTime. The only touchpoints are
+read-only: `TickReport` for the 0.7.9 perf sanity pass, and the
+adapter's co-save staying additive. The engine tab is free to proceed
+with its own 0.8.2+ samples; nothing here blocks or waits on it.
