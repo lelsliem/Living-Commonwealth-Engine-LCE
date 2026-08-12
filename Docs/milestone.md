@@ -322,3 +322,11 @@ the tick loop, a TickReport when it wants per-frame costs, and the
 co-save unchanged (schema v2 — the cap lives in tuning and tick, not
 the record).
 
+Field fix (2026-08-12, from the adapter's ADR-0029): `Rng::StableDerive`
+— per-entity noise anchors to the seed, never the live state, so the
+parent advancing between ticks (the adapter's births) can no longer
+re-roll a settled mind's metabolism or decision. Both engine call
+sites (needs decay, Decide jitter) switched; `Derive` is unchanged.
+Proven by the new Jitter block: two same-seed worlds, one whose
+parent advances three draws between every tick, stay bit-identical.
+

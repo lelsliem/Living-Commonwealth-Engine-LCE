@@ -72,7 +72,10 @@ namespace
     // Personality jitter. With an Rng: a child stream derived from the
     // entity's ID — same seed + same entity = same jitter, and iteration
     // order can never leak into the stream (the parent is untouched).
-    // Without: the deterministic id-hash fallback.
+    // StableDerive anchors to the seed, never the live state, so the
+    // parent advancing between ticks (the adapter's births) can never
+    // re-roll a settled mind's noise (0.8.x field finding). Without: the
+    // deterministic id-hash fallback.
     //-------------------------------------------------------------------------
     float Jitter(
         LCE::Simulation::EntityId id,
@@ -80,7 +83,7 @@ namespace
     {
         if (rng != nullptr)
         {
-            return rng->Derive(id.Value()).NextFloat(-kNoise, kNoise);
+            return rng->StableDerive(id.Value()).NextFloat(-kNoise, kNoise);
         }
 
         return Noise(id);

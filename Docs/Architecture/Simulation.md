@@ -538,16 +538,21 @@ seeded `Rng`, each entity's needs now decay at its own rate, derived
 from its ID:
 
 ```cpp
-const auto rate = rng->Derive(id.Value()).NextFloat(
+const auto rate = rng->StableDerive(id.Value()).NextFloat(
     1.0f - tuning.NeedJitter, 1.0f + tuning.NeedJitter);
 need.Value -= need.DecayRate * delta * rate;
 ```
 
-Same seed + same entity = same metabolism, every run; the parent
-stream never advances (the adapter owns world-level randomness); one
-number in the co-save resumes it. `sim.jitter` (default 0.15) is the
-modder's knob for how strongly minds diverge — `0` turns the spread
-off entirely. Without an `Rng` the rate is exactly 1.0, so no
+Same seed + same entity = same metabolism, every run. The rate
+anchors to the SEED (StableDerive), never the live state, so the
+parent may advance freely between ticks — the adapter's births draw
+from the same Rng — without ever re-rolling a mind's metabolism
+(0.8.x field finding: per-entity noise followed the live state, so
+a settled mind re-rolled every frame; now a settled mind rests). One
+number in the co-save resumes the parent stream. `sim.jitter`
+(default 0.15) is the modder's knob for how strongly minds diverge —
+`0` turns the spread off entirely. Without an `Rng` the rate is
+exactly 1.0, so no
 existing caller is affected.
 
 Proven by the Jitter suite: two identical minds under one seed

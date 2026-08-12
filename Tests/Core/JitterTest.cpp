@@ -253,6 +253,82 @@ namespace LCE::Tests
             }
         }
 
+        //-------------------------------------------------------------------------
+        // 6. The parent may advance between ticks — the world doesn't
+        //    care. The adapter draws births from the same Rng it passes
+        //    to Update, so the parent's live state moves between ticks.
+        //    Per-entity noise must anchor to the seed, never the live
+        //    state: a settled mind keeps its metabolism and its decision
+        //    (0.8.x field finding — a near-tied Rest/Explore mind re-
+        //    rolled its intent every frame). Two same-seed worlds, one
+        //    whose parent advances between ticks, stay identical.
+        //-------------------------------------------------------------------------
+        {
+            Simulation::EntityRegistry quietWorld;
+            const auto quietA = AddFarmer(quietWorld);
+            const auto quietB = AddFarmer(quietWorld);
+
+            Simulation::Rng quietRng{ 31337 };
+
+            for (int tick = 0; tick < 10; ++tick)
+            {
+                Simulation::Update(quietWorld, 1.0, {}, nullptr, &quietRng);
+            }
+
+            Simulation::EntityRegistry busyWorld;
+            const auto busyA = AddFarmer(busyWorld);
+            const auto busyB = AddFarmer(busyWorld);
+
+            Simulation::Rng busyRng{ 31337 };
+
+            for (int tick = 0; tick < 10; ++tick)
+            {
+                // The adapter's pattern: births draw from the same Rng
+                // between ticks, moving the parent's live state.
+                busyRng.Next();
+                busyRng.Next();
+                busyRng.Next();
+
+                Simulation::Update(busyWorld, 1.0, {}, nullptr, &busyRng);
+            }
+
+            const auto quietNeedA = quietWorld.GetComponent<Simulation::Needs>(quietA);
+            const auto quietNeedB = quietWorld.GetComponent<Simulation::Needs>(quietB);
+            const auto busyNeedA = busyWorld.GetComponent<Simulation::Needs>(busyA);
+            const auto busyNeedB = busyWorld.GetComponent<Simulation::Needs>(busyB);
+
+            if (!quietNeedA || !quietNeedB || !busyNeedA || !busyNeedB
+                || quietNeedA->List.empty() || quietNeedB->List.empty()
+                || busyNeedA->List.empty() || busyNeedB->List.empty())
+            {
+                return false;
+            }
+
+            // Bit-identical decay: the parent's advancement never leaked
+            // into anyone's metabolism.
+            if (quietNeedA->List[0].Value != busyNeedA->List[0].Value
+                || quietNeedB->List[0].Value != busyNeedB->List[0].Value)
+            {
+                return false;
+            }
+
+            // And the decisions match too — no re-rolled confidence from
+            // a moved parent.
+            const auto quietIntentA = quietWorld.GetComponent<Simulation::Intent>(quietA);
+            const auto busyIntentA = busyWorld.GetComponent<Simulation::Intent>(busyA);
+
+            if (quietIntentA == nullptr || busyIntentA == nullptr)
+            {
+                return false;
+            }
+
+            if (quietIntentA->Action != busyIntentA->Action
+                || quietIntentA->Confidence != busyIntentA->Confidence)
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 }

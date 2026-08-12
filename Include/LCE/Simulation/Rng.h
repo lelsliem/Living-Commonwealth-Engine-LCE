@@ -59,9 +59,14 @@ namespace LCE::Simulation
     //
     // Derive(key) is the determinism trick: it returns a CHILD stream
     // mixed from the current state and the key WITHOUT advancing the
-    // parent. The tick derives each entity's noise from its ID, so
-    // iteration order can never leak into results — same seed + same
-    // entity = same jitter, every run, whatever order the store visits.
+    // parent. Same (state, key) → same child. StableDerive(key) is the
+    // per-entity variant the tick uses: it anchors to the SEED, never
+    // the live state, so advancing the parent for other draws (births,
+    // mediation) can never re-roll a mind's noise — same seed + same
+    // entity = same jitter, every run, whatever order the store visits
+    // and however far the parent has moved (0.8.x field finding: a
+    // near-tied mind re-rolled its intent every frame because the
+    // adapter's births advanced the parent between ticks).
     //-------------------------------------------------------------------------
     class Rng
     {
@@ -102,7 +107,18 @@ namespace LCE::Simulation
         [[nodiscard]]
         Rng Derive(std::uint64_t key) const noexcept;
 
+        //-------------------------------------------------------------------------
+        // A child stream for the key anchored to the SEED, never the
+        // live state. The parent may advance freely between calls — the
+        // child for a key never moves. This is the per-entity noise
+        // primitive (needs decay, Decide jitter): personality is a pure
+        // function of (seed, entity), so a settled mind stays settled.
+        //-------------------------------------------------------------------------
+        [[nodiscard]]
+        Rng StableDerive(std::uint64_t key) const noexcept;
+
     private:
+        std::uint64_t m_Seed;
         std::uint64_t m_State;
     };
 }

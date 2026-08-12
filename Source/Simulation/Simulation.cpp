@@ -309,10 +309,14 @@ namespace LCE::Simulation
         // Per-mind metabolism (0.5.0): when a seeded Rng is present, each
         // entity's needs decay at its own rate, derived from its ID — the
         // same seed + the same entity yields the same rate every tick, and
-        // the parent stream never advances. This is what breaks the herd:
-        // identical minds no longer get hungry on the same clock. Without
-        // an Rng the jitter is exactly 1.0 — behaviour unchanged, so no
-        // existing caller is affected.
+        // the parent stream never advances. StableDerive anchors to the
+        // seed, never the live state, so a caller advancing the parent
+        // between ticks (the adapter's births) can never re-roll a mind's
+        // metabolism — a near-tied mind stays settled (0.8.x field
+        // finding). This is what breaks the herd: identical minds no
+        // longer get hungry on the same clock. Without an Rng the jitter
+        // is exactly 1.0 — behaviour unchanged, so no existing caller is
+        // affected.
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Needs>(
             [delta, rng, &tuning, &local](EntityId id, Needs& needs)
@@ -320,7 +324,7 @@ namespace LCE::Simulation
                 ++local.Entities;
 
                 const auto rate = (rng != nullptr)
-                    ? rng->Derive(id.Value()).NextFloat(
+                    ? rng->StableDerive(id.Value()).NextFloat(
                           1.0f - tuning.NeedJitter,
                           1.0f + tuning.NeedJitter)
                     : 1.0f;

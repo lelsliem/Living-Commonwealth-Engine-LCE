@@ -277,6 +277,71 @@ namespace LCE::Tests
             }
         }
 
+        //-------------------------------------------------------------------------
+        // 7. StableDerive is seed-anchored: the parent may advance freely
+        //    between calls (births, mediation — the adapter's pattern),
+        //    and the child for a key never moves. This is the 0.8.x
+        //    field finding: a near-tied mind re-rolled its intent every
+        //    frame because the tick's per-entity noise followed the
+        //    parent's live state. A settled mind must rest, not re-roll.
+        //-------------------------------------------------------------------------
+        {
+            Simulation::Rng parent{ 31415 };
+
+            const auto before = parent.StableDerive(7000);
+
+            // The parent advances — the adapter's births draw between
+            // ticks. The anchored child must be untouched.
+            for (int i = 0; i < 64; ++i)
+            {
+                parent.Next();
+            }
+
+            const auto after = parent.StableDerive(7000);
+
+            for (int i = 0; i < 16; ++i)
+            {
+                if (before.Next() != after.Next())
+                {
+                    return false;
+                }
+            }
+
+            // Same seed, same key → same child, always. Different seed →
+            // different personality (the jitter comes from the seed).
+            Simulation::Rng twin{ 31415 };
+            Simulation::Rng other{ 31416 };
+
+            auto twinChild = twin.StableDerive(7000);
+            auto otherChild = other.StableDerive(7000);
+
+            bool anyDifferent = false;
+
+            for (int i = 0; i < 16 && !anyDifferent; ++i)
+            {
+                anyDifferent = (twinChild.Next() != otherChild.Next());
+            }
+
+            if (!anyDifferent)
+            {
+                return false;
+            }
+
+            // A fresh Rng from the same seed matches the advanced parent
+            // — the anchor is the seed, not the stream position.
+            Simulation::Rng fresh{ 31415 };
+            auto freshChild = fresh.StableDerive(7000);
+            auto advancedChild = parent.StableDerive(7000);
+
+            for (int i = 0; i < 16; ++i)
+            {
+                if (freshChild.Next() != advancedChild.Next())
+                {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 }

@@ -2,7 +2,30 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
-## [0.8.0] — 2026-08-11 — Scale · "The Settlement Survives" — 2026-08-11 — Scale · "The Settlement Survives"
+## [0.8.1] — 2026-08-12 — The re-roll fix (field finding from the adapter)
+
+The adapter's 0.7.4 in-game hunt (ADR-0029) found the tick's
+per-entity noise followed the Rng's LIVE state, so its births —
+legitimately drawn from the same Rng it passes to Update — re-rolled
+every mind's metabolism and confidence every frame. A near-tied
+Rest/Explore mind flipped its intent every tick (22k log lines in
+three minutes, the drag behind the frame hang). The adapter throttled
+its log; the engine fixed the root cause.
+
+- `Rng::StableDerive(key)` — a child stream anchored to the SEED,
+  never the live state. Same seed + same entity = same noise every
+  run, however far the parent has advanced. `Derive` is unchanged
+  (state-anchored, documented as such).
+- Both per-entity call sites (needs-decay rate, Decide's confidence
+  jitter) now use `StableDerive` — a settled mind rests, not
+  re-rolls. Backward compatible: with a parent that never advances
+  (all engine tests) the two are byte-identical.
+- Version string corrected to 0.8.0-alpha (the 0.8.0 commit bumped
+  the integer but not the string).
+- 30/30 suites green (RngTest gains the StableDerive block; JitterTest
+  gains the advancing-parent determinism proof).
+
+## [0.8.0] — 2026-08-11 — Scale · "The Settlement Survives"
 
 Engine side shipped (design locked the same day —
 Docs/Design/Scale.md); the adapter's in-game verification is the

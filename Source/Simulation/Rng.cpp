@@ -63,7 +63,7 @@ namespace LCE::Simulation
     }
 
     Rng::Rng(std::uint64_t seed) noexcept
-        : m_State(seed)
+        : m_Seed(seed), m_State(seed)
     {
     }
 
@@ -101,5 +101,16 @@ namespace LCE::Simulation
         // stream. The parent is untouched, so the tick can derive per
         // entity in any iteration order and the results never change.
         return Rng(Avalanche(m_State + kGolden + key));
+    }
+
+    Rng Rng::StableDerive(std::uint64_t key) const noexcept
+    {
+        // Mix the key into the SEED and avalanche — a child stream that
+        // never moves, no matter how far the parent has advanced. The
+        // tick's per-entity noise (needs decay, Decide jitter) anchors
+        // here, so a caller advancing the parent between ticks (births,
+        // mediation) can never re-roll a mind's personality (0.8.x field
+        // finding). Same (seed, key) → same child, every run, every tick.
+        return Rng(Avalanche(m_Seed + kGolden + key));
     }
 }

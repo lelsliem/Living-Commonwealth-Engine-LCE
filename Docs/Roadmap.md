@@ -30,8 +30,12 @@ The endgame plan is locked (Docs/Design/Endgame.md); the adapter
 verdicted every cut (AdapterProject.md) — six of the seven patterns
 need zero new engine work and disease needs none either.
 
-[ ] 0.8.1 — adapter verifies 0.8.0 Scale in-game; the engine lands
-    whatever that surfaces (field-fixes only)
+[~] 0.8.1 — adapter verifies 0.8.0 Scale in-game; the engine lands
+    whatever that surfaces (field-fixes only). First field fix landed
+    2026-08-12: `Rng::StableDerive` — per-entity noise anchors to the
+    seed, not the live state, so the adapter's births between ticks
+    can no longer re-roll a settled mind (ADR-0029). Adapter
+    verification of 0.8.0 Scale is still the open gate.
 [ ] 0.8.2 — the four proven patterns as lean samples: Economy,
     Legacy, Weather, Children
 [ ] 0.8.3 — the three harder patterns: Faction Wars, Disease

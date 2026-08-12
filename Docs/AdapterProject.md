@@ -282,12 +282,13 @@ omit) to keep the deterministic id-hash fallback — behavior unchanged.
 
 **The herd, broken (stone 07):** once you pass the `Rng`, the tick's
 need-decay step gives every mind its own metabolism — each entity's
-needs decay at `DecayRate * Derive(id).NextFloat(1 ± jitter)`, so
-identical settlers stop getting hungry on the same clock. The knob is
-`sim.jitter` (default 0.15); `0` turns the spread off. No Rng → decay
-is exactly as it always was. In-game symptom this fixes: the whole
-settlement marching to the bench in lockstep. Pair it with the
-settlement-market stone (each mind seeded with its home settlement's
+needs decay at `DecayRate * StableDerive(id).NextFloat(1 ± jitter)`,
+so identical settlers stop getting hungry on the same clock. The
+knob is `sim.jitter` (default 0.15); `0` turns the spread off. No
+Rng → decay is exactly as it always was. In-game symptom this
+fixes: the whole settlement marching to the bench in lockstep. Pair
+it with the settlement-market stone (each mind seeded with its home
+settlement's
 market fact) and the march becomes a market day.
 
 ## Animals are not settlers — a field finding for the translator
@@ -560,6 +561,38 @@ The boundary reminder stays: the core is single-threaded and
 deterministic by construction. If you take the tick off the game
 thread, FixedStep's fixed cadence is what makes that safe — the sim
 no longer depends on when you call it, only on how many steps ran.
+
+## The re-roll fix — a field finding, now fixed (2026-08-12)
+
+The adapter's ADR-0029 (its own DecisionLog, 2026-08-12) flagged a
+real engine flaw: the tick's per-entity noise — the needs-decay rate
+AND Decide's confidence jitter — was derived from the Rng's LIVE
+state (`Derive` mixes `m_State` + key). The adapter legitimately
+advances the same Rng it passes to Update (births draw between
+Ticks), so every entity's noise re-rolled every frame. A mind with
+near-tied Rest/Explore needs flipped its intent every tick — 22k
+"decides" log lines in three minutes, 75% of the log, the drag
+behind the frame hang. The adapter throttled its own log (its fix);
+the root cause was the engine's to own.
+
+**Fixed (2026-08-12): `Rng::StableDerive(key)`** — a child stream
+anchored to the SEED, never the live state. Same seed + same entity
+= same noise, every run, no matter how far the parent has moved.
+Both engine call sites (needs decay, Decide jitter) now use it; the
+parent advancing between ticks can no longer re-roll a settled mind.
+`Derive` is unchanged (state-anchored, documented as such) for
+anyone who wants a stream that follows the parent. The co-save is
+unaffected — the Rng state in the record still resumes the parent
+stream; per-entity noise is now a pure function of (seed, entity),
+which is strictly more deterministic.
+
+**Your verify sentence:** with your log throttling in place, watch a
+settled mind near the Rest/Explore boundary — it should hold one
+intent (Rest or Explore) tick after tick instead of alternating, and
+the "decides" lines for it should stop being a per-frame flood. The
+engine's proof is the new Jitter suite block: two same-seed worlds,
+one whose parent advances three draws between every tick, stay
+bit-identical in decay AND decision.
 
 ## The endgame plan — cuts verdicted, plan locked (2026-08-11)
 
