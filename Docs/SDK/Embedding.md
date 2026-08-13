@@ -25,7 +25,7 @@ include(FetchContent)
 FetchContent_Declare(
     lce
     GIT_REPOSITORY https://github.com/lelsliem/Living-Commonwealth-Engine-LCE-.git
-    GIT_TAG        v0.5.0
+    GIT_TAG        v0.8.5
 )
 FetchContent_MakeAvailable(lce)
 
@@ -52,7 +52,7 @@ project(MyWorld LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(LCE 0.5 REQUIRED)
+find_package(LCE 0.8 REQUIRED)
 
 add_executable(myworld main.cpp)
 target_link_libraries(myworld PRIVATE LCE::Core)

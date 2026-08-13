@@ -12,9 +12,9 @@ Project Roadmap
 
 Status
 
-Current Version : 0.8.5-alpha
+Current Version : 0.8.6-alpha
 
-Current Stage   : docs — LearningPath complete, the audit written, Embedding recipe live
+Current Stage   : CI live — every push builds and tests on MSVC, GCC, and Clang
 
 Next Milestone  : 0.9.0 — Release Candidate
 
@@ -86,6 +86,14 @@ need zero new engine work and disease needs none either.
     the 0.8.0 runtime recipe — one loop (FixedStep + TickReport +
     sim.memory.cap) so a non-Fallout embedder starts from one doc.
     32/32 suites, eleven samples green
+[✓] 0.8.6 — CI, live: a GitHub Actions workflow builds and runs all
+    32 suites on three toolchains every push — MSVC (/W4 /WX, warnings
+    are errors), GCC, and Clang (portability). The freeze is the point:
+    a drifted API must fail on EVERY compiler, and the SurfaceTest size
+    guards must hold cross-compiler. ctest wiring, the LCE.Bench smoke
+    run, and the installed-package version fixed (it still said 0.5.0 —
+    find_package consumers were told a lie; now 0.8.x, matching
+    Version.h). Embedding pins moved to the released v0.8.5 tag.
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via
     GitHub; feedback through Nexus comments and GitHub issues.
     Async, unsocial, by design.

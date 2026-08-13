@@ -91,6 +91,10 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   Embedding.md extended with the 0.8.0 onboarding recipe (FixedStep +
   TickReport + sim.memory.cap) so a non-Fallout embedder starts from
   one doc.
+- **0.8.6** — CI, done: GitHub Actions builds and tests on MSVC, GCC,
+  and Clang every push — the freeze enforced cross-compiler, the
+  ctest wiring, the LCE.Bench smoke, and the installed-package
+  version fixed (0.5.0 → 0.8.x; find_package told the truth).
 - **0.9.0 — RC "The Freeze"** — the freeze *in force*: everything
   from here is fixes-only. Public beta live (the mod on Nexus, the
   engine via GitHub), feedback through Nexus comments and GitHub

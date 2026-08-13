@@ -2,6 +2,35 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.6] — 2026-08-13 — CI: three toolchains, every push
+
+The engine's first CI. A GitHub Actions workflow (`.github/workflows/ci.yml`)
+builds and runs every suite on three toolchains on every push to main
+and every pull request:
+
+- **windows-msvc** — `/W4 /WX` (warnings are errors), the same
+  discipline as local development.
+- **ubuntu-gcc** and **ubuntu-clang** — portability: what one
+  toolchain accepts is not the contract until all three do.
+
+The freeze is the point. `SurfaceTest` pins every enum ordinal, struct
+field type, and function signature at compile time — CI makes that
+fail on EVERY compiler, and the size guards on the ABI-stable co-save
+structs must hold cross-compiler. The suites run through ctest (new
+`enable_testing` + `add_test` wiring); samples and tools build too;
+and `LCE.Bench --sanity` smoke-runs after the suites, so the Scale
+numbers at least run on every toolchain even though their timing is
+machine-dependent.
+
+**Two truths restored along the way.** The installed package version
+(`project(VERSION ...)` in the root CMakeLists) still said 0.5.0 — a
+`find_package(LCE)` consumer was being told a version the engine
+hasn't been for six milestones; it now tracks Version.h (0.8.x). And
+Embedding.md's pins pointed at `v0.5.0`; they now point at the
+released `v0.8.5` tag with `find_package(LCE 0.8 REQUIRED)`.
+
+Version bumped to 0.8.6-alpha. 32/32 suites, eleven samples green.
+
 ## [0.8.5] — 2026-08-13 — The docs: the full audit, the complete LearningPath, the Embedding recipe
 
 The milestone that makes the engine *readable* — everything since

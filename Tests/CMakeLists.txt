@@ -8,6 +8,12 @@
 #==============================================================================
 
 # LCE Core test harness — every subsystem has a suite; runs on every build.
+# ctest wiring (0.8.6): CI runs the suites through ctest, so the harness
+# path is the runner's, not a hard-coded binary location.
+enable_testing()
+
+add_test(NAME LCE.Core.Tests COMMAND LCE.Core.Tests)
+
 add_executable(LCE.Core.Tests
     Core/TestRunner.cpp
     Core/LoggingTest.cpp

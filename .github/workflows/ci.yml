@@ -1,0 +1,68 @@
+#===============================================================================
+#
+#  Living Commonwealth Engine (LCE)
+#  Building living worlds through simulation.
+#
+#  SPDX-License-Identifier: MIT
+#
+#  0.8.6 — CI. Build + all suites on three toolchains, every push.
+#
+#  The freeze (SurfaceTest) is the point: a drifted API must fail on
+#  EVERY compiler, and the size guards on the ABI-stable co-save
+#  structs must hold cross-compiler — one toolchain accepting the code
+#  is not the contract until all three do. MSVC runs /W4 /WX (warnings
+#  are errors); GCC and Clang verify portability on the same suites.
+#
+#  The doctor and bench tools build too (LCE_BUILD_TOOLS=ON), and the
+#  bench's --sanity mode smoke-runs after the suites — the Scale
+#  numbers are the 0.9.0 gate, so they must at least RUN on every
+#  toolchain even though their timing is machine-dependent.
+#
+#===============================================================================
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: windows-msvc
+            os: windows-latest
+          - name: ubuntu-gcc
+            os: ubuntu-latest
+          - name: ubuntu-clang
+            os: ubuntu-latest
+            cxx: clang++
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        shell: bash
+        run: |
+          if [ -n "${{ matrix.cxx }}" ]; then
+            export CXX="${{ matrix.cxx }}"
+          fi
+          cmake -S . -B Build \
+            -DLCE_BUILD_TESTS=ON \
+            -DLCE_BUILD_SAMPLES=ON \
+            -DLCE_BUILD_TOOLS=ON
+
+      - name: Build
+        shell: bash
+        run: cmake --build Build --config Debug --parallel
+
+      - name: Test (all suites)
+        shell: bash
+        run: ctest --test-dir Build -C Debug --output-on-failure
+
+      - name: Bench sanity smoke
+        shell: bash
+        run: ./Build/Bin/Debug/LCE.Bench --sanity

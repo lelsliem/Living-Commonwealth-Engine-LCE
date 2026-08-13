@@ -6,7 +6,7 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.8.5--alpha-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.8.6--alpha-emerald.svg)](#roadmap)
 [![Changelog](https://img.shields.io/badge/Changelog-Docs%2FCHANGELOG.md-emerald.svg)](Docs/CHANGELOG.md)
 
 ---
@@ -105,11 +105,13 @@ labels absorb it), the compat policy doc, the surface-stability test
 (every enum ordinal, field type, and signature pinned at compile
 time — a drifted surface cannot build), and the public-header audit
 (docs fixed, banners regenerated; zero API change). The freeze is
-now in force. **0.8.5 (current)**: the docs — LearningPath complete
-(the tour now runs Version → Scale in 19 stops), the full audit
-written up, and Embedding.md's 0.8.0 runtime recipe (FixedStep +
-TickReport + sim.memory.cap) so a non-Fallout embedder starts from
-one doc.
+now in force. **0.8.5**: the docs — LearningPath complete (the tour
+now runs Version → Scale in 19 stops), the full audit written up,
+and Embedding.md's 0.8.0 runtime recipe (FixedStep + TickReport +
+sim.memory.cap) so a non-Fallout embedder starts from one doc.
+**0.8.6 (current)**: CI — a GitHub Actions workflow builds and runs
+all 32 suites on MSVC, GCC, and Clang every push, with the LCE.Bench
+smoke run and the freeze enforced cross-compiler.
 
 **The ladder beyond:**
 
