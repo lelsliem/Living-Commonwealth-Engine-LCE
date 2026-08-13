@@ -705,8 +705,10 @@ for what was removed and why.
   DLL. The mod itself logs through LCE's API and `REX::LOG`, never spdlog
   directly.
 
-The adapter repo owns the living copy of this handoff; this file in the
-core repo is the snapshot from which it grew.
+The adapter repo carries its own working handoff — its
+`Docs/AdapterProject.md` (adapter status, architecture, lifecycle) —
+while this engine-side file is the handover record, per Canonical Copy
+above.
 
 ---
 
@@ -781,3 +783,47 @@ Groups/Traits, Legacy, Rng, and WorldTime. The only touchpoints are
 read-only: `TickReport` for the 0.7.9 perf sanity pass, and the
 adapter's co-save staying additive. The engine tab is free to proceed
 with its own 0.8.2+ samples; nothing here blocks or waits on it.
+
+## Adapter 0.8.x → 0.9.x run — reordered, zero new surface (hand-over 2026-08-13)
+
+The adapter closed 0.8.0 (Illness & Medicine) — **verified in-game on
+a natural radstorm day**: 73 medicine buys, 4 sick-but-broke resters,
+0 deaths; the market-cure fix (retune + hunger counter-toll + the
+wired food vector) is committed (`c3e837b`). Its 0.8.1 co-save audit
+caught and fixed a real gap of its own: `Health` (0.8.0) and
+`Pregnancy`/`BirthDay` (0.7.7) were registered serializers but never
+named in the co-save's stable-name table, so a mid-hold illness and
+an in-progress pregnancy were both lost on save/load (`CompanionTag`
+too, harmless — it re-derives). All four names now ride the adapter's
+record; `MidOutbreakSaveTest` locks the round-trip. 25/25 adapter
+suites green.
+
+Its run to the Nexus beta is designed (`Docs/Design/Run080.md`) and
+was reordered 2026-08-13 — the random-interactions trial moved ahead
+of MCM so the tuning page is built once, with the interaction knobs
+included if the trial proves:
+
+```
+0.8.1 illness field pass (in progress) → 0.8.2 burial →
+0.8.3 sick household → 0.8.4 random interactions (the trial) →
+0.8.5 MCM + Settings Manager → 0.8.6a the audit →
+0.8.6b redefine & loose ends → 0.8.6c scale in the field →
+0.9.1a dialog pools → 0.9.1b timings & weights →
+0.9.1c babies implemented → 0.9.2a animations →
+0.9.2b final touches → 0.9.2c beta on Nexus
+```
+
+**Request E: none — confirmed stone by stone.** Every stone rides the
+existing contract — `CreateEntity` / `DestroyEntity` / `Remember` /
+`Update` / `GetComponent`, `ReportOutcome`, the EventBus,
+Groups/Traits, Legacy, Rng, WorldTime, and the shared wallet. The
+only touchpoints with this repo are read-only: `TickReport` for
+0.8.6c (scale, measured), and the adapter's co-save staying additive
+(burial days, medicine stock, and interaction gates are all
+adapter-owned state on the adapter's record). The 0.8.4 trial is the
+one place a real need could surface — if unprompted interaction ever
+needs a new valence it follows the Death precedent (an append-only
+`InteractionKind`) and will be named here at that time. This run
+supersedes the provisional adapter mapping in the Endgame section
+above (2026-08-11), which predated the final 0.7.x ordering; the
+engine tab is free to proceed — nothing here blocks or waits on it.
