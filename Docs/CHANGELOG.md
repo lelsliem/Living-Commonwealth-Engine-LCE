@@ -2,21 +2,49 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
-## [0.8.2] — 2026-08-13 — The Economy sample
+## [0.8.2] — 2026-08-13 — The four pattern samples
 
-**The Economy (SAMPLE 4).** The first of the 0.8.2 pattern samples —
-proof that a whole living economy needs zero new engine surface.
-`LCE.SampleEconomy` shows dynamic pricing, supply chains, trade
-routes, and market events as pure memory: the price of bread is what
-the market remembers about last harvest. A delivery is a memory
-(supply, cheaper); a blight is a memory (scarcity, dearer); the price
-is a pure function of remembered facts, so it spikes with the blight
-(9→14 caps) and fades back as the memory dies — no ledger, no price
-field, no script. The route to market is Trust, remembered (six fair
-trades, 0.63 Trust). The supply chain is a chain of memories.
+**The Economy (SAMPLE 4).** Proof that a whole living economy needs
+zero new engine surface. `LCE.SampleEconomy` shows dynamic pricing,
+supply chains, trade routes, and market events as pure memory: the
+price of bread is what the market remembers about last harvest. A
+delivery is a memory (supply, cheaper); a blight is a memory
+(scarcity, dearer); the price is a pure function of remembered facts,
+so it spikes with the blight (9→14 caps) and fades back as the
+memory dies — no ledger, no price field, no script. The route to
+market is Trust, remembered (six fair trades, 0.63 Trust). The
+supply chain is a chain of memories.
 
-Built entirely on the public surface: Memory facts, ReportOutcome,
-relationships, QueryWhere — the same loop every adapter walks.
+**Legacy (SAMPLE 5).** Death is three functions and a fact.
+`LCE.SampleLegacy` shows Bequeath (salient facts pass to the heir,
+fainter — a passing kindness below the floor dies with its owner),
+LeaveLegacy (the old bridge survives the keeper), and InheritMemory
+(a generation later, only the recent and the wanted travel — the old
+feud and the grief stay with the dead).
+
+**Weather (SAMPLE 6).** A sky that behaves. `LCE.SampleWeather`
+shows the calendar (seasons derived from the day alone) and weather
+as day-stamped facts that shape need: a radstorm makes safety the
+loudest voice, so the farmer flees the remembered raiders; clear
+skies leave hunger speaking, so the farmer walks to market. The sky
+never tells the mind what to do — it changes which need is urgent.
+
+**Children (SAMPLE 7).** A family is a group. `LCE.SampleChildren`
+shows birth (join the family group), InheritGroupAttitudes (the child
+inherits the family's mean disposition — trust is never inherited),
+JitteredTraits (per-child personality from the seeded RNG), and
+personal experience beating inherited (one kind act warms the
+inherited distrust; one fair trade earns the first trust).
+
+**One engine fix fell out of the Children sample.** `JitteredTraits`'
+RNG path re-derived the child stream per trait and took only its first
+draw, so every trait of an entity came out identical. It now derives
+one child stream and advances it per trait — boldness and sociability
+are different draws again. Regression assertion added to TraitsTest.
+
+All four built entirely on the public surface: Memory facts,
+ReportOutcome, relationships, groups, traits, the calendar, Bequeath
+— the same loop every adapter walks.
 
 ## [0.8.1] — 2026-08-12 — Housekeeping & the re-roll fix
 

@@ -9,10 +9,14 @@ the conversation that built the engine.
 `v0.8.1` and pushed 2026-08-13). Since 0.8.0: the ADR-0029 re-roll
 fix (`Rng::StableDerive`), the Simulation folder reorganization
 (your includes were re-synced), the surface guards (HeaderMapTest +
-Doctor include-layout check), and the first 0.8.2 pattern sample,
-The Economy (prices are memories — pure-memory dynamic pricing;
-zero new surface, nothing for the adapter to consume) — each with
-its own section below.
+Doctor include-layout check), and the four 0.8.2 pattern samples
+(Economy, Legacy, Weather, Children — teaching-only, zero new
+surface for the adapter to consume) — each with its own section
+below. One engine fix came out of the Children sample and DOES
+affect you if you read JitteredTraits: its RNG path was stamping
+one identical value on every trait; it now varies each trait. If
+you captured trait values into a co-save, regenerate them — the
+values change, the schema does not.
 The adapter's in-game verification of 0.8.0 Scale (and the
 StableDerive fix) remains the open gate — its 0.8.6c scale pass
 covers it. Per the adapter's own hand-over (2026-08-13): Request E

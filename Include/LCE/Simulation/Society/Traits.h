@@ -51,6 +51,7 @@
 #include "LCE/Simulation/Substrate/Rng.h"
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -100,15 +101,28 @@ namespace LCE::Simulation
     {
         Traits result;
 
-        const auto jitter = [id, rng, spread](float value, std::size_t index)
+        // The entity's own child stream, derived once — every trait is
+        // its OWN draw from it, so one entity's traits differ from each
+        // other, and the stream advances while the parent never does.
+        // (0.8.2 field fix: the old code re-derived the child for each
+        // trait and took only its first draw, so every trait of an
+        // entity came out identical.)
+        std::optional<Rng> child;
+
+        if (rng != nullptr)
+        {
+            child.emplace(rng->Derive(id.Value()));
+        }
+
+        result.List.reserve(base.List.size());
+
+        for (std::size_t i = 0; i < base.List.size(); ++i)
         {
             float noise = 0.0f;
 
-            if (rng != nullptr)
+            if (child.has_value())
             {
-                // A fresh draw per trait, all from the entity's own
-                // child stream — the stream advances, the parent does not.
-                noise = rng->Derive(id.Value()).NextFloat(-spread, spread);
+                noise = child->NextFloat(-spread, spread);
             }
             else
             {
@@ -117,23 +131,16 @@ namespace LCE::Simulation
                 constexpr std::uint64_t kGolden = 0x9E3779B97F4A7C15ull;
 
                 const auto hash =
-                    (id.Value() * kGolden) ^ (index * kGolden);
+                    (id.Value() * kGolden) ^ (i * kGolden);
 
                 const auto units = static_cast<float>((hash >> 32) % 1000u);
 
                 noise = (units / 1000.0f - 0.5f) * 2.0f * spread;
             }
 
-            return value * (1.0f + noise);
-        };
-
-        result.List.reserve(base.List.size());
-
-        for (std::size_t i = 0; i < base.List.size(); ++i)
-        {
             result.List.push_back(TraitValue{
                 base.List[i].Name,
-                jitter(base.List[i].Value, i) });
+                base.List[i].Value * (1.0f + noise) });
         }
 
         return result;

@@ -43,10 +43,16 @@ need zero new engine work and disease needs none either.
     31/31 engine suites. The open gate is still the adapter's
     in-game verification of 0.8.0 Scale (its Illness & Medicine
     plan is next on its side).
-[~] 0.8.2 — the four proven patterns as lean samples: Economy
-    (done — prices are memories: dynamic pricing, supply chains,
-    trade routes, and market events, zero new surface), Legacy,
-    Weather, Children
+[✓] 0.8.2 — the four proven patterns as lean samples, all done:
+    Economy (prices are memories — dynamic pricing, supply chains,
+    trade routes, market events), Legacy (death, inheritance, the
+    name that outlives the voice), Weather (seasons on the calendar,
+    weather as day-stamped facts shaping needs), Children (family
+    as a group: birth, inherited attitudes, per-child traits) —
+    each zero new engine surface. One engine fix fell out: the
+    JitteredTraits RNG path was re-deriving the child per trait and
+    taking only its first draw, so every trait of an entity was
+    identical — now one child stream advances per trait.
 [ ] 0.8.3 — the three harder patterns: Faction Wars, Disease
     (fact-plus-tick, zero new surface), Roads
 [ ] 0.8.4 — the API Freeze: the surface-stability test (the harness

@@ -157,6 +157,11 @@ namespace LCE::Tests
             {
                 return false;   // same seed, different tree
             }
+
+            if (first.List[0].Value == first.List[1].Value)
+            {
+                return false;   // traits within one entity differ too
+            }
         }
 
         //-------------------------------------------------------------------------

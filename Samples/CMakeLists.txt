@@ -67,7 +67,25 @@ add_executable(LCE.SampleEconomy
     Sample-Economy/main.cpp
 )
 
-foreach(sample LCE.SampleFarmer LCE.SampleVillage LCE.SampleMarket LCE.SampleEconomy)
+# SAMPLE 5 — Legacy (0.8.2): death, inheritance, and the name that
+# outlives the voice — Bequeath, InheritMemory, LeaveLegacy.
+add_executable(LCE.SampleLegacy
+    Sample-Legacy/main.cpp
+)
+
+# SAMPLE 6 — Weather (0.8.2): seasons on the calendar and weather as
+# day-stamped facts that shape needs and decisions.
+add_executable(LCE.SampleWeather
+    Sample-Weather/main.cpp
+)
+
+# SAMPLE 7 — Children (0.8.2): family as a group — birth, inherited
+# attitudes, and the traits that make each child their own.
+add_executable(LCE.SampleChildren
+    Sample-Children/main.cpp
+)
+
+foreach(sample LCE.SampleFarmer LCE.SampleVillage LCE.SampleMarket LCE.SampleEconomy LCE.SampleLegacy LCE.SampleWeather LCE.SampleChildren)
     target_link_libraries(${sample}
         PRIVATE
             LCE.Core
