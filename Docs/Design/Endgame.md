@@ -115,10 +115,16 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   tests now resolve against their own tree), and the static-CRT ABI
   mismatch — LCE::Core now carries /MT as an INTERFACE option, so any
   consumer links clean. CI runs the gate every push.
-- **0.8.9** — LCE Studio (beta companion, scoped): the observation
-  window — live event feed, mind inspector, tuning cockpit.
-  Consumer-only through the public API (the bench's shape with a
-  window): zero core surface, the freeze untouched. Planned.
+- **0.8.9** — the trust story + the Studio, done:
+  Docs/Design/TrustStory.md — the beta's promise, structural not
+  patched: remove the DLL, keep the saves; the co-save is a shadow
+  (saves load clean with or without the mod); uninstall leaves
+  nothing behind — the 0.9.0 gate's rehearsal. And LCE Studio, the
+  observation window: zero GUI dependencies (a localhost HTTP server
+  and one embedded HTML page — the browser is the window), a live
+  event feed, an entity table, a mind inspector, and a tuning
+  cockpit — consumer-only through the public API (the bench's shape
+  with a window): zero core surface, the freeze untouched.
 - **0.9.0 — RC "The Freeze"** — the freeze *in force*: everything
   from here is fixes-only. Public beta live (the mod on Nexus, the
   engine via GitHub), feedback through Nexus comments and GitHub

@@ -12,11 +12,11 @@ Project Roadmap
 
 Status
 
-Current Version : 0.8.8-alpha
+Current Version : 0.8.9-alpha
 
-Current Stage   : 0.8.8 done — the packaging gate proven; 0.8.9 trust story + Studio next
+Current Stage   : 0.8.9 done — the trust story written, the Studio watching; the gate is next
 
-Next Milestone  : 0.8.9 — the trust story and the Studio
+Next Milestone  : 0.9.0 — the release gate (the doors open)
 
 ═══════════════════════════════════════════════
 
@@ -114,15 +114,26 @@ need zero new engine work and disease needs none either.
     CRT ABI mismatch — LCE::Core now carries its /MT requirement as
     an INTERFACE option, so consumers link clean without knowing.
     CI runs the gate on every push.
-[ ] 0.8.9 — LCE Studio (beta companion, scoped): the observation
-    window — a live event feed (EntityCreated / IntentProduced /
-    OutcomeRecorded / RelationshipChanged), a mind inspector (needs /
-    memory / relationships / intent), and a tuning cockpit (sliders
-    over the sim.* keys). Consumer-only through the public API — the
-    same shape as the bench and the adapter — so zero core surface
-    and the freeze untouched. The full vision (in-game attach, the
-    co-save browser, the entity editor, the query workbench) stays
-    post-1.0.
+[✓] 0.8.9 — the trust story + the Studio, done:
+
+    The trust story (Docs/Design/TrustStory.md) — the beta's
+    promise, structural not patched: remove the DLL, keep the saves;
+    the co-save is a shadow (saves load clean with or without the
+    mod, either direction); uninstall leaves nothing behind. The
+    0.9.0 gate's rehearsal: the remove-the-DLL test, the
+    save-round-trip test, the uninstall page.
+
+    LCE Studio — the observation window (beta companion, scoped): a
+    zero-dependency GUI — a tiny HTTP server on 127.0.0.1 and ONE
+    embedded HTML page; the browser is the window. A live event feed
+    (EntityCreated / IntentProduced / OutcomeRecorded /
+    RelationshipChanged), an entity table, a mind inspector (needs /
+    memory / relationships / intent / goal), and a tuning cockpit
+    (sliders over the sim.* keys). Consumer-only through the public
+    API — the same shape as the bench and the adapter — so zero core
+    surface and the freeze untouched. --selftest is CI's smoke.
+    The full vision (in-game attach, the co-save browser, the
+    entity editor, the query workbench) stays post-1.0.
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via
     GitHub; feedback through Nexus comments and GitHub issues.
     Async, unsocial, by design.

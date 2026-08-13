@@ -2,6 +2,45 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.9] — 2026-08-13 — the trust story and the Studio
+
+**The trust story** (`Docs/Design/TrustStory.md`) — the beta's
+promise, structural rather than patched, and the 0.9.0 gate's
+rehearsal. Three promises: remove the DLL and keep the saves; the
+co-save is a shadow (a save loads clean with or without the mod, in
+either direction — the sim is a pure data layer that never writes to
+the game's own state); uninstall leaves nothing behind. The remove-
+the-DLL test, the save-round-trip test, and the uninstall page are
+checked before the doors open.
+
+**LCE Studio** (`Tools/LCEStudio`, `LCE.Studio`) — the observation
+window, scoped to be the beta companion. The GUI is deliberately
+zero-dependency: a tiny HTTP server on 127.0.0.1 (std sockets, with a
+winsock/POSIX shim) and ONE embedded HTML page — the browser is the
+window. A village of thirty settlers + a trader ticks at 20 Hz on one
+thread; the page watches:
+
+- **The event feed** — EntityCreated / IntentProduced /
+  OutcomeRecorded / RelationshipChanged pushed from the bus, no
+  polling (a bounded ring buffer, cursor-polled by the page).
+- **The entity table** — every mind, live needs, current intent and
+  confidence; click a row for the full picture.
+- **The mind inspector** — one settler, everything: needs with decay
+  rates, memories with days and labels, relationships (disposition
+  + trust), the current intent, the active goal.
+- **The tuning cockpit** — sliders over the sim.* keys
+  (sim.memory.fade, sim.drift.rate, sim.jitter, ...), POSTing live
+  into the running tick.
+
+Consumer-only through the public API — the same shape the bench
+proved — so zero core surface and the freeze untouched. Threading is
+taught in the source: one mutex makes the world safe to watch.
+`--selftest` starts on an ephemeral port, makes one internal request,
+and exits — CI's smoke that the tool runs on every toolchain.
+
+Version 0.8.9-alpha. The ladder's last rungs are climbed — **0.9.0,
+the release gate, is next.**
+
 ## [0.8.8] — 2026-08-13 — the packaging gate, automated
 
 **The gate** (`Tools/scripts/consumer-test.sh`) — builds and installs
