@@ -48,6 +48,7 @@
 #include "ScaleTest.h"
 #include "SoakTest.h"
 #include "HeaderMapTest.h"
+#include "SurfaceTest.h"
 
 #include <cstdio>
 
@@ -93,6 +94,7 @@ namespace
         { "Scale",           LCE::Tests::ScaleTest },
         { "Soak",            LCE::Tests::SoakTest },
         { "HeaderMap",       LCE::Tests::HeaderMapTest },
+        { "Surface",         LCE::Tests::SurfaceTest },
     };
 
     constexpr int kSuiteCount =

@@ -39,7 +39,24 @@ world's serializer chooses to carry the label.
 what is append-only, what the world owns, and what breaks when — the
 freeze contract written down.
 
-**31/31 suites, eleven samples clean.** Version bumped to 0.8.4-alpha.
+**The surface-stability test (SurfaceTest, the freeze's teeth).**
+HeaderMapTest froze the FILE map (every path a consumer can include);
+SurfaceTest freezes the DECLARATIONS inside those headers. Every
+public enum ordinal (InteractionKind, ActionType, NeedType, GoalType,
+OutcomeResult, Season, LogLevel — the ordinals the adapter's co-save
+writes raw), every public struct field type, and every public member
+and free-function signature — each pinned by a `static_assert` that
+names the declaration in its message. The freeze is enforced at
+compile time: the harness cannot even BUILD against a drifted surface,
+and the error says exactly what moved. Size guards pin the
+ABI-stable co-save structs (Intent, Outcome, Need, Goal, Relationship,
+WorldTime); string-bearing structs are pinned by field type, with
+additive change governed by the append-only compat policy. The suite
+was proven live: a simulated `InteractionKind::Fact` ordinal shift
+failed the build with `static_assert failed: 'InteractionKind::Fact
+ordinal (co-save critical - append-only)'`, then restored green.
+
+**32/32 suites, eleven samples clean.** Version bumped to 0.8.4-alpha.
 
 ## [0.8.3] — 2026-08-13 — The three harder pattern samples
 

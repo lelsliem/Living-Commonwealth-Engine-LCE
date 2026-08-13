@@ -76,10 +76,11 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   the Fact kind + label string (the enum stops growing; labels
   absorb it), the compat policy doc (what is stable, what is
   append-only — InteractionKind ordinals, snapshot schema — and
-  what breaks when), then the surface-stability test (a canonical
-  list of public declarations; the harness fails if the API
-  changes),
-  and the public-header audit. Warts found here are fixed *before* the
+  what breaks when), and the surface-stability test (SurfaceTest:
+  every public enum ordinal, struct field type, and function
+  signature pinned by static_assert — the freeze is enforced at
+  COMPILE time, so a drifted surface cannot even build). Remaining:
+  the public-header audit. Warts found here are fixed *before* the
   freeze is in force.
 - **0.8.5** — the docs: LearningPath complete, the full audit, and
   Embedding.md extended with the 0.8.0 onboarding recipe (FixedStep +

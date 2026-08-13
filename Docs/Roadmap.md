@@ -12,9 +12,9 @@ Project Roadmap
 
 Status
 
-Current Version : 0.8.0-alpha
+Current Version : 0.8.4-alpha
 
-Current Stage   : Scale — engine side shipped; adapter verification pending
+Current Stage   : the API Freeze — surface pinned; header audit next
 
 Next Milestone  : 0.9.0 — Release Candidate
 
@@ -66,9 +66,13 @@ need zero new engine work and disease needs none either.
     into; the Fact kind + label string (the world's vocabulary rides
     MemoryEvent::Label; the enum stops growing because labels absorb
     it); the compat policy doc (stable / append-only / adapter-owned /
-    breaks-when). Remaining: the surface-stability test (harness
-    fails if the public API changes), the public-header audit, the
-    warts fixed before the freeze is in force
+    breaks-when); the surface-stability test (SurfaceTest — every
+    public enum ordinal, struct field type, and function signature
+    pinned by static_assert: a drifted surface cannot even compile,
+    and the error names the declaration that moved; the suite provably
+    caught a simulated ordinal shift). 32/32 suites green. Remaining:
+    the public-header audit, the warts fixed before the freeze is in
+    force
 [ ] 0.8.5 — the docs: LearningPath complete, the full audit,
     Embedding.md extended with the 0.8.0 onboarding recipe
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via
