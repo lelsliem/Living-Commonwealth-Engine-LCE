@@ -66,8 +66,11 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   shaping needs), Children (family as a group: inherited attitudes and
   per-child traits) — each zero new surface, plus the JitteredTraits
   per-trait fix the Children sample surfaced.
-- **0.8.3** — the three harder patterns: Faction Wars, Disease
-  (fact-plus-tick, zero new surface), Roads.
+- **0.8.3** — the three harder patterns, all done: Faction Wars
+  (groups as the map, dispositions as loyalty, InheritGroupAttitudes
+  as indoctrination), Disease (quarantine door-fact + Fatigue toll;
+  the world owns Health), Roads (LegacyStore routes whose weight is
+  condition, maintained by traffic and forgotten by neglect).
 - **0.8.4** — the API Freeze: the surface-stability test (a canonical
   list of public declarations; the harness fails if the API changes),
   the compat policy doc (what is stable, what is append-only —

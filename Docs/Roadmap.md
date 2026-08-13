@@ -53,8 +53,12 @@ need zero new engine work and disease needs none either.
     JitteredTraits RNG path was re-deriving the child per trait and
     taking only its first draw, so every trait of an entity was
     identical — now one child stream advances per trait.
-[ ] 0.8.3 — the three harder patterns: Faction Wars, Disease
-    (fact-plus-tick, zero new surface), Roads
+[✓] 0.8.3 — the three harder patterns, all done: Faction Wars
+    (groups are the map, dispositions the loyalty, InheritGroupAttitudes
+    the indoctrination), Disease (a quarantine door-fact + a Fatigue
+    toll — the world owns Health, the core owns memory and need),
+    Roads (routes as LegacyStore facts whose weight is condition,
+    maintained by traffic, forgotten by neglect)
 [ ] 0.8.4 — the API Freeze: the surface-stability test (the harness
     fails if the public API changes), the compat policy doc (what is
     stable, what is append-only, what breaks and when), the

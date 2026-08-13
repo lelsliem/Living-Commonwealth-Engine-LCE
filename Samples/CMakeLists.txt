@@ -85,7 +85,26 @@ add_executable(LCE.SampleChildren
     Sample-Children/main.cpp
 )
 
-foreach(sample LCE.SampleFarmer LCE.SampleVillage LCE.SampleMarket LCE.SampleEconomy LCE.SampleLegacy LCE.SampleWeather LCE.SampleChildren)
+# SAMPLE 8 — Faction Wars (0.8.3): territory, sieges, and diplomacy
+# as groups and dispositions — a rally flips a member's loyalty.
+add_executable(LCE.SampleFactionWars
+    Sample-FactionWars/main.cpp
+)
+
+# SAMPLE 9 — Disease (0.8.3): outbreaks as facts and ticks — a
+# quarantine door-fact and a Fatigue toll; the world owns Health.
+add_executable(LCE.SampleDisease
+    Sample-Disease/main.cpp
+)
+
+# SAMPLE 10 — Roads (0.8.3): routes that improve with traffic and
+# degrade with neglect as LegacyStore facts; caravans prefer the
+# maintained road.
+add_executable(LCE.SampleRoads
+    Sample-Roads/main.cpp
+)
+
+foreach(sample LCE.SampleFarmer LCE.SampleVillage LCE.SampleMarket LCE.SampleEconomy LCE.SampleLegacy LCE.SampleWeather LCE.SampleChildren LCE.SampleFactionWars LCE.SampleDisease LCE.SampleRoads)
     target_link_libraries(${sample}
         PRIVATE
             LCE.Core

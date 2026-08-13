@@ -51,9 +51,9 @@ namespace LCE::Version
 
     inline constexpr int MajorValue = 0;
     inline constexpr int MinorValue = 8;
-    inline constexpr int PatchValue = 2;
+    inline constexpr int PatchValue = 3;
 
-    inline constexpr std::string_view VersionString = "0.8.2-alpha";
+    inline constexpr std::string_view VersionString = "0.8.3-alpha";
 
     inline constexpr std::string_view EngineName = "Living Commonwealth Engine";
 

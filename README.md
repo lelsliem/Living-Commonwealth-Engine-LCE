@@ -93,16 +93,16 @@ so the adapter's births between ticks can no longer re-roll a settled
 mind — plus the Simulation folders reorganized into category
 subfolders and the SDK surface now guarded by HeaderMapTest and an
 LCE Doctor include-layout check (31/31 suites, tagged `v0.8.1`).
-**0.8.2 (current)**: the pattern samples — all four of the seven mod
-types proven as lean samples, each zero new engine surface. The
-Economy (prices are memories: a blight spikes the price, it falls
-back as the fact fades), Legacy (death is three functions and a
-fact — the name outlives the voice), Weather (seasons on the
-calendar, the sky as day-stamped facts that shape needs), Children
-(family as a group: inherited attitudes, trust earned not
-inherited, per-child traits). One engine fix fell out: JitteredTraits
-now varies each trait instead of stamping one identical value on all
-of them.
+**0.8.2-0.8.3 (current)**: the pattern samples — all SEVEN of the
+mod types proven as lean samples, each zero new engine surface.
+Economy (prices are memories), Legacy (death is three functions and
+a fact), Weather (the sky as day-stamped facts that shape needs),
+Children (family as a group), Faction Wars (groups are the map,
+dispositions the loyalty), Disease (a quarantine door-fact + a
+Fatigue toll), Roads (routes as LegacyStore facts maintained by
+traffic). One engine fix fell out along the way: JitteredTraits now
+varies each trait instead of stamping one identical value on all of
+them.
 
 **The ladder beyond:**
 
@@ -187,6 +187,7 @@ each adapter's own project, never in the core.
 | 0.8.0 | Scale — a settlement, not a village (engine side) | ✅ |
 | 0.8.1 | Housekeeping — field fix + reorg + surface guards | ✅ |
 | 0.8.2 | Pattern samples — Economy, Legacy, Weather, Children | ✅ |
+| 0.8.3 | Pattern samples — Faction Wars, Disease, Roads | ✅ |
 | 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
 | 1.0.0 | Release | ⬜ |
 

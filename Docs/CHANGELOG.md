@@ -2,6 +2,36 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.3] — 2026-08-13 — The three harder pattern samples
+
+**Faction Wars (SAMPLE 8).** Territory, sieges, and diplomacy as
+groups and dispositions. `LCE.SampleFactionWars` shows a wrong from a
+comrade and a kindness from an enemy accumulating into a crossing:
+mara's disposition toward the ally sinks (-0.50) while the enemy
+diplomat rises (+0.20), the world reads the crossing, the membership
+flips, and InheritGroupAttitudes makes the new faction's grudges her
+own — the decision follows the feelings (Socialize toward the
+former enemy).
+
+**Disease (SAMPLE 9).** Outbreaks as facts and ticks, honoring the
+adapter's 0.8.0 verdict (Health is adapter-owned). `LCE.SampleDisease`
+shows the loop the core supplies: a quarantine is a world fact with
+an invalid Other — the Trade door closes while it is remembered and
+reopens the moment it fades (no script ordered a halt); the sick
+mind's toll is Fatigue held urgent (the fever takes the appetite,
+so rest becomes the loudest voice); recovery is rest, and the
+settlement remembers the outbreak as a fading, day-stamped fact.
+
+**Roads (SAMPLE 10).** Routes that improve with traffic and degrade
+with neglect, as LegacyStore facts. `LCE.SampleRoads` shows a road's
+Weight IS its condition: use maintains it, weather wears it, the day
+stamp moves only with use — so the neglected road decays and the
+wrecked road falls out of the world's books while the young road
+grows under the rerouted caravans.
+
+All three zero new engine surface. **31/31 suites, eleven samples
+clean.** Docs updated (roadmap, endgame, handoff).
+
 ## [0.8.2] — 2026-08-13 — The four pattern samples
 
 **The Economy (SAMPLE 4).** Proof that a whole living economy needs
