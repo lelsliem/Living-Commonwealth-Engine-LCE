@@ -848,3 +848,43 @@ needs a new valence it follows the Death precedent (an append-only
 supersedes the provisional adapter mapping in the Endgame section
 above (2026-08-11), which predated the final 0.7.x ordering; the
 engine tab is free to proceed — nothing here blocks or waits on it.
+
+## Adapter freeze sign-off — Request E none at the line (2026-08-13)
+
+The engine's 0.8.4 freeze work (personality tie-break, per-need
+metabolism, the Fact kind + label, CompatPolicy) is audited from the
+adapter side: **nothing new is needed — now or later.** Every
+remaining adapter stone rides the existing contract, and the freeze
+protects what the adapter persists (stable InteractionKind ordinals,
+additive MemoryEvent fields):
+
+- **0.8.2 burial** — game corpse refs, adapter-owned; no engine surface.
+- **0.8.3 sick household** — medicine stock + family care on the
+  shared wallet; no engine surface.
+- **0.8.4 random interactions (the trial)** — proximity, Say/talk,
+  ReportOutcome; any new valence rides Fact + label, no new kinds.
+- **0.8.5 MCM** — the adapter builds its own Papyrus surface via
+  CommonLibF4; the engine's C ABI / MCM cuts do not block it (no
+  engine ask).
+- **0.8.6c scale** — TickReport (read-only).
+- **0.9.x content** — dialog pools, the birth journey, ESP
+  animations: all adapter-side.
+- **Post-beta roads** — legacy-fact roads (LeaveLegacy/ReadLegacy
+  + weight re-push decay) and Fact + label gates; per-fact legacy
+  decay stays cut.
+- **Seasons** — SeasonOf (exists).
+
+Adapter commitments at the freeze, for the record:
+
+1. **InteractionKind stays append-only from this side too** — future
+   fact-types (plague, blocked roads, market events) ride Fact + a
+   label, never a new kind.
+2. **MemoryEvent::Label** — the adapter's Memory serializer keeps not
+   writing it today (restore yields empty, which is fine); writing it
+   later is an adapter record bump, per the CompatPolicy table.
+3. **The 0.8.4 tie-break and per-need metabolism are clean for us** —
+   the seeded needs carry no exact ties, and the adapter's traits read
+   on the hash path, so the JitteredTraits fix never touched our
+   values.
+
+The engine can freeze; nothing here blocks or waits on it.
