@@ -2,6 +2,41 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.5] — 2026-08-13 — The docs: the full audit, the complete LearningPath, the Embedding recipe
+
+The milestone that makes the engine *readable* — everything since
+0.5.0 finally taught as a course.
+
+**LearningPath complete.** The tour previously stopped at the
+snapshot; it now runs Version → Scale in 19 stops — the whole
+simulation layer added: the Mind (Needs, Memory, Relationships,
+Goals), Behaviour/Decide, the tick (Update/Remember/ReportOutcome),
+the Substrate (Rng, WorldTime), Society (Groups, Traits), Legacy,
+Observation & Query, and Scale (FixedStep, TickReport, MemoryCap) —
+each with its lesson. All eleven samples listed with their one-line
+teaching (Economy, Legacy, Weather, Children, Faction Wars, Disease,
+Roads joined Farmer, Village, Market, Host); the exercises grew from
+8 to 13 (query order, observation, byte-identical determinism, the
+door fact, traits into decisions).
+
+**The full audit** (`Docs/Design/Audit.md`). The 0.8.4 pass written
+up: method (doc vs behaviour, namespace vs folder, header-only
+claims, format), what held (the behaviour docs are true; zero
+namespace-folder mismatches; the reorg held), what was fixed (the
+Goals doc lie, Logger.h's copy-paste Purpose, seven malformed
+banners, `///` stragglers), and what was deliberately NOT changed
+(the weather kinds stay for co-save ordinals; Goals stays
+adapter-owned; string-bearing structs are append-only, not
+size-pinned).
+
+**Embedding.md: the 0.8.0 runtime recipe.** The doc previously
+covered packaging; it now carries a complete minimal host — one
+loop (FixedStep + TickReport + sim.memory.cap) with the three keys
+an embedder needs first, the bus, and the co-save three-liner. A
+non-Fallout embedder starts from one doc.
+
+Version bumped to 0.8.5-alpha. 32/32 suites, eleven samples green.
+
 ## [0.8.4] — 2026-08-13 — The freeze work begins: personality into decisions
 
 The first stones of the API Freeze, each a schema or behaviour decision

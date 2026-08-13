@@ -12,9 +12,9 @@ Project Roadmap
 
 Status
 
-Current Version : 0.8.4-alpha
+Current Version : 0.8.5-alpha
 
-Current Stage   : the API Freeze — surface pinned; header audit next
+Current Stage   : docs — LearningPath complete, the audit written, Embedding recipe live
 
 Next Milestone  : 0.9.0 — Release Candidate
 
@@ -78,8 +78,14 @@ need zero new engine work and disease needs none either.
     /// comment stragglers converted). The freeze is now in force —
     nothing in the surface changes without failing the harness and the
     changelog. 32/32 suites, eleven samples green.
-[ ] 0.8.5 — the docs: LearningPath complete, the full audit,
-    Embedding.md extended with the 0.8.0 onboarding recipe
+[✓] 0.8.5 — the docs, done: LearningPath extended through the whole
+    simulation layer (the tour now runs Version → Scale: 19 stops,
+    eleven samples, thirteen exercises); the full audit written up
+    (Docs/Design/Audit.md — every header read fresh, what held, what
+    was fixed, what was deliberately not changed); Embedding.md gained
+    the 0.8.0 runtime recipe — one loop (FixedStep + TickReport +
+    sim.memory.cap) so a non-Fallout embedder starts from one doc.
+    32/32 suites, eleven samples green
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via
     GitHub; feedback through Nexus comments and GitHub issues.
     Async, unsocial, by design.

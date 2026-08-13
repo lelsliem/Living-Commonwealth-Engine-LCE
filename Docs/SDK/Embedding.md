@@ -98,6 +98,69 @@ What is in there is public; what is not in there is not public.
 - **Do not** call into internals. If a header is not under
   `Include/LCE`, it is not yours to call.
 
+## The runtime recipe (0.8.0) — a complete minimal host
+
+Packaging gets you the library; this gets you a *living world*. The
+whole runtime contract, in one place — the loop an embedder actually
+runs:
+
+```cpp
+#include "LCE/Simulation/Simulation.h"
+#include "LCE/Simulation/SimulationEvents.h"
+#include "LCE/Events/EventBus.h"
+
+using namespace LCE::Simulation;
+
+// The inputs — nothing is global (ADR-0014):
+EntityRegistry registry;          // entities + components
+Rng rng{ 0xC0FFEE };              // the seeded stream; save State() in the co-save
+EventBus events;                  // push channel for observations
+
+// Tuning from the modder's text file — known keys override defaults,
+// broken values keep the default, unknown keys are ignored:
+//   sim.memory.cap 64        -> each mind holds at most 64 events
+//   sim.jitter 0.15          -> per-mind metabolism spread
+//   sim.memory.fade 0.2      -> salience lost per second
+SimulationTuning tuning = SimulationTuning::FromConfiguration(config);
+
+tick:
+// FixedStep: real frame deltas in, whole fixed steps out. Same seed +
+// same steps = same world at any frame rate.
+FixedStep step;   // Step = 0.1s sim cadence
+TickReport report;
+
+// Each frame:
+const std::size_t steps = step.Advance(
+    frameDelta, registry, tuning, &events, &rng, &report);
+
+// steps = how many intents were produced this frame. React to them via
+// the bus (push, not poll) and feed the results back:
+//   IntentProducedEvent  -> execute in the game world
+//   OutcomeRecordedEvent -> ReportOutcome already recorded it
+// RelationshipChangedEvent -> the world's bond lines crossed
+
+// The cost of a settlement is knowable, not guessed:
+//   report.TotalMs, report.Entities, report.MemoryEvents, ...
+// Print it once a minute — that is the 0.9.0 scale gate, earned here.
+
+// Save/load (co-save): register serializers ONCE at init for every
+// component you want persisted, then:
+//   RegistrySnapshot snap = registry.Capture();   // pure data
+//   registry.Restore(snap);                        // ids preserved exactly
+//   registry.Clear();                              // blank, serializers kept
+// Persist rng.State() beside it — one number resumes the stream.
+```
+
+**Three keys to know first.** `sim.memory.cap` bounds each mind's
+history (the hot path stays bounded); `sim.jitter` breaks the herd
+(each mind metabolizes at its own rate); `FixedStep` is the cadence
+that makes a year of sim time pass without drift whatever your frame
+rate. That is the whole 0.8.0 onboarding: one loop, three knobs, and
+the bus.
+
+The Fallout 4 adapter (The-Commonwealth-Lives) is the living example
+of this recipe — the same loop, the game as the executor.
+
 ## The proof
 
 The 0.5.0 packaging verification: `cmake --install` into a scratch

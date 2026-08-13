@@ -111,8 +111,98 @@ type in, runtime blob out) and the registry never interprets the bytes.
 Also: identity as a contract (the snapshot preserves index + generation
 exactly, so a save/load can never alias entities), and the free list as a
 source of truth (restored slots are alive; new entities reuse only the
-dead ones). This is the stone that lets the simulation ride inside a
-game's save file.
+dead ones). This is the stone that lets the simulation ride insidea game's save file.
+
+### 12. The Mind — Needs, Memory, Relationships, Goals (`Simulation/Mind/`)
+Four components, one idea: **everything a mind is, is data the world can
+read and write.**
+
+- **Needs** — drives whose value decays toward 0; the lower the value,
+  the more urgent.
+- **Memory** — experiences as events. `Weight` is salience: it fades
+  each second and is forgotten below the threshold. `Day` stamps when
+  it happened. A world fact has an invalid Other — it shapes no
+  relationship, but shuts a door (Trade/Social) *while it is
+  remembered*.
+- **Relationships** — two floats: Disposition (valence) and Trust
+  (reliability). Both drift toward neutral; experience refreshes them.
+- **Goals** — one active ambition, urgency growing while unserved.
+
+**Teaches:** generic vocabulary (the core never knows what "hunger"
+means), components as plain data, and the door-fact trick — the world
+communicates availability by *what it remembers*, not by flags.
+
+### 13. Behaviour — Decide (`Simulation/Decision/Behaviour.h`)
+Needs become one Intent per mind, every tick. Confidence = urgency +
+personality jitter. Near-tied needs resolve by a per-need seeded draw,
+not list order — the personality tie-break (0.8.4). Targets come from
+memory (ChooseTarget scores remembered others by weight plus
+relationship); danger from the strongest remembered wrong
+(FindThreat); closed doors from remembered world facts (IsUnavailable).
+
+**Teaches:** a pure function of data (ADR-0026), the "decide" leg of
+the loop, and determinism as a feature — same seed + same entity =
+same mind.
+
+### 14. The Tick — `Simulation/Simulation.h`
+`Update` decays, fades, drifts, grows, and decides — five passes, one
+call. `Remember` records an experience; `ReportOutcome` reports how an
+executed intent went and closes the loop: **decide → act → observe →
+remember → decide**.
+
+**Teaches:** statelessness — time and tuning are inputs, never global
+state (ADR-0014); and why the observe leg (outcomes) is what turns a
+walk into a learning settler.
+
+### 15. Substrate — Rng, WorldTime (`Simulation/Substrate/`)
+Rng: splitmix64, one word of state — save the number, resume the
+world. `Derive(key)` gives order-independent child streams;
+`StableDerive(key)` anchors to the seed, so a mind's personality can
+never be re-rolled by other draws. WorldTime: a day counter and the
+seasons derived from it — the calendar memory stamps stand on.
+
+**Teaches:** determinism as a design goal (same seed, same steps, same
+world), and derivation over state.
+
+### 16. Society — Groups, Traits (`Simulation/Society/`)
+GroupId: an opaque number the world assigns meaning to — a family, a
+settlement, a faction. Membership is a component;
+`InheritGroupAttitudes` seeds a newcomer with the group's mean
+disposition — trust is never inherited, it is earned. Traits: named
+floats varied deterministically per entity by `JitteredTraits`; the
+world's behaviour tables read them, the core never interprets the
+names.
+
+**Teaches:** the vocabulary boundary (the core carries names, never
+interprets them), and the echo rule (feelings travel through groups;
+trust does not).
+
+### 17. Legacy — Bequeath, InheritMemory, LegacyStore (`Simulation/Decision/Legacy.h`)
+Death is three functions and a fact. `Bequeath` passes salient
+memories to heirs, fainter. `InheritMemory` passes selected stories a
+generation later, aged. `LegacyStore` keeps a registry-level fact
+forever — the promise that outlives its maker.
+
+**Teaches:** the day-stamp as the substrate of memory ("the feud is
+decades old"), and registry-level state beside entity-level state.
+
+### 18. Observation & Query (`Simulation/SimulationEvents.h`, `EntityRegistry.h`)
+The push channel: EntityCreated, IntentProduced, OutcomeRecorded,
+RelationshipChanged — games react without polling. Restore does not
+re-announce (a loaded world is not a flood). `QueryWhere<T>` reads
+deterministically — ascending EntityId order, always.
+
+**Teaches:** push over poll, and iteration order as a contract — the
+determinism the save-compat stands on.
+
+### 19. Scale — FixedStep, TickReport, MemoryCap (`Simulation/Simulation.h`)
+FixedStep: real frame deltas in, whole fixed steps out — same seed +
+same steps = same world at any frame rate. TickReport: the cost of a
+settlement, knowable instead of guessed. MemoryCap: a mind can only
+hold so much — the lowest-weight event is evicted on insert.
+
+**Teaches:** bounding the hot path by construction, and measurement as
+a first-class input.
 
 ---
 
@@ -143,30 +233,70 @@ game's save file.
    restore into a fresh registry, read the position back. Then remove the
    serializer and capture again — `Position` silently vanishes from the
    snapshot. Data presence decides membership, everywhere in LCE.
+9. **Query.** Attach Needs to five entities, decay two of them below the
+   rest, and `QueryWhere` "everyone hungry" — prove the result comes
+   back in ascending ID order, twice.
+10. **Observation.** Subscribe to `IntentProducedEvent` and run one tick:
+    every fresh decision arrives on the bus without polling.
+11. **Determinism.** Two registries, same seed, same steps via FixedStep:
+    capture both, flatten, and prove the snapshots are byte-identical.
+12. **The door fact.** Remember `{ invalid, Trade }` on a mind with
+    urgent Hunger: Decide should refuse the trip (Explore). Fade the fact
+    below the threshold — the market reopens, no script fired.
+13. **Traits into decisions.** Give two identical minds different traits
+    and bias their needs' decay before the tick (the Weather/Disease
+    channel) — watch the same seed diverge into different choices. That
+    is the seam 0.8.4's personality tie-break exists for.
 
 ---
 
-## The Samples Teach (the 0.5.0 SDK)
+## The Samples Teach (the SDK course)
 
 Reading teaches structure; running teaches behaviour. The samples in
-`Samples/` are the SDK's course, in three sizes:
+`Samples/` are the SDK's course, from the smallest mind to the whole
+loop:
 
 1. **Sample-Farmer** — the smallest complete mind: one entity, one need,
-   one goal, one loop. If a subsystem confuses you, this is where it is
-   alone and visible.
+   one loop. If a subsystem confuses you, this is where it is alone and
+   visible.
 2. **Sample-Village** — several minds and the relationships between them.
    Watch a grudge steer a villager away from the neighbour who wronged
    them — experience shapes behaviour, knowledge doesn't.
 3. **Sample-Market** — the world: day-stamped memories, seasons, weather
    facts. The same market the Fallout 4 adapter runs for real.
-4. **SampleHost** — the whole loop embedded in a host with *no game at
-   all*: the money test live (cheated twice → trades elsewhere), the
-   observation bus, and a save that keeps the lesson. This is the proof
-   that any engine can embed LCE — read its `main.cpp` as the course.
+4. **Sample-Economy** (0.8.2) — prices are memories: a blight is a fact,
+   a delivery is a fact, and the price of bread is a pure function of
+   remembered facts. Dynamic pricing with no price field, no ledger, no
+   script.
+5. **Sample-Legacy** (0.8.2) — death is three functions and a fact:
+   Bequeath, InheritMemory, LeaveLegacy — the name that outlives the
+   voice.
+6. **Sample-Weather** (0.8.2) — a sky that behaves: seasons from the day
+   counter; a radstorm makes Safety the loudest voice, so the farmer
+   flees the remembered raiders. The sky never tells the mind what to
+   do.
+7. **Sample-Children** (0.8.2) — a family is a group: inherited
+   dispositions, per-child traits, trust earned personally. The sample
+   that caught the JitteredTraits bug.
+8. **Sample-FactionWars** (0.8.3) — groups are the map, dispositions are
+   loyalty: a wrong from a comrade and a kindness from an enemy flip a
+   membership, and the new faction's grudges become her own.
+9. **Sample-Disease** (0.8.3) — the quarantine loop: a door-fact closes
+   the market, the fever takes the appetite, rest becomes the loudest
+   voice, and the settlement remembers the outbreak as a fading,
+   day-stamped fact.
+10. **Sample-Roads** (0.8.3) — routes as legacies: a road's weight IS
+    its condition — traffic maintains it, neglect decays it, a storm
+    reroutes the caravans.
+11. **SampleHost** — the whole loop embedded in a host with *no game at
+    all*: the money test live (cheated twice → trades elsewhere), the
+    observation bus, and a save that keeps the lesson. This is the proof
+    that any engine can embed LCE — read its `main.cpp` as the course.
 
 And when you are ready to embed LCE in something of your own,
 [Docs/SDK/Embedding.md](SDK/Embedding.md) is the recipe: the pinned
-FetchContent path and the installed `find_package(LCE)` path, both
+FetchContent path, the installed `find_package(LCE)` path, and the
+0.8.0 runtime recipe (FixedStep + TickReport + sim.memory.cap) — all
 verified.
 
 ---

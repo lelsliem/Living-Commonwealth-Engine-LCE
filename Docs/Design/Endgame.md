@@ -85,7 +85,9 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   malformed banners regenerated; zero API change). The freeze is
   now in force — surface changes fail the harness and need the
   changelog.
-- **0.8.5** — the docs: LearningPath complete, the full audit, and
+- **0.8.5** — the docs, done: LearningPath complete (the tour now
+  runs Version → Scale: 19 stops, eleven samples, thirteen
+  exercises), the full audit written up (Docs/Design/Audit.md), and
   Embedding.md extended with the 0.8.0 onboarding recipe (FixedStep +
   TickReport + sim.memory.cap) so a non-Fallout embedder starts from
   one doc.
