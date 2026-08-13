@@ -71,17 +71,20 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   as indoctrination), Disease (quarantine door-fact + Fatigue toll;
   the world owns Health), Roads (LegacyStore routes whose weight is
   condition, maintained by traffic and forgotten by neglect).
-- **0.8.4** — the API Freeze, in progress: the personality
+- **0.8.4** — the API Freeze, done: the personality
   tie-break and per-need metabolism (the seam traits multiply into),
   the Fact kind + label string (the enum stops growing; labels
   absorb it), the compat policy doc (what is stable, what is
   append-only — InteractionKind ordinals, snapshot schema — and
-  what breaks when), and the surface-stability test (SurfaceTest:
+  what breaks when), the surface-stability test (SurfaceTest:
   every public enum ordinal, struct field type, and function
   signature pinned by static_assert — the freeze is enforced at
-  COMPILE time, so a drifted surface cannot even build). Remaining:
-  the public-header audit. Warts found here are fixed *before* the
-  freeze is in force.
+  COMPILE time, so a drifted surface cannot even build), and the
+  public-header audit (every header read fresh against its
+  implementation; the Goals seam documented honestly; seven
+  malformed banners regenerated; zero API change). The freeze is
+  now in force — surface changes fail the harness and need the
+  changelog.
 - **0.8.5** — the docs: LearningPath complete, the full audit, and
   Embedding.md extended with the 0.8.0 onboarding recipe (FixedStep +
   TickReport + sim.memory.cap) so a non-Fallout embedder starts from

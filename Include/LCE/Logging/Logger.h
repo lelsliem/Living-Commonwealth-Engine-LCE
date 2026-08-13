@@ -1,17 +1,17 @@
 //=============================================================================//
-// ┌─────────────────────────────────────────────────────────────────────────┐ 
-// │                                                                                                     
-// │                       ██╗      ██████╗███████╗                                               
-// │                       ██║     ██╔════╝██╔════╝                                               
-// │                       ██║     ██║     █████╗                                                   
-// │                       ██║     ██║     ██╔══╝                                                   
-// │                       ███████╗╚██████╗███████╗                                            
-// │                       ╚══════╝ ╚═════╝╚══════╝                            	            
-// │                                                                                                    
-// │            Building living worlds through simulation.                                              
-// │                                                                                                    
-// │                "Good software speaks. Great software explains."
-// │                                                                                                    
+// ┌─────────────────────────────────────────────────────────────────────────┐
+// │
+// │                       ██╗      ██████╗███████╗
+// │                       ██║     ██╔════╝██╔════╝
+// │                       ██║     ██║     █████╗
+// │                       ██║     ██║     ██╔══╝
+// │                       ███████╗╚██████╗███████╗
+// │                       ╚══════╝ ╚═════╝╚══════╝
+// │
+// │            Building living worlds through simulation.
+// │
+// │          “Good software speaks. Great software explains.”
+// │
 // └─────────────────────────────────────────────────────────────────────────┘
 //
 // Living Commonwealth Engine (LCE)
@@ -20,8 +20,8 @@
 //      Logger.h
 //
 // Purpose:
-//      Provides compile-time version information for the Living Commonwealth
-//      Engine.
+//      Defines the LCE logging interface — the severity levels, the
+//      write entry point, and the convenience functions.
 //
 // Project:
 //      Living Commonwealth Engine (LCE)
@@ -33,7 +33,6 @@
 //
 // Copyright:
 //      (c) 2026-present LCE Contributors
-//=============================================================================//
 //=============================================================================//
 // Includes
 //=============================================================================//

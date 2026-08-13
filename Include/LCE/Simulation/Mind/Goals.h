@@ -64,8 +64,12 @@ namespace LCE::Simulation
     //-------------------------------------------------------------------------
     // Goal
     //
-    // Urgency grows while the goal goes unserved and feeds the decision
-    // function.
+    // Urgency grows while the goal goes unserved. Decide does NOT read
+    // Goals directly — it stays a pure function of needs (Behaviour.h);
+    // goals shape behaviour through the world's planning layer, which
+    // reads Goals::Active and biases needs before the tick (the same
+    // channel Weather and Disease use). ReportOutcome serves and
+    // frustrates goals; the ambition itself is the world's to own.
     //-------------------------------------------------------------------------
     struct Goal
     {

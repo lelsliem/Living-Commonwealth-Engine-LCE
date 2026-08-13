@@ -102,6 +102,10 @@ namespace LCE::Simulation
     // the deterministic id-hash noise and strict-lowest ordering;
     // existing callers are untouched.
     //
+    // Needs are the only drive Decide reads — Goals and Traits shape
+    // decisions only through the world biasing needs before the tick
+    // (Goals.h); Decide never touches them directly.
+    //
     // desperateHunger (0.7.0 field finding): below this hunger value a
     // remembered Trade world fact no longer blocks the trip — a starving
     // mind pushes the shut door anyway, so an arrival can land on a

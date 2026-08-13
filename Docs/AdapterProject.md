@@ -16,8 +16,11 @@ Economy, Legacy, Weather, Children; 0.8.3: Faction Wars, Disease,
 Roads — teaching-only, zero new surface for the adapter to
 consume), and the first 0.8.4 freeze stones — the personality
 tie-break, per-need metabolism, the Fact kind + label, and the
-compat policy doc, and the surface-stability test (32/32 suites).
-Each has its own section below.
+compat policy doc, the surface-stability test, and the public-header
+audit — which found ZERO API change for you (the Goals seam is now
+documented honestly: Decide reads needs only; goals influence through
+your planning layer biasing needs before the tick — behaviour
+unchanged). 32/32 suites. Each has its own section below.
 
 Two 0.8.4 changes could matter to you: (1) near-tied needs now
 resolve by a per-need seeded draw instead of list order — if you

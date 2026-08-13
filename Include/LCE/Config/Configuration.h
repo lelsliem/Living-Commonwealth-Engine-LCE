@@ -10,7 +10,7 @@
 // │
 // │            Building living worlds through simulation.
 // │
-// │               "My life’s like a bad configuration file — full of defaults I never agreed to."
+// │          “My life is a bad config file — full of defaults I never agreed to.”
 // │
 // └─────────────────────────────────────────────────────────────────────────┘
 //

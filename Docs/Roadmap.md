@@ -59,7 +59,7 @@ need zero new engine work and disease needs none either.
     toll — the world owns Health, the core owns memory and need),
     Roads (routes as LegacyStore facts whose weight is condition,
     maintained by traffic, forgotten by neglect)
-[~] 0.8.4 — the API Freeze, in progress. Landed: the personality
+[✓] 0.8.4 — the API Freeze, done. Landed: the personality
     tie-break (near-tied needs resolve by a per-need seeded draw, not
     list order) and per-need metabolism (each need decays at its own
     seeded rate), both keyed on need type — the seam traits multiply
@@ -70,9 +70,14 @@ need zero new engine work and disease needs none either.
     public enum ordinal, struct field type, and function signature
     pinned by static_assert: a drifted surface cannot even compile,
     and the error names the declaration that moved; the suite provably
-    caught a simulated ordinal shift). 32/32 suites green. Remaining:
-    the public-header audit, the warts fixed before the freeze is in
-    force
+    caught a simulated ordinal shift); the public-header audit — every
+    header read fresh and checked against its implementation (the
+    Goals seam now documented honestly: Decide reads needs only, goals
+    influence through the world; the Logger.h copy-paste Purpose lie
+    fixed; seven malformed banners regenerated to the uniform template;
+    /// comment stragglers converted). The freeze is now in force —
+    nothing in the surface changes without failing the harness and the
+    changelog. 32/32 suites, eleven samples green.
 [ ] 0.8.5 — the docs: LearningPath complete, the full audit,
     Embedding.md extended with the 0.8.0 onboarding recipe
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via

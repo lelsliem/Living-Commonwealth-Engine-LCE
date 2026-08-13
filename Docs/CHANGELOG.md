@@ -56,7 +56,37 @@ was proven live: a simulated `InteractionKind::Fact` ordinal shift
 failed the build with `static_assert failed: 'InteractionKind::Fact
 ordinal (co-save critical - append-only)'`, then restored green.
 
-**32/32 suites, eleven samples clean.** Version bumped to 0.8.4-alpha.
+**The public-header audit (the box's last item).** Every header in
+`Include/LCE/` was read fresh and every doc claim checked against its
+implementation. The behaviour docs all held — Update's pass order,
+Remember's stamping, ReportOutcome's four steps, Bequeath/InheritMemory,
+FromConfiguration's keys. What the audit found and fixed:
+
+- **The Goals doc lie.** Goals.h claimed urgency "feeds the decision
+  function" — but `Decide` never reads Goals. Now documented honestly
+  from both sides (Goals.h and Behaviour.h): Decide reads needs only;
+  goals influence through the world's planning layer biasing needs
+  before the tick, the same channel Weather and Disease use.
+  ReportOutcome serves and frustrates; the ambition is the world's to
+  own. Zero code change — the behaviour was already the contract.
+- **Logger.h's copy-paste Purpose lie** — it claimed to "provide
+  compile-time version information" (Version.h's text). Now describes
+  the logging interface; the doubled separator is gone.
+- **Seven malformed banners regenerated** to the uniform template
+  (Event, Logger, LogLevel, Version, Clock, Task, Configuration):
+  quote lines that overflowed the box (the 99-bugs lyric, the
+  Michelangelo line, the Covey attribution) now fit on one line, the
+  doubled-quote in Event.h is gone, and the trailing whitespace is
+  cleaned. New one-liners: "99 little bugs in the code — and they're
+  all mine.", "Every block of stone has a statue inside it.", "The
+  key is in not spending time, but in investing it.", "Simple things
+  should be simple; complex things composed from them.", "My life is a
+  bad config file — full of defaults I never agreed to."
+- **`/// <summary>` stragglers** (Event.h, LogLevel.h) converted to
+  the house `//-----` style.
+
+Zero API change — the freeze surface (SurfaceTest) is untouched. The
+freeze is now in force. **32/32 suites, eleven samples clean.**
 
 ## [0.8.3] — 2026-08-13 — The three harder pattern samples
 

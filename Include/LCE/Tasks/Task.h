@@ -10,7 +10,7 @@
 // │
 // │            Building living worlds through simulation.
 // │
-// │"Every block of stone has a statue inside it and it is the task of the sculptor to discover it." - Michelangelo
+// │          “Every block of stone has a statue inside it.”
 // │
 // └─────────────────────────────────────────────────────────────────────────┘
 //

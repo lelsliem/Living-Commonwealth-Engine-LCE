@@ -10,7 +10,7 @@
 // │
 // │            Building living worlds through simulation.
 // │
-// │                “The key is in not spending time, but in investing it.” – Stephen R. Covey
+// │          “The key is in not spending time, but in investing it.”
 // │
 // └─────────────────────────────────────────────────────────────────────────┘
 //
