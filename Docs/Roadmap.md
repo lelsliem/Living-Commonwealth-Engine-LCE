@@ -43,8 +43,10 @@ need zero new engine work and disease needs none either.
     31/31 engine suites. The open gate is still the adapter's
     in-game verification of 0.8.0 Scale (its Illness & Medicine
     plan is next on its side).
-[ ] 0.8.2 — the four proven patterns as lean samples: Economy,
-    Legacy, Weather, Children
+[~] 0.8.2 — the four proven patterns as lean samples: Economy
+    (done — prices are memories: dynamic pricing, supply chains,
+    trade routes, and market events, zero new surface), Legacy,
+    Weather, Children
 [ ] 0.8.3 — the three harder patterns: Faction Wars, Disease
     (fact-plus-tick, zero new surface), Roads
 [ ] 0.8.4 — the API Freeze: the surface-stability test (the harness

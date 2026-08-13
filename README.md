@@ -87,12 +87,16 @@ as 0.8.0-alpha): TickReport (the cost of a settlement is knowable),
 sim.memory.cap (a mind can only hold so much), FixedStep (same seed
 + same steps = same world at any frame rate), soak and save/load
 proofs at 5000 minds. The adapter's in-game verification is the
-remaining gate. **0.8.1 (current)**: the field fix for the adapter's
-ADR-0029 finding — `Rng::StableDerive` anchors per-entity noise to
-the seed, so the adapter's births between ticks can no longer re-roll
-a settled mind — plus the Simulation folders reorganized into
-category subfolders and the SDK surface now guarded by HeaderMapTest
-and an LCE Doctor include-layout check (31/31 suites).
+remaining gate. **0.8.1**: the field fix for the adapter's ADR-0029
+finding — `Rng::StableDerive` anchors per-entity noise to the seed,
+so the adapter's births between ticks can no longer re-roll a settled
+mind — plus the Simulation folders reorganized into category
+subfolders and the SDK surface now guarded by HeaderMapTest and an
+LCE Doctor include-layout check (31/31 suites, tagged `v0.8.1`).
+**0.8.2 (current)**: the pattern samples — first up, The Economy:
+prices are memories. Dynamic pricing, supply chains, trade routes,
+and market events as pure memory (a blight spikes the price; the
+price falls back as the fact fades), zero new engine surface.
 
 **The ladder beyond:**
 
@@ -175,7 +179,8 @@ each adapter's own project, never in the core.
 | 0.6.0 | Society — groups & traits | ✅ |
 | 0.7.0 | Legacy — birth, death, inheritance | ✅ |
 | 0.8.0 | Scale — a settlement, not a village (engine side) | ✅ |
-| 0.8.1 | Housekeeping — field fix + reorg + surface guards | ⬜ |
+| 0.8.1 | Housekeeping — field fix + reorg + surface guards | ✅ |
+| 0.8.2 | Pattern samples — Economy first (prices are memories) | ◐ |
 | 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
 | 1.0.0 | Release | ⬜ |
 

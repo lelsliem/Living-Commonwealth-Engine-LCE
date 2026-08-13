@@ -60,8 +60,9 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   subfolders, and the public surface guarded (HeaderMapTest + LCE
   Doctor include-layout check). Remaining gate: the adapter's
   in-game verification of 0.8.0 Scale.
-- **0.8.2** — the four proven patterns as samples: Economy, Legacy,
-  Weather, Children.
+- **0.8.2** — the four proven patterns as samples: Economy (done —
+  dynamic pricing, supply chains, trade routes, and market events as
+  pure memory, zero new surface), Legacy, Weather, Children.
 - **0.8.3** — the three harder patterns: Faction Wars, Disease
   (fact-plus-tick, zero new surface), Roads.
 - **0.8.4** — the API Freeze: the surface-stability test (a canonical

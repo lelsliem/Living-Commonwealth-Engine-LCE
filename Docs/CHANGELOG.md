@@ -2,6 +2,22 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.2] — 2026-08-13 — The Economy sample
+
+**The Economy (SAMPLE 4).** The first of the 0.8.2 pattern samples —
+proof that a whole living economy needs zero new engine surface.
+`LCE.SampleEconomy` shows dynamic pricing, supply chains, trade
+routes, and market events as pure memory: the price of bread is what
+the market remembers about last harvest. A delivery is a memory
+(supply, cheaper); a blight is a memory (scarcity, dearer); the price
+is a pure function of remembered facts, so it spikes with the blight
+(9→14 caps) and fades back as the memory dies — no ledger, no price
+field, no script. The route to market is Trust, remembered (six fair
+trades, 0.63 Trust). The supply chain is a chain of memories.
+
+Built entirely on the public surface: Memory facts, ReportOutcome,
+relationships, QueryWhere — the same loop every adapter walks.
+
 ## [0.8.1] — 2026-08-12 — Housekeeping & the re-roll fix
 
 Three field fixes and housekeeping changes landed after 0.8.0, each

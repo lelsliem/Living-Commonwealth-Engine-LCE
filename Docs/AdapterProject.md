@@ -5,12 +5,19 @@ rooted at `C:\Fallout4Adaption`) can start this project with full context —
 the plan, the conventions, and the contract — without having been part of
 the conversation that built the engine.
 
-**Current core:** `0.8.1-alpha` (31/31 suites, committed locally
-2026-08-12; the 0.8.1 push waits on your in-game verification of
-0.8.0 Scale). Since 0.8.0: the ADR-0029 re-roll fix
-(`Rng::StableDerive`), the Simulation folder reorganization (your
-includes were re-synced), and the surface guards (HeaderMapTest +
-Doctor include-layout check) — each with its own section below.
+**Current core:** `0.8.2-alpha` (31/31 suites; 0.8.1 was tagged
+`v0.8.1` and pushed 2026-08-13). Since 0.8.0: the ADR-0029 re-roll
+fix (`Rng::StableDerive`), the Simulation folder reorganization
+(your includes were re-synced), the surface guards (HeaderMapTest +
+Doctor include-layout check), and the first 0.8.2 pattern sample,
+The Economy (prices are memories — pure-memory dynamic pricing;
+zero new surface, nothing for the adapter to consume) — each with
+its own section below.
+The adapter's in-game verification of 0.8.0 Scale (and the
+StableDerive fix) remains the open gate — its 0.8.6c scale pass
+covers it. Per the adapter's own hand-over (2026-08-13): Request E
+is none — its run to the Nexus beta needs zero new engine surface,
+so the engine is free to proceed with its own ladder.
 
 **Companion documents** (in the LCE core repo, `C:\LivingCommonwealthEngine`):
 - `Docs/Architecture/PlatformIntegration.md` — the 0.4.0 boundary design
@@ -65,7 +72,7 @@ The adapter is an F4SE plugin built on CommonLibF4 (`F4SE::Init`,
 ## The core's 0.4.0 side is built — what the adapter gains
 
 At 0.4.0 the core shipped `0.4.0-alpha` (14/14 suites then); the
-current core is 0.8.1-alpha, 31/31 suites green. Two things changed
+current core is 0.8.2-alpha, 31/31 suites green. Two things changed
 at 0.4.0 that still matter to this project:
 
 1. **The boundary is the public API only.** The old
@@ -106,7 +113,7 @@ at 0.4.0 that still matter to this project:
 ## The core's 0.5.0 side is built — the complete boundary contract
 
 At 0.5.0 the core shipped `0.5.0-alpha` (25/25 suites then); the
-current core is 0.8.1-alpha, 31/31 suites. All seven stones of the
+current core is 0.8.2-alpha, 31/31 suites. All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
 calendar, per-mind decay jitter) — and stone 08 (bond thresholds +

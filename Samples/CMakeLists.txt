@@ -60,7 +60,14 @@ add_executable(LCE.SampleMarket
     Sample-Market/main.cpp
 )
 
-foreach(sample LCE.SampleFarmer LCE.SampleVillage LCE.SampleMarket)
+# SAMPLE 4 — The Economy (0.8.2): dynamic pricing, supply chains,
+# trade routes, and market events — prices are memories with numbers
+# on them. Zero new engine surface.
+add_executable(LCE.SampleEconomy
+    Sample-Economy/main.cpp
+)
+
+foreach(sample LCE.SampleFarmer LCE.SampleVillage LCE.SampleMarket LCE.SampleEconomy)
     target_link_libraries(${sample}
         PRIVATE
             LCE.Core
