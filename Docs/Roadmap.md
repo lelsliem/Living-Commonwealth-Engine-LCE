@@ -14,9 +14,9 @@ Status
 
 Current Version : 0.8.7-alpha
 
-Current Stage   : LCE Bench — the Scale numbers, measured; the docs tell one story
+Current Stage   : 0.8.7 done — the bench measures; 0.8.8 packaging gate, 0.8.9 Studio planned
 
-Next Milestone  : 0.9.0 — Release Candidate
+Next Milestone  : 0.8.8 — the packaging gate
 
 ═══════════════════════════════════════════════
 
@@ -102,6 +102,19 @@ need zero new engine work and disease needs none either.
     in CI. Also: the docs now tell one story — the stale milestone
     log (it still said 0.8.1 was "in progress") folded into the
     changelog.
+[ ] 0.8.8 — the packaging gate: an install + find_package(LCE)
+    consumer test scripted against the tagged release, and an
+    lce-doctor init that scaffolds a minimal embedder from the
+    Embedding.md recipe — the doc and the tool agree by construction.
+[ ] 0.8.9 — LCE Studio (beta companion, scoped): the observation
+    window — a live event feed (EntityCreated / IntentProduced /
+    OutcomeRecorded / RelationshipChanged), a mind inspector (needs /
+    memory / relationships / intent), and a tuning cockpit (sliders
+    over the sim.* keys). Consumer-only through the public API — the
+    same shape as the bench and the adapter — so zero core surface
+    and the freeze untouched. The full vision (in-game attach, the
+    co-save browser, the entity editor, the query workbench) stays
+    post-1.0.
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via
     GitHub; feedback through Nexus comments and GitHub issues.
     Async, unsocial, by design.
@@ -130,6 +143,7 @@ Consciously Deferred — decisions, not oversights
 [ ] Networking / replication — single-player mods don't need it
 [ ] Multi-agent negotiation / planning — deep AI, beyond the
     engine's promise; deferred, not forgotten
-[ ] LCE Studio (GUI) — the LCE Doctor wrapped in a window, for
-    developers who want app-like onboarding; built when there is an
-    audience (post-1.0)
+[ ] LCE Studio (GUI) — the scoped observation-window version is
+    0.8.9 (consumer-only, public API only). The full vision — in-game
+    attach, the co-save browser, the entity editor, the query
+    workbench — waits for the audience beta builds (post-1.0)

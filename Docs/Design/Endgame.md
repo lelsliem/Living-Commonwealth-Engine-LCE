@@ -43,7 +43,13 @@ keeps living in-game as the real test. Mapping to shipped substrate:
 3. **Networking / replication** — cut. Single-player.
 4. **Multi-agent negotiation / deep planning AI** — cut. Beyond the
    promise.
-5. **LCE Studio (GUI)** — cut. The CLI Doctor and the log are enough.
+5. **LCE Studio (GUI)** — cut as an *onboarding wizard* (the CLI
+   Doctor and the log are enough for setup) — but **upgraded (0.8.9)**
+   as a scoped *observation window*, the beta companion: live event
+   feed, mind inspector, tuning cockpit. Consumer-only through the
+   public API — zero core surface, the freeze untouched. The full
+   vision (in-game attach, co-save browser, entity editor) stays
+   post-1.0.
 6. **Per-fact legacy decay** — cut, with a standing condition: revisit
    only if the soak data or a mechanic demands it.
 7. **MCM / radio audio** — cut. The INI delivers tuning; captions
@@ -100,6 +106,13 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   bytes per mind, round-trip, determinism, the memory cap) — the
   0.9.0 gate becomes measurable, not asserted. The stale milestone
   log folded into the changelog: one story.
+- **0.8.8** — the packaging gate: the install + find_package(LCE)
+  consumer test scripted against the tagged release, and an
+  lce-doctor init scaffold. Planned.
+- **0.8.9** — LCE Studio (beta companion, scoped): the observation
+  window — live event feed, mind inspector, tuning cockpit.
+  Consumer-only through the public API (the bench's shape with a
+  window): zero core surface, the freeze untouched. Planned.
 - **0.9.0 — RC "The Freeze"** — the freeze *in force*: everything
   from here is fixes-only. Public beta live (the mod on Nexus, the
   engine via GitHub), feedback through Nexus comments and GitHub
