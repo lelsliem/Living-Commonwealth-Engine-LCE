@@ -109,6 +109,16 @@ FetchContent_MakeAvailable(spdlog)
 add_subdirectory(Source)
 
 #------------------------------------------------------------------------------
+# Testing (0.8.6 — ctest wiring). enable_testing() must live HERE, at
+# the project root: ctest --test-dir Build walks the tree from the
+# top-level CTestTestfile.cmake. Called only from Tests/, the top
+# level has no test file and ctest finds nothing ("No tests were
+# found!!") — every CI leg silently ran zero tests.
+#------------------------------------------------------------------------------
+
+enable_testing()
+
+#------------------------------------------------------------------------------
 # The ABI contract, carried by the package (0.8.8 — found by the
 # packaging gate). LCE.Core's objects are compiled with the static CRT
 # (above), so any consumer linking the core must use the SAME runtime

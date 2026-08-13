@@ -114,8 +114,8 @@ suites on MSVC, GCC, and Clang every push, with the freeze enforced
 cross-compiler. **0.8.7**: LCE Bench — the Scale numbers, measured:
 ms/tick at 1k/5k/20k minds, co-save bytes per mind (the documented
 207), snapshot round-trip, determinism at scale, the memory cap — so
-the 0.9.0 gate is measurable, not asserted. **0.8.8 (current)**: the
-packaging gate — Tools/scripts/consumer-test.sh builds and installs
+the 0.9.0 gate is measurable, not asserted. **0.8.8**: the packaging
+gate — Tools/scripts/consumer-test.sh builds and installs
 the engine, then proves BOTH Embedding paths end to end (FetchContent
 via the lce-doctor init scaffold, find_package against the install),
 plus the ABI contract the gate found: LCE::Core carries its static-
@@ -137,7 +137,7 @@ for anyone to embed.
 | 0.6.0 | Society — groups and traits |
 | 0.7.0 | Legacy — birth, death, inheritance |
 | 0.8.0 | Scale — a settlement, not a village |
-| 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) |
+| 0.9.0 | Public Beta — the doors open |
 | 1.0.0 | Release — the promise, made good |
 
 **The point of it all — the mods this makes possible:** living economies
@@ -214,8 +214,13 @@ each adapter's own project, never in the core.
 | 0.8.1 | Housekeeping — field fix + reorg + surface guards | ✅ |
 | 0.8.2 | Pattern samples — Economy, Legacy, Weather, Children | ✅ |
 | 0.8.3 | Pattern samples — Faction Wars, Disease, Roads | ✅ |
-| 0.8.4 | API Freeze — tie-break, Fact kind, compat policy (in progress) | ◐ |
-| 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
+| 0.8.4 | API Freeze — tie-break, Fact kind, compat policy | ✅ |
+| 0.8.5 | Docs — LearningPath, the audit, the Embedding recipe | ✅ |
+| 0.8.6 | CI — three toolchains, every push | ✅ |
+| 0.8.7 | LCE Bench — the Scale numbers, measured | ✅ |
+| 0.8.8 | Packaging gate — both Embedding paths, end to end | ✅ |
+| 0.8.9 | Trust story + LCE Studio | ✅ |
+| 0.9.0 | Public Beta — the doors open (current) | ◐ |
 | 1.0.0 | Release | ⬜ |
 
 ## License

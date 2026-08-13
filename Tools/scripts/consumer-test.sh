@@ -45,14 +45,21 @@ echo
 # exactly the released shape the find_package path consumes.
 #-------------------------------------------------------------------------------
 echo "[1/3] building and installing the engine ..."
+# The build type is explicit: single-config generators (and CMake >= 4)
+# only emit the export's per-config file when a build type is set —
+# without it, install(EXPORT) leaves the package without any
+# IMPORTED_LOCATION and find_package consumers fail.
 cmake -S "$ENGINE_ROOT" -B "$SCRATCH/engine" \
+    -DCMAKE_BUILD_TYPE=Debug \
     -DLCE_BUILD_TESTS=ON \
     -DLCE_BUILD_SAMPLES=OFF \
     -DLCE_BUILD_TOOLS=ON >/dev/null
 cmake --build "$SCRATCH/engine" --config Debug --parallel >/dev/null
 cmake --install "$SCRATCH/engine" --config Debug --prefix "$SCRATCH/prefix" >/dev/null
 
-VERSION="$(grep -oP 'VersionString = "\K[^"]+' \
+# grep -oP is GNU-only (BusyBox and BSD grep have no PCRE); sed does
+# the same extraction everywhere the gate runs.
+VERSION="$(sed -n 's/.*VersionString = "\([^"]*\)".*/\1/p' \
     "$ENGINE_ROOT/Include/LCE/Version/Version.h")"
 
 echo "      installed: $VERSION"

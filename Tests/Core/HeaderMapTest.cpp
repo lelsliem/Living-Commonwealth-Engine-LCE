@@ -86,12 +86,27 @@ namespace LCE::Tests
 
         //-------------------------------------------------------------------------
         // The engine root — the include tree lives at <root>/Include.
-        // Walks up from the working directory until it finds the tree,
-        // so the suite runs from the repo root, a build dir, or a
-        // subdirectory without hard-coding a machine path.
+        // The build system compiles the real source root in
+        // (LCE_SOURCE_ROOT, relative to THIS Tests dir — never
+        // CMAKE_SOURCE_DIR, which is the consumer's root when the
+        // engine is embedded via FetchContent), so the suite finds its
+        // tree no matter what the working directory is: ctest runs the
+        // harness from the BUILD tree, where a cwd walk cannot reach
+        // the sources. The walk-up from the working directory remains
+        // as a fallback for ad-hoc runs from inside the source tree.
         //-------------------------------------------------------------------------
         fs::path EngineRoot()
         {
+#ifdef LCE_SOURCE_ROOT
+            const auto compiled = fs::path(LCE_SOURCE_ROOT);
+
+            if (fs::exists(
+                    compiled / "Include" / "LCE" / "Simulation" / "Simulation.h"))
+            {
+                return compiled;
+            }
+#endif
+
             auto dir = fs::current_path();
 
             for (;;)

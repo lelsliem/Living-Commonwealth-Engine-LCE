@@ -18,6 +18,12 @@
 #  numbers are the 0.9.0 gate, so they must at least RUN on every
 #  toolchain even though their timing is machine-dependent.
 #
+#  The GCC leg pins g++-14 rather than the image default: the
+#  runner's default g++ (13.3.0) fails building this tree on Linux
+#  — observed on both the matrix and packaging-gate legs, where
+#  g++-12, g++-14, Clang, and MSVC all pass. The compiler version is
+#  printed so the log says exactly what ran.
+#
 #===============================================================================
 name: CI
 
@@ -38,17 +44,20 @@ jobs:
             os: windows-latest
           - name: ubuntu-gcc
             os: ubuntu-latest
+            cxx: g++-14
           - name: ubuntu-clang
             os: ubuntu-latest
             cxx: clang++
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Configure
         shell: bash
         run: |
           if [ -n "${{ matrix.cxx }}" ]; then
             export CXX="${{ matrix.cxx }}"
+            echo "CXX: $CXX"
+            "$CXX" --version | head -1
           fi
           cmake -S . -B Build \
             -DLCE_BUILD_TESTS=ON \
@@ -64,14 +73,23 @@ jobs:
         run: ctest --test-dir Build -C Debug --output-on-failure
 
       # The tools live in Build/Bin on single-config generators (Linux)
-      # and Build/Bin/<config> on multi-config (MSVC) — find them.
+      # and Build/Bin/<config> on multi-config (MSVC) — find them. The
+      # name carries the platform's executable suffix (LCE.Bench vs
+      # LCE.Bench.exe), so match both and fail loudly rather than let
+      # an empty path become a cryptic "command not found".
       - name: Tool smokes (bench sanity, studio selftest)
         shell: bash
         run: |
-          BENCH=$(find Build/Bin -name 'LCE.Bench' -type f | head -1)
+          BENCH=$(find Build/Bin \( -name 'LCE.Bench' -o -name 'LCE.Bench.exe' \) -type f | head -1)
+          if [ -z "$BENCH" ]; then
+            echo "FAIL — LCE.Bench not found under Build/Bin"; find Build/Bin | head -20; exit 1
+          fi
           echo "bench: $BENCH"
           "$BENCH" --sanity
-          STUDIO=$(find Build/Bin -name 'LCE.Studio' -type f | head -1)
+          STUDIO=$(find Build/Bin \( -name 'LCE.Studio' -o -name 'LCE.Studio.exe' \) -type f | head -1)
+          if [ -z "$STUDIO" ]; then
+            echo "FAIL — LCE.Studio not found under Build/Bin"; find Build/Bin | head -20; exit 1
+          fi
           echo "studio: $STUDIO"
           "$STUDIO" --selftest
 
@@ -83,7 +101,7 @@ jobs:
     name: packaging-gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run the packaging gate
         shell: bash
         run: bash Tools/scripts/consumer-test.sh "$PWD"

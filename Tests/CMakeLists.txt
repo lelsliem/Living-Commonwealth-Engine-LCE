@@ -9,9 +9,9 @@
 
 # LCE Core test harness — every subsystem has a suite; runs on every build.
 # ctest wiring (0.8.6): CI runs the suites through ctest, so the harness
-# path is the runner's, not a hard-coded binary location.
-enable_testing()
-
+# path is the runner's, not a hard-coded binary location. enable_testing()
+# lives at the PROJECT ROOT (see CMakeLists.txt) — the top-level
+# CTestTestfile.cmake is what ctest --test-dir Build reads.
 add_test(NAME LCE.Core.Tests COMMAND LCE.Core.Tests)
 
 add_executable(LCE.Core.Tests
@@ -69,3 +69,13 @@ target_include_directories(LCE.Core.Tests
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/../Tools
 )
+
+# HeaderMapTest must find the engine root without relying on the
+# process working directory (ctest runs the binary from the build
+# tree, not the source tree). The source root is compiled in; the
+# suite's walk-up-from-cwd discovery remains as a fallback for ad-hoc
+# runs.
+target_compile_definitions(LCE.Core.Tests
+    PRIVATE
+        LCE_SOURCE_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/.."
+))

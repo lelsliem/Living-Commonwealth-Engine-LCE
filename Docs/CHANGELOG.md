@@ -13,6 +13,25 @@ packaging gate, the trust story, the Studio — and the version moves
 from alpha to **beta**. The mod (The Commonwealth Lives, a separate
 repo) releases alongside.
 
+CI is green on all three legs for real now — the first run's only
+passing job was ubuntu-clang. The suites were never running: ctest
+found nothing because `enable_testing()` lived in Tests/ instead of
+at the project root (the top-level CTestTestfile.cmake is what
+`ctest --test-dir Build` reads), so every leg silently ran zero
+tests. With it moved, HeaderMap needed its engine root compiled in
+(LCE_SOURCE_ROOT) — its cwd-walk fails from the build tree ctest
+runs in. The tool smokes now match the platform's executable suffix
+(LCE.Bench vs LCE.Bench.exe — MSVC was dying with exit 127 on an
+empty path), the packaging gate sets a build type (CMake ≥ 4 only
+emits an install-export's per-config file when one is set; without
+it, `find_package(LCE)` consumers fail with "IMPORTED_LOCATION not
+set") and reads the version with sed instead of GNU-only
+`grep -oP`, and the GCC leg runs g++-14 (the runner's default
+g++-13.3.0 fails building this tree on Linux; g++-12, g++-14, Clang,
+and MSVC all pass). The repo's canonical URL dropped its trailing
+hyphen (Living-Commonwealth-Engine-LCE); every reference — Embedding
+recipe, doctor scaffold, git remote — points at the renamed repo.
+
 ## [0.8.9] — 2026-08-13 — the trust story and the Studio
 
 **The trust story** (`Docs/Design/TrustStory.md`) — the beta's
