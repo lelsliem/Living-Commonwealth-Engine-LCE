@@ -5,7 +5,7 @@ rooted at `C:\Fallout4Adaption`) can start this project with full context —
 the plan, the conventions, and the contract — without having been part of
 the conversation that built the engine.
 
-**Current core:** `0.8.6-alpha` (32/32 suites; 0.8.1 was tagged
+**Current core:** `0.8.7-alpha` (32/32 suites; 0.8.1 was tagged
 `v0.8.1` and pushed 2026-08-13). Since 0.8.0: the ADR-0029 re-roll
 fix (`Rng::StableDerive`), the Simulation folder reorganization
 (your includes were re-synced), the surface guards (HeaderMapTest + the new SurfaceTest
@@ -92,7 +92,7 @@ The adapter is an F4SE plugin built on CommonLibF4 (`F4SE::Init`,
 ## The core's 0.4.0 side is built — what the adapter gains
 
 At 0.4.0 the core shipped `0.4.0-alpha` (14/14 suites then); the
-current core is 0.8.6-alpha, 32/32 suites green. Two things changed
+current core is 0.8.7-alpha, 32/32 suites green. Two things changed
 at 0.4.0 that still matter to this project:
 
 1. **The boundary is the public API only.** The old
@@ -133,7 +133,7 @@ at 0.4.0 that still matter to this project:
 ## The core's 0.5.0 side is built — the complete boundary contract
 
 At 0.5.0 the core shipped `0.5.0-alpha` (25/25 suites then); the
-current core is 0.8.6-alpha, 32/32 suites. All seven stones of the
+current core is 0.8.7-alpha, 32/32 suites. All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
 calendar, per-mind decay jitter) — and stone 08 (bond thresholds +

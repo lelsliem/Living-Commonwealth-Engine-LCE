@@ -95,6 +95,11 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   and Clang every push — the freeze enforced cross-compiler, the
   ctest wiring, the LCE.Bench smoke, and the installed-package
   version fixed (0.5.0 → 0.8.x; find_package told the truth).
+- **0.8.7** — LCE Bench, done: the Scale numbers measured on any
+  machine (ms/tick at population with the per-pass breakdown, co-save
+  bytes per mind, round-trip, determinism, the memory cap) — the
+  0.9.0 gate becomes measurable, not asserted. The stale milestone
+  log folded into the changelog: one story.
 - **0.9.0 — RC "The Freeze"** — the freeze *in force*: everything
   from here is fixes-only. Public beta live (the mod on Nexus, the
   engine via GitHub), feedback through Nexus comments and GitHub

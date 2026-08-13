@@ -2,6 +2,38 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.7] — 2026-08-13 — LCE Bench: the Scale numbers, measured
+
+**LCE Bench** (`Tools/LCEBench`, `LCE.Bench`) — the Scale numbers,
+reproduced on any machine. Same seed (2026), same scenarios, same
+methodology as the Scale suite: settler-shaped minds (needs + three
+memories + one relationship) around one trader. It measures:
+
+- **Tick cost at population** — ms/tick averaged over 200 whole steps
+  at 1000 / 5000 / 20000 minds, with the per-pass breakdown
+  (needs / memory / relationships / goals / decide). The decide pass
+  dominates, as documented — the number is the 0.9.0 gate, measured
+  on the target box instead of asserted.
+- **The co-save** — bytes per mind (the documented ~207: at 5001
+  entities the tool prints exactly 1,040,032 bytes / 207 per mind),
+  capture and restore wall time, and whether the round-trip is exact.
+- **Determinism at scale** — two worlds, same seed, 1000 minds,
+  1000 steps: bit-identical, or the tool says DIVERGED.
+- **The memory cap** — forty remembers into a cap: every mind stays
+  at or under it.
+
+`--sanity` runs a tiny scenario and exits — CI's smoke check that
+the tool runs on every toolchain (timing is machine-dependent by
+nature; the tool prints, the gate reads).
+
+**The docs tell one story now.** The milestone log (milestone.md) was
+folded into this changelog and retired — it had drifted behind (it
+still said 0.8.1 was "in progress"), and the changelog already held
+the same milestones, more current. References updated: the README's
+docs list now points here.
+
+Version bumped to 0.8.7-alpha. 32/32 suites, eleven samples green.
+
 ## [0.8.6] — 2026-08-13 — CI: three toolchains, every push
 
 The engine's first CI. A GitHub Actions workflow (`.github/workflows/ci.yml`)
@@ -334,7 +366,9 @@ arrivals, blame, rival bonds, mediated grudges.
   live).
 - 28/28 test suites green.
 Each entry is a released milestone — see Docs/Roadmap.md for the full
-arc and Docs/milestone.md for the in-flight story.
+arc. This changelog is the single record: the former milestone log
+(Docs/milestone.md) was folded here (0.8.7) so the story lives in one
+place.
 
 ## [0.6.0] — 2026-08-11 — Society · "The Bonds Between Minds"
 

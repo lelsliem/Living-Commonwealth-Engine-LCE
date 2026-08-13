@@ -12,9 +12,9 @@ Project Roadmap
 
 Status
 
-Current Version : 0.8.6-alpha
+Current Version : 0.8.7-alpha
 
-Current Stage   : CI live — every push builds and tests on MSVC, GCC, and Clang
+Current Stage   : LCE Bench — the Scale numbers, measured; the docs tell one story
 
 Next Milestone  : 0.9.0 — Release Candidate
 
@@ -94,6 +94,14 @@ need zero new engine work and disease needs none either.
     run, and the installed-package version fixed (it still said 0.5.0 —
     find_package consumers were told a lie; now 0.8.x, matching
     Version.h). Embedding pins moved to the released v0.8.5 tag.
+[✓] 0.8.7 — LCE Bench, done: Tools/LCEBench reproduces the Scale
+    numbers on any machine — ms/tick at 1k/5k/20k minds with the
+    per-pass breakdown, co-save bytes per mind (the documented 207,
+    exactly), capture/restore time, determinism at scale
+    (bit-identical or DIVERGED), the memory cap. --sanity smoke-runs
+    in CI. Also: the docs now tell one story — the stale milestone
+    log (it still said 0.8.1 was "in progress") folded into the
+    changelog.
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via
     GitHub; feedback through Nexus comments and GitHub issues.
     Async, unsocial, by design.
