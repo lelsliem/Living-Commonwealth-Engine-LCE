@@ -10,6 +10,15 @@ We record why, not just what.
 
 Every architectural decision is logged. Once accepted, a decision only changes if a better architectural solution exists. After all these decisions, we know exactly why LCE looks the way it does.
 
+---
+
+STATUS: closed record (0.8.9). The API is frozen (0.8.4) and the engine
+is feature-complete; the decisions below are the project's reasoning,
+not an active ledger. New ADRs are not expected while the freeze is in
+force — the log is the "why" a future reader comes here for.
+
+---
+
 =============================================================================
 
 

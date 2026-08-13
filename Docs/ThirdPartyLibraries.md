@@ -34,20 +34,14 @@ adapter became a separate project.
 
 ---
 
-## Platform adapter dependencies — not core
+## Platform adapter dependencies — never core
 
-The Fallout 4 set was vendored in `Depends/` for study, then removed when
-the adapter became a separate project (0.4.0). The core never links them;
-the adapter project brings its own. Future adapters bring their own sets
-and document them with their adapter.
-
-| Dependency  | What it is                              | License                             |
-|-------------|-----------------------------------------|-------------------------------------|
-| F4SE        | runtime + plugin contract               | BSD-3-Clause                        |
-| CommonLibF4 | typed game API (C++23, static library)  | GPL-3.0 + modding/linking exceptions|
-| common      | shared foundation (REL/address library) | zlib                                |
-| json        | serialization (nlohmann)                | MIT                                 |
-| DirectXTK   | DirectX Tool Kit                        | MIT                                 |
-
-Details, the licensing landmine, and the adapter boundary:
-`Docs/Architecture/PlatformIntegration.md`.
+Each game brings its own dependency set; no two games need the same
+one. Adapter dependencies live with their adapter's project and are
+never linked into the core (ADR-0023 — the core never includes game
+headers). The Fallout 4 set (F4SE, CommonLibF4, common, json,
+DirectXTK) was studied in `Depends/`, then removed when the adapter
+became a separate project (0.4.0) — its provenance is recorded in the
+adapter's own `Depends/README.md`, and the adapter boundary is
+documented in `Docs/Architecture/PlatformIntegration.md`. This
+document lists only what the core links: **spdlog, and nothing else.**

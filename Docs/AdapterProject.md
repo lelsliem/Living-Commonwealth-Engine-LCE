@@ -1,3 +1,10 @@
+> **Status: closed record (0.8.9).** The engine's API is frozen; every
+> hand-over below has landed. This document is the historical contract
+> between the two repos — what the core provides and how the adapter
+> consumes it — and the record of the engine↔adapter proof. No new
+> entries are expected while the freeze is in force; the adapter's own
+> project keeps its own copy current for its 0.9.0 gate.
+
 # The Living Commonwealth — Fallout 4 Adapter Project
 
 **Handoff document.** This file exists so a new agent (a new Freebuff tab
