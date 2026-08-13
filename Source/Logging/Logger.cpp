@@ -130,6 +130,11 @@ namespace LCE::Logging
         }
     }
 
+    // The level filter is set once in Initialize (all levels during
+    // development) and is deliberately NOT configuration-driven: the
+    // core's console logger is a development tool, and the adapter owns
+    // its own verbosity through its own logging. ADR-0014 keeps this
+    // stateless — no reach into a global Configuration.
     void Write(
         LogLevel level,
         std::string_view message) noexcept
@@ -169,7 +174,7 @@ namespace LCE::Logging
 
     void Trace(std::string_view message) noexcept
     {
-        Write(LogLevel::Trace, message);        // TODO: Read the log level from the LCE configuration system once available.
+        Write(LogLevel::Trace, message);
     }
 
     void Debug(std::string_view message) noexcept
