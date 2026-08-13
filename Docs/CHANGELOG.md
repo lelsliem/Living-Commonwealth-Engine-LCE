@@ -2,6 +2,49 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.8] — 2026-08-13 — the packaging gate, automated
+
+**The gate** (`Tools/scripts/consumer-test.sh`) — builds and installs
+the engine, then proves BOTH Embedding paths from
+`Docs/SDK/Embedding.md` end to end:
+
+- **Path 1 — FetchContent via `lce-doctor init`** — the doctor now
+  scaffolds a minimal embedder (CMakeLists.txt + main.cpp + host.ini)
+  straight from the recipe: the doc and the tool agree by
+  construction. A generated project that compiles and runs IS the
+  proof the recipe is real.
+- **Path 2 — `find_package(LCE)`** — the recipe verbatim against the
+  freshly installed prefix.
+
+Each consumer builds, links, and runs. The gate runs in CI on every
+push.
+
+**What the gate found on its first run** — three real bugs, all
+fixed:
+
+1. **The scaffold's missing import** — the generated main.cpp used
+   `EventBus` (LCE::Events) but only imported LCE::Simulation; a
+   broken recipe that no reader would catch until compile time.
+2. **The harness's `CMAKE_SOURCE_DIR` break** — the Doctor suite and
+   the Doctor tool resolved `Tools/` against the top-level source
+   dir, which is the *consumer's* root when the engine is embedded
+   via FetchContent. The engine's own tests failed for embedders.
+   Both now resolve against their own tree (`CMAKE_CURRENT_SOURCE_DIR`),
+   so the harness builds wherever the engine does.
+3. **The static-CRT ABI mismatch** — the core compiles with the static
+   runtime (MTd), so any consumer linking `LCE::Core` must too; a
+   default MSVC consumer uses the dynamic runtime and died with
+   LNK2038. Rather than pushing that burden onto every embedder, the
+   package now carries its own requirement: `LCE::Core` propagates
+   `/MT[d]` as an INTERFACE compile option (MSVC consumers only —
+   GCC/Clang untouched), so linking `LCE::Core` just works through
+   both FetchContent and the installed package.
+
+**LCE Doctor** grew the `init` subcommand (scaffold an embedder from
+the recipe), harness-tested in the Doctor suite — including that the
+scaffold passes the doctor's own checks, and that bad names are
+refused.
+
 ## [0.8.7] — 2026-08-13 — LCE Bench: the Scale numbers, measured
 
 **LCE Bench** (`Tools/LCEBench`, `LCE.Bench`) — the Scale numbers,

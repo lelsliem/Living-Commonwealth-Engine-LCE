@@ -6,7 +6,7 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.8.7--alpha-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.8.8--alpha-emerald.svg)](#roadmap)
 [![Changelog](https://img.shields.io/badge/Changelog-Docs%2FCHANGELOG.md-emerald.svg)](Docs/CHANGELOG.md)
 
 ---
@@ -111,11 +111,16 @@ and Embedding.md's 0.8.0 runtime recipe (FixedStep + TickReport +
 sim.memory.cap) so a non-Fallout embedder starts from one doc.
 **0.8.6**: CI — a GitHub Actions workflow builds and runs all 32
 suites on MSVC, GCC, and Clang every push, with the freeze enforced
-cross-compiler. **0.8.7 (current)**: LCE Bench — the Scale numbers,
-measured: ms/tick at 1k/5k/20k minds, co-save bytes per mind (the
-documented 207), snapshot round-trip, determinism at scale, the
-memory cap — so the 0.9.0 gate is measurable, not asserted. The docs
-now tell one story: the milestone log folded into the changelog.
+cross-compiler. **0.8.7**: LCE Bench — the Scale numbers, measured:
+ms/tick at 1k/5k/20k minds, co-save bytes per mind (the documented
+207), snapshot round-trip, determinism at scale, the memory cap — so
+the 0.9.0 gate is measurable, not asserted. **0.8.8 (current)**: the
+packaging gate — Tools/scripts/consumer-test.sh builds and installs
+the engine, then proves BOTH Embedding paths end to end (FetchContent
+via the lce-doctor init scaffold, find_package against the install),
+plus the ABI contract the gate found: LCE::Core carries its static-
+CRT requirement as an INTERFACE option, so consumers link clean
+without knowing.
 
 **The ladder beyond:**
 

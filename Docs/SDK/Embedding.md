@@ -25,7 +25,7 @@ include(FetchContent)
 FetchContent_Declare(
     lce
     GIT_REPOSITORY https://github.com/lelsliem/Living-Commonwealth-Engine-LCE-.git
-    GIT_TAG        v0.8.5
+    GIT_TAG        v0.8.8
 )
 FetchContent_MakeAvailable(lce)
 

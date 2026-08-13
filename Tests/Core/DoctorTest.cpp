@@ -296,6 +296,63 @@ namespace LCE::Tests
             }
         }
 
+        //-------------------------------------------------------------------------
+        // ScaffoldEmbedder (0.8.8) — lce-doctor init. The scaffold is the
+        // Embedding.md recipe as files; a generated project must pass the
+        // doctor's own checks (the doc and the tool agree by
+        // construction), and a bad name must be refused.
+        //-------------------------------------------------------------------------
+        {
+            const auto report =
+                ScaffoldEmbedder(scratch.Root, "embedder");
+
+            if (!report.Passed)
+            {
+                return false;   // the scaffold wrote its files
+            }
+
+            const auto project = scratch.Dir("embedder");
+
+            if (!fs::exists(project / "CMakeLists.txt")
+                || !fs::exists(project / "main.cpp")
+                || !fs::exists(project / "host.ini"))
+            {
+                return false;   // all three files exist
+            }
+
+            // The recipe's shape: FetchContent wiring, LCE::Core, the
+            // runtime loop, the knob file.
+            const auto cmake = ReadText(project / "CMakeLists.txt");
+            const auto main = ReadText(project / "main.cpp");
+            const auto ini = ReadText(project / "host.ini");
+
+            if (cmake.find("FetchContent_Declare") == std::string::npos
+                || cmake.find("LCE::Core") == std::string::npos
+                || main.find("FixedStep") == std::string::npos
+                || main.find("EventBus") == std::string::npos
+                || ini.find("sim.jitter") == std::string::npos)
+            {
+                return false;   // the recipe's parts are present
+            }
+
+            // The scaffold passes the doctor's own contract checks.
+            if (!CheckTarget(project).Passed
+                || !CheckBuildSystem(project).Passed
+                || !CheckLWiring(project).Passed)
+            {
+                return false;
+            }
+
+            // The same doctor refuses to scaffold over something, or
+            // with a name that walks a path.
+            if (ScaffoldEmbedder(scratch.Root, "embedder").Passed
+                || ScaffoldEmbedder(scratch.Root, "../evil").Passed
+                || ScaffoldEmbedder(scratch.Root, "").Passed)
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 }

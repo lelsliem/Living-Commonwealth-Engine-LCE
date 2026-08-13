@@ -12,11 +12,11 @@ Project Roadmap
 
 Status
 
-Current Version : 0.8.7-alpha
+Current Version : 0.8.8-alpha
 
-Current Stage   : 0.8.7 done — the bench measures; 0.8.8 packaging gate, 0.8.9 Studio planned
+Current Stage   : 0.8.8 done — the packaging gate proven; 0.8.9 trust story + Studio next
 
-Next Milestone  : 0.8.8 — the packaging gate
+Next Milestone  : 0.8.9 — the trust story and the Studio
 
 ═══════════════════════════════════════════════
 
@@ -102,10 +102,18 @@ need zero new engine work and disease needs none either.
     in CI. Also: the docs now tell one story — the stale milestone
     log (it still said 0.8.1 was "in progress") folded into the
     changelog.
-[ ] 0.8.8 — the packaging gate: an install + find_package(LCE)
-    consumer test scripted against the tagged release, and an
-    lce-doctor init that scaffolds a minimal embedder from the
-    Embedding.md recipe — the doc and the tool agree by construction.
+[✓] 0.8.8 — the packaging gate, done: Tools/scripts/consumer-test.sh
+    builds and installs the engine, then proves BOTH Embedding paths
+    end to end — FetchContent via the lce-doctor init scaffold (the
+    doc and the tool agree by construction) and find_package(LCE)
+    against the installed prefix. Each consumer builds, links, and
+    runs. The gate earned its keep on the first run: it found the
+    scaffold's missing LCE::Events import, the harness's
+    CMAKE_SOURCE_DIR break when the engine is embedded (a moved
+    header is a build break — but so is a wrong root), and the static-
+    CRT ABI mismatch — LCE::Core now carries its /MT requirement as
+    an INTERFACE option, so consumers link clean without knowing.
+    CI runs the gate on every push.
 [ ] 0.8.9 — LCE Studio (beta companion, scoped): the observation
     window — a live event feed (EntityCreated / IntentProduced /
     OutcomeRecorded / RelationshipChanged), a mind inspector (needs /

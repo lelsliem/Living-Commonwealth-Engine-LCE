@@ -67,6 +67,30 @@ int main(int argc, char** argv)
 {
     using namespace LCE::Doctor;
 
+    // init: scaffold a minimal embedder from the Embedding.md recipe —
+    // the doc and the tool agree by construction (0.8.8).
+    if (argc > 1 && std::string_view{ argv[1] } == "init")
+    {
+        if (argc < 3)
+        {
+            std::printf("LCE Doctor — init\n");
+            std::printf("usage: LCEDoctor init <name>\n");
+            std::printf("       scaffolds ./<name> (CMakeLists.txt, main.cpp, host.ini)\n");
+            std::printf("       from the Embedding.md recipe\n");
+            return 2;
+        }
+
+        const auto report =
+            ScaffoldEmbedder(fs::current_path(), argv[2]);
+
+        std::printf("LCE Doctor — init\n");
+        std::printf("  [%s] scaffold %s\n",
+            report.Passed ? "OK " : "FAIL", argv[2]);
+        std::printf("        %s\n", report.Detail.c_str());
+
+        return report.Passed ? 0 : 1;
+    }
+
     std::printf("LCE Doctor — the SDK contract, checked.\n\n");
 
     // The target: the argument, or the working directory.

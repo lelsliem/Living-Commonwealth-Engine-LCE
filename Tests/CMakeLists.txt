@@ -61,8 +61,11 @@ target_compile_features(LCE.Core.Tests
 )
 
 # The Doctor suite tests LCE Doctor's checks — the tools live beside
-# the core, so the harness reaches them by include path.
+# the core, so the harness reaches them by include path. Relative to
+# THIS file, never CMAKE_SOURCE_DIR: when the engine is embedded via
+# FetchContent, CMAKE_SOURCE_DIR is the CONSUMER's root — the harness
+# must resolve against its own tree wherever it is built.
 target_include_directories(LCE.Core.Tests
     PRIVATE
-        ${CMAKE_SOURCE_DIR}/Tools
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Tools
 )

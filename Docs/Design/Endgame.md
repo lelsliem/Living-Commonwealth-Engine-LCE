@@ -106,9 +106,15 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   bytes per mind, round-trip, determinism, the memory cap) — the
   0.9.0 gate becomes measurable, not asserted. The stale milestone
   log folded into the changelog: one story.
-- **0.8.8** — the packaging gate: the install + find_package(LCE)
-  consumer test scripted against the tagged release, and an
-  lce-doctor init scaffold. Planned.
+- **0.8.8** — the packaging gate, done: Tools/scripts/consumer-test.sh
+  proves BOTH Embedding paths end to end — FetchContent via the
+  lce-doctor init scaffold (doc and tool agree by construction) and
+  find_package(LCE) against the installed prefix. The gate caught
+  three real bugs on its first run: the scaffold's missing LCE::Events
+  import, the harness's CMAKE_SOURCE_DIR break when embedded (the
+  tests now resolve against their own tree), and the static-CRT ABI
+  mismatch — LCE::Core now carries /MT as an INTERFACE option, so any
+  consumer links clean. CI runs the gate every push.
 - **0.8.9** — LCE Studio (beta companion, scoped): the observation
   window — live event feed, mind inspector, tuning cockpit.
   Consumer-only through the public API (the bench's shape with a

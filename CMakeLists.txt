@@ -15,7 +15,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(
     LivingCommonwealthEngine
-    VERSION 0.8.6
+    VERSION 0.8.8
     DESCRIPTION "Living Commonwealth Engine"
     LANGUAGES CXX
 )
@@ -107,6 +107,26 @@ FetchContent_MakeAvailable(spdlog)
 #------------------------------------------------------------------------------
 
 add_subdirectory(Source)
+
+#------------------------------------------------------------------------------
+# The ABI contract, carried by the package (0.8.8 — found by the
+# packaging gate). LCE.Core's objects are compiled with the static CRT
+# (above), so any consumer linking the core must use the SAME runtime
+# — a default MSVC consumer uses the dynamic CRT and dies with
+# LNK2038 at link time. Rather than pushing that burden onto every
+# embedder's CMakeLists, the target carries the requirement: the
+# INTERFACE option propagates to consumers (and through the exported
+# package), so linking LCE::Core just works.
+#
+# The generator expression keys on the consumer's own compiler, so
+# GCC/Clang consumers are untouched.
+if(MSVC)
+    # A compile flag, not a link flag — /MT must reach cl.exe (the
+    # runtime is baked into each object, which is exactly what LNK2038
+    # detects). It lands after the consumer's own flags, so it wins.
+    target_compile_options(LCE.Core INTERFACE
+        $<$<CXX_COMPILER_ID:MSVC>:/MT$<$<CONFIG:Debug>:d>>)
+endif()
 
 if(LCE_BUILD_TESTS)
     add_subdirectory(Tests)

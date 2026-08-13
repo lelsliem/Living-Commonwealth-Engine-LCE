@@ -63,6 +63,27 @@ jobs:
         shell: bash
         run: ctest --test-dir Build -C Debug --output-on-failure
 
-      - name: Bench sanity smoke
+      # The tools live in Build/Bin on single-config generators (Linux)
+      # and Build/Bin/<config> on multi-config (MSVC) — find them.
+      - name: Tool smokes (bench sanity, studio selftest)
         shell: bash
-        run: ./Build/Bin/Debug/LCE.Bench --sanity
+        run: |
+          BENCH=$(find Build/Bin -name 'LCE.Bench' -type f | head -1)
+          echo "bench: $BENCH"
+          "$BENCH" --sanity
+          STUDIO=$(find Build/Bin -name 'LCE.Studio' -type f | head -1)
+          echo "studio: $STUDIO"
+          "$STUDIO" --selftest
+
+  # 0.8.8 — the packaging gate: both Embedding paths, proven end to end
+  # (FetchContent via the doctor scaffold, find_package against the
+  # installed prefix). A generated project that compiles and runs IS the
+  # proof the recipe is real.
+  packaging-gate:
+    name: packaging-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run the packaging gate
+        shell: bash
+        run: bash Tools/scripts/consumer-test.sh "$PWD"
