@@ -63,7 +63,7 @@ the Commonwealth, and this mod makes it live.
 
 **Repo naming:** decided 2026-08-10 — the adapter lives at
 `The-Commonwealth-Lives` (the mod's public name: The Living
-Commonwealth); the engine lives at `Living-Commonwealth-Engine-LCE-`.
+Commonwealth); the engine lives at `Living-Commonwealth-Engine-LCE`.
 Both under the lelsliem GitHub account.
 
 **License:** GPL — the mod links CommonLibF4 (GPL-3.0 with modding/linking

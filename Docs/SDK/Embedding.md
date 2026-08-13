@@ -24,7 +24,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)
 FetchContent_Declare(
     lce
-    GIT_REPOSITORY https://github.com/lelsliem/Living-Commonwealth-Engine-LCE-.git
+    GIT_REPOSITORY https://github.com/lelsliem/Living-Commonwealth-Engine-LCE.git
     GIT_TAG        v0.9.0
 )
 FetchContent_MakeAvailable(lce)
