@@ -46,6 +46,7 @@
 #include "LCE/Simulation/Entity/EntityId.h"
 
 #include <cstdint>
+#include <string>
 #include <vector>
 
 namespace LCE::Simulation
@@ -82,7 +83,19 @@ namespace LCE::Simulation
         // Decide gates only Trade and Social, so a death never blocks a
         // walk or a trade. The Other names who died; the Day stamps when.
         // Ordinal is append-only, like the weather kinds.
-        Death
+        Death,
+
+        // Fact (0.8.4) — the general label-carrying world fact, and the
+        // way forward for everything the weather kinds and Death used to
+        // be: "a radstorm", "a plague", "the old road must hold". The
+        // world's own name lives in MemoryEvent::Label; the core carries
+        // it, fades it, forgets it, and never interprets it — that is the
+        // world's vocabulary. Facts are never doors: Decide gates only
+        // Trade and Social, so a Fact never blocks a walk or a trade.
+        // The weather kinds and Death stay in the enum (the adapter's
+        // co-save writes raw ordinals — append-only, never removed); new
+        // fact-types become labels, not enum entries.
+        Fact
     };
 
     //-------------------------------------------------------------------------
@@ -105,6 +118,13 @@ namespace LCE::Simulation
         // unstamped. The age of a fact is now.Day - event.Day — the
         // substrate 0.7.0 Legacy stands on ("entities remember decades").
         std::uint64_t Day = 0;
+
+        // The world's own name for a Fact (0.8.4) — "radstorm",
+        // "plague", "the old road must hold". Empty for every other
+        // kind. The core carries it, fades it, forgets it, and never
+        // interprets it: the label is the world's vocabulary, and the
+        // world's serializer owns whether it rides the co-save.
+        std::string Label;
     };
 
     //-------------------------------------------------------------------------

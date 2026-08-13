@@ -59,10 +59,16 @@ need zero new engine work and disease needs none either.
     toll — the world owns Health, the core owns memory and need),
     Roads (routes as LegacyStore facts whose weight is condition,
     maintained by traffic, forgotten by neglect)
-[ ] 0.8.4 — the API Freeze: the surface-stability test (the harness
-    fails if the public API changes), the compat policy doc (what is
-    stable, what is append-only, what breaks and when), the
-    public-header audit — warts fixed before the freeze is in force
+[~] 0.8.4 — the API Freeze, in progress. Landed: the personality
+    tie-break (near-tied needs resolve by a per-need seeded draw, not
+    list order) and per-need metabolism (each need decays at its own
+    seeded rate), both keyed on need type — the seam traits multiply
+    into; the Fact kind + label string (the world's vocabulary rides
+    MemoryEvent::Label; the enum stops growing because labels absorb
+    it); the compat policy doc (stable / append-only / adapter-owned /
+    breaks-when). Remaining: the surface-stability test (harness
+    fails if the public API changes), the public-header audit, the
+    warts fixed before the freeze is in force
 [ ] 0.8.5 — the docs: LearningPath complete, the full audit,
     Embedding.md extended with the 0.8.0 onboarding recipe
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via

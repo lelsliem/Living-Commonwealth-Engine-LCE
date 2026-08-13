@@ -314,23 +314,33 @@ namespace LCE::Simulation
         // between ticks (the adapter's births) can never re-roll a mind's
         // metabolism — a near-tied mind stays settled (0.8.x field
         // finding). This is what breaks the herd: identical minds no
-        // longer get hungry on the same clock. Without an Rng the jitter
-        // is exactly 1.0 — behaviour unchanged, so no existing caller is
-        // affected.
+        // longer get hungry on the same clock.
+        //
+        // Per-NEED metabolism (0.8.4): the rate is derived per need, the
+        // need's TYPE folded into the key — a bold mind's Safety can
+        // decay differently from its Hunger, which is exactly the seam a
+        // world's traits multiply into. Same seed + same entity + same
+        // need = same rate, every tick. The key is the need type, never
+        // the list index — two minds with the same needs listed in a
+        // different order metabolize identically (the QueryWhere
+        // discipline). Without an Rng the jitter is exactly 1.0 —
+        // behaviour unchanged, so no existing caller is affected.
         //-------------------------------------------------------------------------
         registry.ForEachWithComponent<Needs>(
             [delta, rng, &tuning, &local](EntityId id, Needs& needs)
             {
                 ++local.Entities;
 
-                const auto rate = (rng != nullptr)
-                    ? rng->StableDerive(id.Value()).NextFloat(
-                          1.0f - tuning.NeedJitter,
-                          1.0f + tuning.NeedJitter)
-                    : 1.0f;
-
                 for (auto& need : needs.List)
                 {
+                    const auto rate = (rng != nullptr)
+                        ? rng->StableDerive(id.Value())
+                              .Derive(static_cast<std::uint64_t>(need.Type))
+                              .NextFloat(
+                                  1.0f - tuning.NeedJitter,
+                                  1.0f + tuning.NeedJitter)
+                        : 1.0f;
+
                     need.Value -= need.DecayRate * delta * rate;
 
                     if (need.Value < 0.0f)

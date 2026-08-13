@@ -5,19 +5,27 @@ rooted at `C:\Fallout4Adaption`) can start this project with full context —
 the plan, the conventions, and the contract — without having been part of
 the conversation that built the engine.
 
-**Current core:** `0.8.3-alpha` (31/31 suites; 0.8.1 was tagged
+**Current core:** `0.8.4-alpha` (31/31 suites; 0.8.1 was tagged
 `v0.8.1` and pushed 2026-08-13). Since 0.8.0: the ADR-0029 re-roll
 fix (`Rng::StableDerive`), the Simulation folder reorganization
 (your includes were re-synced), the surface guards (HeaderMapTest +
-Doctor include-layout check), and ALL SEVEN pattern samples (0.8.2:
+Doctor include-layout check), ALL SEVEN pattern samples (0.8.2:
 Economy, Legacy, Weather, Children; 0.8.3: Faction Wars, Disease,
 Roads — teaching-only, zero new surface for the adapter to
-consume, and the Disease sample deliberately mirrors your Illness
-verdict: the world owns Health, the core owns memory and need).
-Each has its own section below. One engine fix came out of the
-Children sample and DOES affect you if you read JitteredTraits: its
-RNG path was stamping one identical value on every trait; it now
-varies each trait. If you captured trait values into a co-save,
+consume), and the first 0.8.4 freeze stones — the personality
+tie-break, per-need metabolism, the Fact kind + label, and the
+compat policy doc. Each has its own section below.
+
+Two 0.8.4 changes could matter to you: (1) near-tied needs now
+resolve by a per-need seeded draw instead of list order — if you
+constructed multi-need minds with exactly equal needs and relied on
+the order deciding, the coin is now seeded (deterministic, but
+possibly a different side); (2) `MemoryEvent` gained a `Label`
+string — your Memory serializer is the world's to keep or drop it;
+if you don't write it, restore yields an empty label, which is
+fine. The `InteractionKind` ordinals you persist are untouched
+(Fact was appended at the end). The JitteredTraits fix from 0.8.2
+still stands: if you captured trait values into a co-save,
 regenerate them — the values change, the schema does not.
 The adapter's in-game verification of 0.8.0 Scale (and the
 StableDerive fix) remains the open gate — its 0.8.6c scale pass
@@ -78,7 +86,7 @@ The adapter is an F4SE plugin built on CommonLibF4 (`F4SE::Init`,
 ## The core's 0.4.0 side is built — what the adapter gains
 
 At 0.4.0 the core shipped `0.4.0-alpha` (14/14 suites then); the
-current core is 0.8.3-alpha, 31/31 suites green. Two things changed
+current core is 0.8.4-alpha, 31/31 suites green. Two things changed
 at 0.4.0 that still matter to this project:
 
 1. **The boundary is the public API only.** The old
@@ -119,7 +127,7 @@ at 0.4.0 that still matter to this project:
 ## The core's 0.5.0 side is built — the complete boundary contract
 
 At 0.5.0 the core shipped `0.5.0-alpha` (25/25 suites then); the
-current core is 0.8.3-alpha, 31/31 suites. All seven stones of the
+current core is 0.8.4-alpha, 31/31 suites. All seven stones of the
 boundary contract are live — each with its own section below (tuning,
 outcome channel, observation events, query surface, seeded RNG, world
 calendar, per-mind decay jitter) — and stone 08 (bond thresholds +

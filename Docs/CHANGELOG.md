@@ -2,6 +2,45 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.8.4] — 2026-08-13 — The freeze work begins: personality into decisions
+
+The first stones of the API Freeze, each a schema or behaviour decision
+made deliberately while the surface can still change.
+
+**The personality tie-break.** A mind with two near-tied needs was
+decided by list order — whichever need the world happened to push
+first. `Decide` now resolves needs within a small band (0.05) of the
+most urgent by a per-need seeded draw: same seed + same entity + same
+needs = same choice, every run, and the choice is the same whatever
+order the needs are listed in (the QueryWhere discipline). This is the
+seam a world's traits multiply into — a bold mind's Safety can win its
+attention over a barely-more-urgent Hunger. Proven by a BehaviourTest
+block: the same entity with the same needs in both list orders makes
+the same decision, and the same seed re-rolls identically.
+
+**Per-need metabolism.** Needs decayed at one shared rate per entity;
+now each need decays at its own seeded rate, keyed on the need TYPE —
+Hunger and Safety metabolize differently. Same seed + same entity +
+same need = same rate, every tick; the key is never the list index,
+so identical needs listed differently metabolize identically. Without
+an Rng the rate is exactly 1.0 — behaviour unchanged for every
+existing caller.
+
+**The Fact kind.** `InteractionKind::Fact` + `MemoryEvent::Label` —
+the world's own name for a fact ("radstorm", "plague", "the old road
+must hold") rides the event; the core fades it, forgets it, and never
+interprets it. The weather kinds and Death stay in the enum (the
+adapter's co-save writes raw ordinals — append-only, never removed);
+new fact-types become labels, not enum entries. Proven by a Snapshot
+round-trip: a labeled Fact survives capture and restore when the
+world's serializer chooses to carry the label.
+
+**Compat policy** (`Docs/Design/CompatPolicy.md`): what is stable,
+what is append-only, what the world owns, and what breaks when — the
+freeze contract written down.
+
+**31/31 suites, eleven samples clean.** Version bumped to 0.8.4-alpha.
+
 ## [0.8.3] — 2026-08-13 — The three harder pattern samples
 
 **Faction Wars (SAMPLE 8).** Territory, sieges, and diplomacy as

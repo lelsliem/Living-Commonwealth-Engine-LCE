@@ -93,16 +93,17 @@ so the adapter's births between ticks can no longer re-roll a settled
 mind — plus the Simulation folders reorganized into category
 subfolders and the SDK surface now guarded by HeaderMapTest and an
 LCE Doctor include-layout check (31/31 suites, tagged `v0.8.1`).
-**0.8.2-0.8.3 (current)**: the pattern samples — all SEVEN of the
-mod types proven as lean samples, each zero new engine surface.
-Economy (prices are memories), Legacy (death is three functions and
-a fact), Weather (the sky as day-stamped facts that shape needs),
-Children (family as a group), Faction Wars (groups are the map,
-dispositions the loyalty), Disease (a quarantine door-fact + a
-Fatigue toll), Roads (routes as LegacyStore facts maintained by
-traffic). One engine fix fell out along the way: JitteredTraits now
-varies each trait instead of stamping one identical value on all of
-them.
+**0.8.2-0.8.3**: the pattern samples — all SEVEN of the mod types
+proven as lean samples, each zero new engine surface (Economy,
+Legacy, Weather, Children, Faction Wars, Disease, Roads).
+**0.8.4 (current)**: the API Freeze begins — the personality
+tie-break (near-tied needs resolve by a per-need seeded draw, not
+list order) and per-need metabolism (each need decays at its own
+rate — the seam traits multiply into), the Fact kind + label string
+(the world's vocabulary rides MemoryEvent::Label; the enum stops
+growing because labels absorb it), and the compat policy doc. One
+engine fix fell out along the way: JitteredTraits now varies each
+trait instead of stamping one identical value on all of them.
 
 **The ladder beyond:**
 
@@ -188,6 +189,7 @@ each adapter's own project, never in the core.
 | 0.8.1 | Housekeeping — field fix + reorg + surface guards | ✅ |
 | 0.8.2 | Pattern samples — Economy, Legacy, Weather, Children | ✅ |
 | 0.8.3 | Pattern samples — Faction Wars, Disease, Roads | ✅ |
+| 0.8.4 | API Freeze — tie-break, Fact kind, compat policy (in progress) | ◐ |
 | 0.9.0 | Release Candidate + Public Beta (Nexus + GitHub) | ⬜ |
 | 1.0.0 | Release | ⬜ |
 

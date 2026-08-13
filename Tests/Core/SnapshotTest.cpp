@@ -22,6 +22,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <string>
 
 namespace
 {
@@ -57,6 +58,18 @@ namespace
             std::uint32_t bits = 0;
             std::memcpy(&bits, &value, sizeof(bits));
             U32(bits);
+        }
+
+        // A length-prefixed string (0.8.4, for the Fact label). The
+        // adapter's serializer owns the format; this is one honest shape.
+        void Str(const std::string& value)
+        {
+            U32(static_cast<std::uint32_t>(value.size()));
+
+            for (const auto ch : value)
+            {
+                Blob.push_back(static_cast<std::byte>(ch));
+            }
         }
     };
 
@@ -96,6 +109,22 @@ namespace
             std::uint32_t bits = U32();
             float value = 0.0f;
             std::memcpy(&value, &bits, sizeof(value));
+            return value;
+        }
+
+        // The length-prefixed string (0.8.4, for the Fact label).
+        std::string Str()
+        {
+            const auto length = U32();
+            std::string value;
+            value.reserve(length);
+
+            for (std::uint32_t i = 0; i < length; ++i)
+            {
+                value.push_back(
+                    static_cast<char>(Blob[Position++]));
+            }
+
             return value;
         }
     };
@@ -171,6 +200,51 @@ namespace
                         static_cast<LCE::Simulation::InteractionKind>(reader.U32()),
                         reader.F(),
                         reader.U64() });   // world-time anchor (0.5.0)
+                }
+
+                return memory;
+            }
+        };
+    }
+
+    // A Memory serializer that also carries the Fact label (0.8.4). The
+    // world's serializer owns whether the label rides the co-save — this
+    // one chooses to keep it, and the round-trip proves the schema holds.
+    LCE::Simulation::ComponentSerializer<LCE::Simulation::Memory>
+    MakeLabeledMemorySerializer()
+    {
+        return {
+            [](const LCE::Simulation::Memory& memory)
+            {
+                Writer writer;
+                writer.U32(static_cast<std::uint32_t>(memory.Events.size()));
+
+                for (const auto& event : memory.Events)
+                {
+                    writer.U64(event.Other.Value());
+                    writer.U32(static_cast<std::uint32_t>(event.Kind));
+                    writer.F(event.Weight);
+                    writer.U64(event.Day);
+                    writer.Str(event.Label);
+                }
+
+                return writer.Blob;
+            },
+            [](const LCE::Simulation::ComponentBlob& blob)
+            {
+                Reader reader{ blob };
+                LCE::Simulation::Memory memory;
+
+                const auto count = reader.U32();
+
+                for (std::uint32_t i = 0; i < count; ++i)
+                {
+                    memory.Events.push_back(LCE::Simulation::MemoryEvent{
+                        LCE::Simulation::EntityId{ reader.U64() },
+                        static_cast<LCE::Simulation::InteractionKind>(reader.U32()),
+                        reader.F(),
+                        reader.U64(),
+                        reader.Str() });
                 }
 
                 return memory;
@@ -434,6 +508,52 @@ namespace LCE::Tests
         if (newcomer == first || newcomer == last)
         {
             return false;   // a new entity must never alias a restored one
+        }
+
+        //---------------------------------------------------------------------
+        // The Fact label (0.8.4) survives a save and a load, when the
+        // world's serializer chooses to carry it.
+        //---------------------------------------------------------------------
+        {
+            Simulation::EntityRegistry factSource;
+            factSource.RegisterSerializer<Simulation::Memory>(
+                MakeLabeledMemorySerializer());
+
+            const auto villager = factSource.CreateEntity();
+
+            Simulation::Remember(
+                factSource, villager,
+                Simulation::MemoryEvent{
+                    Simulation::EntityId{},
+                    Simulation::InteractionKind::Fact,
+                    2.0f, 30, "the old road must hold" });
+
+            const auto factSnapshot = factSource.Capture();
+
+            Simulation::EntityRegistry factRestored;
+            factRestored.RegisterSerializer<Simulation::Memory>(
+                MakeLabeledMemorySerializer());
+            factRestored.Restore(factSnapshot);
+
+            const auto factMemory =
+                factRestored.GetComponent<Simulation::Memory>(villager);
+
+            if (!factMemory || factMemory->Events.size() != 1)
+            {
+                return false;
+            }
+
+            const auto& fact = factMemory->Events[0];
+
+            if (fact.Kind != Simulation::InteractionKind::Fact)
+            {
+                return false;
+            }
+
+            if (fact.Label != "the old road must hold")
+            {
+                return false;   // the label rode the co-save
+            }
         }
 
         return true;

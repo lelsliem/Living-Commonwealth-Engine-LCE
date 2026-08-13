@@ -71,10 +71,14 @@ keeps living in-game as the real test. Mapping to shipped substrate:
   as indoctrination), Disease (quarantine door-fact + Fatigue toll;
   the world owns Health), Roads (LegacyStore routes whose weight is
   condition, maintained by traffic and forgotten by neglect).
-- **0.8.4** — the API Freeze: the surface-stability test (a canonical
-  list of public declarations; the harness fails if the API changes),
-  the compat policy doc (what is stable, what is append-only —
-  InteractionKind ordinals, snapshot schema — and what breaks when),
+- **0.8.4** — the API Freeze, in progress: the personality
+  tie-break and per-need metabolism (the seam traits multiply into),
+  the Fact kind + label string (the enum stops growing; labels
+  absorb it), the compat policy doc (what is stable, what is
+  append-only — InteractionKind ordinals, snapshot schema — and
+  what breaks when), then the surface-stability test (a canonical
+  list of public declarations; the harness fails if the API
+  changes),
   and the public-header audit. Warts found here are fixed *before* the
   freeze is in force.
 - **0.8.5** — the docs: LearningPath complete, the full audit, and

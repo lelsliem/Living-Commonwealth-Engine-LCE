@@ -96,8 +96,11 @@ namespace LCE::Simulation
     // Stateless (ADR-0026): a pure function of data. When an Rng is
     // provided (0.5.0), the personality jitter comes from a child stream
     // derived from the entity's ID — same seed + same entity = same
-    // jitter, regardless of iteration order. Nullptr keeps the
-    // deterministic id-hash noise; existing callers are untouched.
+    // jitter, regardless of iteration order. Near-tied needs (within a
+    // small band of the most urgent) resolve by a per-need draw instead
+    // of list order (0.8.4) — the personality tie-break. Nullptr keeps
+    // the deterministic id-hash noise and strict-lowest ordering;
+    // existing callers are untouched.
     //
     // desperateHunger (0.7.0 field finding): below this hunger value a
     // remembered Trade world fact no longer blocks the trip — a starving

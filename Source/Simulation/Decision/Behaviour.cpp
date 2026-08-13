@@ -91,9 +91,22 @@ namespace
 
     //-------------------------------------------------------------------------
     // The most urgent need: the one with the lowest value (most deprived).
+    //
+    // Personality tie-break (0.8.4): when two needs are within a small
+    // band of the most urgent one, they are effectively tied — and list
+    // order must not decide the mind. With an Rng, the winner among band
+    // members is the one with the highest per-need draw, derived from
+    // (seed, entity, need ordinal): same seed + same entity + same needs
+    // = same winner, every run, whatever the iteration order — the
+    // parent stream never advances. This is the seam a world's traits
+    // multiply into: a bold mind's Safety can win its attention over a
+    // barely-more-urgent Hunger. Without an Rng the strict lowest wins
+    // and ties fall to list order — behaviour unchanged.
     //-------------------------------------------------------------------------
     const LCE::Simulation::Need* MostUrgent(
-        const LCE::Simulation::Needs& needs) noexcept
+        const LCE::Simulation::Needs& needs,
+        LCE::Simulation::EntityId id,
+        const LCE::Simulation::Rng* rng) noexcept
     {
         const LCE::Simulation::Need* best = nullptr;
 
@@ -105,7 +118,42 @@ namespace
             }
         }
 
-        return best;
+        if (best == nullptr || rng == nullptr)
+        {
+            return best;
+        }
+
+        // The band: within this margin of the most urgent need, needs
+        // compete for the mind's attention. Small enough that a clearly
+        // dominant need still wins outright; the draw decides the rest.
+        //
+        // The draw keys on the need TYPE, never the list index — two
+        // minds with the same needs listed in a different order make
+        // the same choice (the QueryWhere discipline).
+        constexpr float kTieBand = 0.05f;
+
+        const LCE::Simulation::Need* winner = best;
+        float winnerDraw = -1.0f;
+
+        for (const auto& need : needs.List)
+        {
+            if (need.Value > best->Value + kTieBand)
+            {
+                continue;
+            }
+
+            const auto draw = rng->StableDerive(id.Value())
+                .Derive(static_cast<std::uint64_t>(need.Type))
+                .NextFloat();
+
+            if (draw > winnerDraw)
+            {
+                winnerDraw = draw;
+                winner = &need;
+            }
+        }
+
+        return winner;
     }
 
     //-------------------------------------------------------------------------
@@ -245,7 +293,7 @@ namespace LCE::Simulation
             return std::nullopt;
         }
 
-        const Need* urgent = MostUrgent(*needs);
+        const Need* urgent = MostUrgent(*needs, id, rng);
 
         if (urgent == nullptr)
         {
