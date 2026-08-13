@@ -6,7 +6,7 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.8.9--alpha-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.9.0--beta-emerald.svg)](#roadmap)
 [![Changelog](https://img.shields.io/badge/Changelog-Docs%2FCHANGELOG.md-emerald.svg)](Docs/CHANGELOG.md)
 
 ---
@@ -120,13 +120,15 @@ the engine, then proves BOTH Embedding paths end to end (FetchContent
 via the lce-doctor init scaffold, find_package against the install),
 plus the ABI contract the gate found: LCE::Core carries its static-
 CRT requirement as an INTERFACE option, so consumers link clean
-without knowing. **0.8.9 (current)**: the trust story
+without knowing. **0.8.9**: the trust story
 (Docs/Design/TrustStory.md — remove the DLL, keep the saves; the
 co-save is a shadow) and LCE Studio, the observation window — a
 zero-dependency GUI (a localhost HTTP server and one embedded page;
 the browser is the window) watching the bus live: event feed, mind
 inspector, tuning cockpit. Consumer-only, zero core surface, the
-freeze untouched.
+freeze untouched. **0.9.0 (current — public beta)**: the doors open —
+the API freeze in force, every suite green, and the engine released
+for anyone to embed.
 
 **The ladder beyond:**
 

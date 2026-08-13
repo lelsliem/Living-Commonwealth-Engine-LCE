@@ -515,7 +515,7 @@ namespace LCE::Doctor
             "FetchContent_Declare(\n"
             "    lce\n"
             "    GIT_REPOSITORY https://github.com/lelsliem/Living-Commonwealth-Engine-LCE-.git\n"
-            "    GIT_TAG        v0.8.8   # pin to the released version you build against\n"
+            "    GIT_TAG        v0.9.0   # pin to the released version you build against\n"
             ")\n"
             "FetchContent_MakeAvailable(lce)\n"
             "\n"

@@ -12,11 +12,11 @@ Project Roadmap
 
 Status
 
-Current Version : 0.8.9-alpha
+Current Version : 0.9.0-beta
 
-Current Stage   : 0.8.9 done — the trust story written, the Studio watching; the gate is next
+Current Stage   : 0.9.0 — public beta. The freeze is in force; the doors are open.
 
-Next Milestone  : 0.9.0 — the release gate (the doors open)
+Next Milestone  : 1.0.0 — the release, the promise made good
 
 ═══════════════════════════════════════════════
 

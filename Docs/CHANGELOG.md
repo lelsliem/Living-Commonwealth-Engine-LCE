@@ -2,6 +2,17 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.9.0] — 2026-08-13 — public beta: the doors open
+
+The API freeze is in force, every suite green (32/32), and the engine
+is released for anyone to embed. The public beta is the release gate:
+feedback runs through GitHub issues (engine) and Nexus comments (the
+mod), async and unsocial by design. Since v0.8.5, the ladder was
+climbed in full — CI on three toolchains, the benchmark, the
+packaging gate, the trust story, the Studio — and the version moves
+from alpha to **beta**. The mod (The Commonwealth Lives, a separate
+repo) releases alongside.
+
 ## [0.8.9] — 2026-08-13 — the trust story and the Studio
 
 **The trust story** (`Docs/Design/TrustStory.md`) — the beta's
