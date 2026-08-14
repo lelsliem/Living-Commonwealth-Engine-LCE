@@ -60,7 +60,7 @@ jobs:
           tar -czf lce-${{ matrix.name }}-${{ github.ref_name }}.tar.gz -C dist .
 
       - name: Upload package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: lce-${{ matrix.name }}
           path: lce-${{ matrix.name }}-${{ github.ref_name }}.tar.gz
@@ -85,15 +85,35 @@ jobs:
       contents: write
     steps:
       - name: Download packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: artifacts
 
+      # The archives are collected with find (robust to any download
+      # layout — never a literal glob) and passed to gh. --repo is
+      # explicit: this job has no checkout, so the repository comes from
+      # the environment. On failure the error lines are re-emitted as
+      # ::error:: annotations so a broken publish is diagnosable without
+      # signing in.
       - name: Publish
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" artifacts/*/*.tar.gz \
-            --title "$GITHUB_REF_NAME" \
-            --generate-notes
+          set -euo pipefail
+          FILES=$(find artifacts -name '*.tar.gz' -type f)
+          if [ -z "$FILES" ]; then
+            echo "::error::no package archives found under artifacts/"
+            find artifacts -maxdepth 3 | head -20
+            exit 1
+          fi
+          echo "publishing: $FILES"
+          if ! gh release create "$GITHUB_REF_NAME" $FILES \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "$GITHUB_REF_NAME" \
+              --generate-notes 2>&1 | tee release-err.log; then
+            echo "::group::gh release create error"
+            tail -30 release-err.log | sed 's/^/::error::/'
+            echo "::endgroup::"
+            exit 1
+          fi
