@@ -35,6 +35,19 @@ canonical URL dropped its trailing hyphen
 (Living-Commonwealth-Engine-LCE); every reference — Embedding
 recipe, doctor scaffold, git remote — points at the renamed repo.
 
+A CI status badge now sits in the README, a nightly workflow builds
+the Release configuration (optimized, asserts off) on all three
+toolchains, the frozen naming convention is written down in
+CompatPolicy (the member-named-after-its-type idiom, `Intent Intent;`
+/ `Outcome Outcome;`), the build and tool-smoke steps were extracted
+into shared scripts (Tools/scripts/ci-build.sh, ci-tool-smokes.sh),
+and a local Linux+GCC dev loop (Dockerfile +
+Tools/scripts/linux-gcc-loop.sh) reproduces the ubuntu-gcc leg in a
+container before push. Push-time CI now runs Release alongside Debug
+on all three toolchains (six legs), and a Release workflow builds,
+installs, and publishes the per-platform SDK archives when a version
+tag (v*) is pushed.
+
 ## [0.8.9] — 2026-08-13 — the trust story and the Studio
 
 **The trust story** (`Docs/Design/TrustStory.md`) — the beta's

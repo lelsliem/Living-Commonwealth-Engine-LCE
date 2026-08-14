@@ -13,6 +13,9 @@
 #  is not the contract until all three do. MSVC runs /W4 /WX (warnings
 #  are errors); GCC and Clang verify portability on the same suites.
 #
+#  Each leg builds both Debug and Release: the optimized, NDEBUG shape
+#  that ships is checked on every push, not only in the nightly.
+#
 #  The doctor and bench tools build too (LCE_BUILD_TOOLS=ON), and the
 #  bench's --sanity mode smoke-runs after the suites — the Scale
 #  numbers are the 0.9.0 gate, so they must at least RUN on every
@@ -35,7 +38,7 @@ on:
 
 jobs:
   build-and-test:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.name }} (${{ matrix.config }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -43,11 +46,24 @@ jobs:
         include:
           - name: windows-msvc
             os: windows-latest
+            config: Debug
+          - name: windows-msvc
+            os: windows-latest
+            config: Release
           - name: ubuntu-gcc
             os: ubuntu-latest
+            config: Debug
+          - name: ubuntu-gcc
+            os: ubuntu-latest
+            config: Release
           - name: ubuntu-clang
             os: ubuntu-latest
             cxx: clang++
+            config: Debug
+          - name: ubuntu-clang
+            os: ubuntu-latest
+            cxx: clang++
+            config: Release
     steps:
       - uses: actions/checkout@v5
 
@@ -60,48 +76,28 @@ jobs:
             "$CXX" --version | head -1
           fi
           cmake -S . -B Build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }} \
             -DLCE_BUILD_TESTS=ON \
             -DLCE_BUILD_SAMPLES=ON \
             -DLCE_BUILD_TOOLS=ON
 
-      # The log is kept and, on failure, the error lines are re-emitted
-      # as ::error:: workflow annotations — the same text the step log
-      # shows, but readable from the Checks API so a build break is
-      # diagnosable without signing in.
+      # The shared build step (Tools/scripts/ci-build.sh) keeps the log
+      # and, on failure, re-emits the error lines as ::error:: workflow
+      # annotations — readable from the Checks API without signing in.
       - name: Build
         shell: bash
-        run: |
-          if ! cmake --build Build --config Debug --parallel 2>&1 | tee build.log; then
-            echo "::group::last errors"
-            grep -aiE 'error:|fatal error|undefined reference|internal compiler' build.log | tail -20 | sed 's/^/::error::/' || true
-            echo "::endgroup::"
-            exit 1
-          fi
+        run: bash Tools/scripts/ci-build.sh Build ${{ matrix.config }}
 
       - name: Test (all suites)
         shell: bash
-        run: ctest --test-dir Build -C Debug --output-on-failure
+        run: ctest --test-dir Build -C ${{ matrix.config }} --output-on-failure
 
-      # The tools live in Build/Bin on single-config generators (Linux)
-      # and Build/Bin/<config> on multi-config (MSVC) — find them. The
-      # name carries the platform's executable suffix (LCE.Bench vs
-      # LCE.Bench.exe), so match both and fail loudly rather than let
-      # an empty path become a cryptic "command not found".
+      # The find logic (platform executable suffix, multi-config Bin
+      # layout) lives in Tools/scripts/ci-tool-smokes.sh, shared with
+      # the nightly workflow.
       - name: Tool smokes (bench sanity, studio selftest)
         shell: bash
-        run: |
-          BENCH=$(find Build/Bin \( -name 'LCE.Bench' -o -name 'LCE.Bench.exe' \) -type f | head -1)
-          if [ -z "$BENCH" ]; then
-            echo "FAIL — LCE.Bench not found under Build/Bin"; find Build/Bin | head -20; exit 1
-          fi
-          echo "bench: $BENCH"
-          "$BENCH" --sanity
-          STUDIO=$(find Build/Bin \( -name 'LCE.Studio' -o -name 'LCE.Studio.exe' \) -type f | head -1)
-          if [ -z "$STUDIO" ]; then
-            echo "FAIL — LCE.Studio not found under Build/Bin"; find Build/Bin | head -20; exit 1
-          fi
-          echo "studio: $STUDIO"
-          "$STUDIO" --selftest
+        run: bash Tools/scripts/ci-tool-smokes.sh Build
 
   # 0.8.8 — the packaging gate: both Embedding paths, proven end to end
   # (FetchContent via the doctor scaffold, find_package against the

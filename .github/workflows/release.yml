@@ -1,0 +1,84 @@
+#===============================================================================
+#
+#  Living Commonwealth Engine (LCE)
+#  Building living worlds through simulation.
+#
+#  SPDX-License-Identifier: MIT
+#
+#  0.9.0 — the release automation. Pushing a version tag (v0.9.0,
+#  v1.0.0, ...) builds the engine in Release on Windows and Linux,
+#  installs the SDK shape (headers, libs, the LCE package config the
+#  find_package path consumes), and publishes a GitHub Release with the
+#  per-platform archives and auto-generated notes. CI and the nightly
+#  already prove the tree — this is the shipping step.
+#
+#===============================================================================
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  package:
+    name: package (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: windows-msvc
+            os: windows-latest
+          - name: ubuntu-gcc
+            os: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure (Release)
+        shell: bash
+        run: |
+          cmake -S . -B Build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLCE_BUILD_TESTS=OFF \
+            -DLCE_BUILD_SAMPLES=ON \
+            -DLCE_BUILD_TOOLS=ON
+
+      - name: Build (Release)
+        shell: bash
+        run: bash Tools/scripts/ci-build.sh Build Release
+
+      # The released shape is the installed prefix — Include/LCE, the
+      # static lib, and the LCE package config — archived per platform.
+      - name: Package (install prefix)
+        shell: bash
+        run: |
+          cmake --install Build --config Release --prefix dist
+          tar -czf lce-${{ matrix.name }}-${{ github.ref_name }}.tar.gz -C dist .
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: lce-${{ matrix.name }}
+          path: lce-${{ matrix.name }}-${{ github.ref_name }}.tar.gz
+
+  release:
+    name: publish GitHub release
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" artifacts/*/*.tar.gz \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes

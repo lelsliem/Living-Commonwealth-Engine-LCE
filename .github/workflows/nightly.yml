@@ -1,0 +1,66 @@
+#===============================================================================
+#
+#  Living Commonwealth Engine (LCE)
+#  Building living worlds through simulation.
+#
+#  SPDX-License-Identifier: MIT
+#
+#  0.9.0 — the nightly Release build. Push-time CI runs the Debug
+#  configuration; this runs Release (optimized, asserts off) on the same
+#  three toolchains, on a schedule and on demand. Release is the shape
+#  the engine ships in, so NDEBUG-only bugs — logic hiding inside an
+#  assert, a read that Debug masks — surface here instead of in a
+#  consumer's build. Same wiring as CI: build, all suites through ctest,
+#  then the Bench and Studio smokes.
+#
+#===============================================================================
+name: Nightly (Release)
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # daily, 04:00 UTC
+  workflow_dispatch:
+
+jobs:
+  build-release:
+    name: ${{ matrix.name }} (Release)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: windows-msvc
+            os: windows-latest
+          - name: ubuntu-gcc
+            os: ubuntu-latest
+          - name: ubuntu-clang
+            os: ubuntu-latest
+            cxx: clang++
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure (Release)
+        shell: bash
+        run: |
+          if [ -n "${{ matrix.cxx }}" ]; then
+            export CXX="${{ matrix.cxx }}"
+            echo "CXX: $CXX"
+            "$CXX" --version | head -1
+          fi
+          cmake -S . -B Build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLCE_BUILD_TESTS=ON \
+            -DLCE_BUILD_SAMPLES=ON \
+            -DLCE_BUILD_TOOLS=ON
+
+      - name: Build (Release)
+        shell: bash
+        run: bash Tools/scripts/ci-build.sh Build Release
+
+      - name: Test (all suites, Release)
+        shell: bash
+        run: ctest --test-dir Build -C Release --output-on-failure
+
+      - name: Tool smokes (bench sanity, studio selftest)
+        shell: bash
+        run: bash Tools/scripts/ci-tool-smokes.sh Build

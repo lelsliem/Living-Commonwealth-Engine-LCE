@@ -8,6 +8,8 @@ The first platform is Fallout 4. The core never knows.
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
 [![Version](https://img.shields.io/badge/Version-0.9.0--beta-emerald.svg)](#roadmap)
 [![Changelog](https://img.shields.io/badge/Changelog-Docs%2FCHANGELOG.md-emerald.svg)](Docs/CHANGELOG.md)
+[![CI](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/ci.yml/badge.svg)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/ci.yml)
+[![Nightly (Release)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/nightly.yml/badge.svg)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/nightly.yml)
 
 ---
 

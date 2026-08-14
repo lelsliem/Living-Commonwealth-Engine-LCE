@@ -98,3 +98,23 @@ world's traits enter decisions:
 
 Both are vocabulary-free: the core never learns "boldness", it only
 sees a seeded, deterministic draw.
+
+## 6. The naming convention (frozen style)
+
+The public headers follow a deliberate naming style; `SurfaceTest`
+pins it, so it is contract, not taste:
+
+- **Events read as "what happened".** A noun plus a past participle —
+  `EntityCreatedEvent`, `IntentProducedEvent`, `OutcomeRecordedEvent`,
+  `RelationshipChangedEvent`.
+- **A single-payload event names its member after its type.**
+  `IntentProducedEvent` holds `Intent Intent;` and
+  `OutcomeRecordedEvent` holds `Outcome Outcome;`. The member reads as
+  the thing it carries — "the intent that was produced" — not as a type
+  declaration.
+
+That member idiom is legal C++ and part of the frozen ABI. Clang and
+MSVC accept it silently; GCC 13+ rejects it with `-Wchanges-meaning`
+(a member named like its type is ambiguous in a redeclaration). The
+build silences that diagnostic on GCC only — the API is never renamed
+to appease a compiler, because the names are the contract.
