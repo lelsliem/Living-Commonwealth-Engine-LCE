@@ -74,7 +74,7 @@ jobs:
             cxx: clang++
             config: Release
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Configure
         shell: bash
@@ -116,7 +116,7 @@ jobs:
     name: packaging-gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Run the packaging gate
         shell: bash
         run: bash Tools/scripts/consumer-test.sh "$PWD"
