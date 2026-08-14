@@ -7,7 +7,10 @@ description: Building living worlds through simulation.
 baseurl: "/Living-Commonwealth-Engine-LCE"
 
 # The default GitHub Pages theme; its "default" layout wraps each page.
-theme: jekyll-theme-minima
+# The short name "minima" — not the full gem name — is what the
+# github-pages gem resolves against; "jekyll-theme-minima" fails its
+# supported-theme check with "theme could not be found".
+theme: minima
 
 # GitHub Pages supports jekyll-relative-links: the repo's own relative
 # .md links (README → Docs/…) become working html links on the site.
