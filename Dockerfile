@@ -14,7 +14,7 @@
 #
 #===============================================================================
 
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 # build-essential brings g++ (13.3 on 24.04); g++-13 is named for clarity
 # so the image advertises the exact toolchain it reproduces.
