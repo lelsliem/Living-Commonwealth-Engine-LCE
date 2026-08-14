@@ -21,7 +21,10 @@ Pages workflow renders the docs (README, LearningPath, the design
 and decision documents) as a site — one-time setup: Settings →
 Pages → Source: "GitHub Actions". Releases prefer
 `Docs/ReleaseNotes/<tag>.md` for their notes when the tag's tree
-carries one, falling back to auto-generated notes.
+carries one, falling back to auto-generated notes. Dependabot keeps
+the workflow actions and the dev-loop base image current via weekly
+PRs — the spdlog FetchContent pin stays hand-managed (no C++ package
+ecosystem exists, and the freeze locks the compiler surface).
 
 ## [0.9.0] — 2026-08-13 — public beta: the doors open
 
