@@ -194,6 +194,8 @@ each adapter's own project, never in the core.
 
 - [Learning Path](Docs/LearningPath.md) — read the code as a course: what
   each subsystem teaches, plus hands-on exercises.
+- [Docs site](https://lelsliem.github.io/Living-Commonwealth-Engine-LCE/) —
+  the docs, rendered (GitHub Pages).
 - [Design documents](Docs/Architecture/) — how each stone was designed and
   why.
 - [Decision Log](Docs/DecisionLog.md) — the ADRs; the why of everything.

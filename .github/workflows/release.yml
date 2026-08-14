@@ -84,6 +84,7 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v5
       - name: Download packages
         uses: actions/download-artifact@v5
         with:
@@ -91,10 +92,11 @@ jobs:
 
       # The archives are collected with find (robust to any download
       # layout — never a literal glob) and passed to gh. --repo is
-      # explicit: this job has no checkout, so the repository comes from
-      # the environment. On failure the error lines are re-emitted as
-      # ::error:: annotations so a broken publish is diagnosable without
-      # signing in.
+      # explicit so the repository never depends on ambient state.
+      # Notes: Docs/ReleaseNotes/<tag>.md is preferred when the tag's
+      # tree carries one; otherwise notes are auto-generated. On
+      # failure the error lines are re-emitted as ::error:: annotations
+      # so a broken publish is diagnosable without signing in.
       - name: Publish
         shell: bash
         env:
@@ -108,10 +110,18 @@ jobs:
             exit 1
           fi
           echo "publishing: $FILES"
+          NOTES="Docs/ReleaseNotes/$GITHUB_REF_NAME.md"
+          if [ -f "$NOTES" ]; then
+            echo "notes: $NOTES"
+            NOTES_ARGS=(--notes-file "$NOTES")
+          else
+            echo "notes: none — auto-generating"
+            NOTES_ARGS=(--generate-notes)
+          fi
           if ! gh release create "$GITHUB_REF_NAME" $FILES \
               --repo "$GITHUB_REPOSITORY" \
               --title "$GITHUB_REF_NAME" \
-              --generate-notes 2>&1 | tee release-err.log; then
+              "${NOTES_ARGS[@]}" 2>&1 | tee release-err.log; then
             echo "::group::gh release create error"
             tail -30 release-err.log | sed 's/^/::error::/'
             echo "::endgroup::"

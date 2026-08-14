@@ -19,7 +19,9 @@ ubuntu-gcc leg before push. v0.9.1 shipped via the new Release
 workflow — the first release the automation made itself. A GitHub
 Pages workflow renders the docs (README, LearningPath, the design
 and decision documents) as a site — one-time setup: Settings →
-Pages → Source: "GitHub Actions".
+Pages → Source: "GitHub Actions". Releases prefer
+`Docs/ReleaseNotes/<tag>.md` for their notes when the tag's tree
+carries one, falling back to auto-generated notes.
 
 ## [0.9.0] — 2026-08-13 — public beta: the doors open
 
