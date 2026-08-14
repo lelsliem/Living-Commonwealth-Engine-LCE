@@ -64,9 +64,19 @@ jobs:
             -DLCE_BUILD_SAMPLES=ON \
             -DLCE_BUILD_TOOLS=ON
 
+      # The log is kept and, on failure, the error lines are re-emitted
+      # as ::error:: workflow annotations — the same text the step log
+      # shows, but readable from the Checks API so a build break is
+      # diagnosable without signing in.
       - name: Build
         shell: bash
-        run: cmake --build Build --config Debug --parallel
+        run: |
+          if ! cmake --build Build --config Debug --parallel 2>&1 | tee build.log; then
+            echo "::group::last errors"
+            grep -aiE 'error:|fatal error|undefined reference|internal compiler' build.log | tail -20 | sed 's/^/::error::/' || true
+            echo "::endgroup::"
+            exit 1
+          fi
 
       - name: Test (all suites)
         shell: bash
