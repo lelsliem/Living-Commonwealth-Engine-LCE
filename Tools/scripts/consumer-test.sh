@@ -22,7 +22,10 @@
 #  generated project that compiles and links against the released
 #  surface IS the proof the recipe is real.
 #
-#  Usage:  bash Tools/scripts/consumer-test.sh [engine-root]
+#  Usage:  bash Tools/scripts/consumer-test.sh [engine-root] [config]
+#
+#  CONFIG defaults to Debug. The Release workflow gates on Release so
+#  the packaged shape is proven in the configuration it ships in.
 #
 #  Exit code: 0 when both legs pass, 1 otherwise. Runs on Git Bash
 #  (Windows) and bash (Linux/CI).
@@ -31,6 +34,7 @@
 set -euo pipefail
 
 ENGINE_ROOT="${1:-$(cd "$(dirname "$0")/../.." && pwd)}"
+CONFIG="${2:-Debug}"
 SCRATCH="$(mktemp -d)"
 trap 'rm -rf "$SCRATCH"' EXIT
 
@@ -50,12 +54,12 @@ echo "[1/3] building and installing the engine ..."
 # without it, install(EXPORT) leaves the package without any
 # IMPORTED_LOCATION and find_package consumers fail.
 cmake -S "$ENGINE_ROOT" -B "$SCRATCH/engine" \
-    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_BUILD_TYPE=$CONFIG \
     -DLCE_BUILD_TESTS=ON \
     -DLCE_BUILD_SAMPLES=OFF \
     -DLCE_BUILD_TOOLS=ON >/dev/null
-cmake --build "$SCRATCH/engine" --config Debug --parallel >/dev/null
-cmake --install "$SCRATCH/engine" --config Debug --prefix "$SCRATCH/prefix" >/dev/null
+cmake --build "$SCRATCH/engine" --config "$CONFIG" --parallel >/dev/null
+cmake --install "$SCRATCH/engine" --config "$CONFIG" --prefix "$SCRATCH/prefix" >/dev/null
 
 # grep -oP is GNU-only (BusyBox and BSD grep have no PCRE); sed does
 # the same extraction everywhere the gate runs.
@@ -83,7 +87,7 @@ fi
 
 cmake -S "$SCRATCH/consumer" -B "$SCRATCH/consumer/build" \
     -DFETCHCONTENT_SOURCE_DIR_LCE="$ENGINE_ROOT" >/dev/null
-cmake --build "$SCRATCH/consumer/build" --config Debug --parallel >/dev/null
+cmake --build "$SCRATCH/consumer/build" --config "$CONFIG" --parallel >/dev/null
 
 # The scaffold names its executable after the project name: "consumer"
 # (consumer.exe on Windows, consumer on Linux). The build dir is full
@@ -137,7 +141,7 @@ cp "$SCRATCH/consumer/host.ini" "$SCRATCH/pkg-consumer/host.ini"
 
 cmake -S "$SCRATCH/pkg-consumer" -B "$SCRATCH/pkg-consumer/build" \
     -DCMAKE_PREFIX_PATH="$SCRATCH/prefix" >/dev/null
-cmake --build "$SCRATCH/pkg-consumer/build" --config Debug --parallel >/dev/null
+cmake --build "$SCRATCH/pkg-consumer/build" --config "$CONFIG" --parallel >/dev/null
 
 CONSUMER2="$(find "$SCRATCH/pkg-consumer/build" -name 'myworld.exe' -type f | head -1)"
 

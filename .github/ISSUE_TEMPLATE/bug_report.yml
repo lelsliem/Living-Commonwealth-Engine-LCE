@@ -1,0 +1,44 @@
+name: Bug report
+description: The engine did something wrong — file a bug.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing. The beta's contract is async and unsocial by
+        design — no deadlines, no pressure. If this is a security issue,
+        use private vulnerability reporting instead (SECURITY.md).
+  - type: input
+    id: version
+    attributes:
+      label: Engine version
+      description: What does `LCE::Version::String()` say, or which tag did you pin?
+      placeholder: "0.9.1"
+    validations:
+      required: true
+  - type: input
+    id: toolchain
+    attributes:
+      label: Toolchain
+      description: Compiler + OS you built on.
+      placeholder: "MSVC 19.43 / Windows 11"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what actually happened? The loop is decide → act → observe → remember — which part misbehaved?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduce
+      description: The smallest code or steps that show it. A test case against the public API is ideal.
+  - type: textarea
+    id: surface
+    attributes:
+      label: Surface touched
+      description: Which public headers did you touch? A change there may be a freeze event (Docs/Design/CompatPolicy.md).

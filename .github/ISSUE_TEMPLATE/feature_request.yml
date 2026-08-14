@@ -1,0 +1,29 @@
+name: Feature request
+description: A world you want to simulate that LCE can't yet.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        LCE is middleware: the core simulates, the adapter plays. The
+        core surface is frozen (CompatPolicy), so most requests land as
+        adapter-side worlds, tuning, or sample patterns. Say what world
+        you want; we'll find the seam.
+  - type: textarea
+    id: world
+    attributes:
+      label: The world you want to simulate
+      description: What behaviour should emerge? ("farmers trade at the market when hungry")
+    validations:
+      required: true
+  - type: textarea
+    id: surface
+    attributes:
+      label: What LCE would need
+      description: A new event? A tuning knob? A sample pattern? Or is it all adapter-side?
+  - type: textarea
+    id: alternative
+    attributes:
+      label: What you do today instead
+      description: Scripts, polling, a different engine — the current workaround.

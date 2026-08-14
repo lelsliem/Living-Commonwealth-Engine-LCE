@@ -6,10 +6,12 @@ The first platform is Fallout 4. The core never knows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-emerald.svg)](https://en.cppreference.com/w/cpp/23)
-[![Version](https://img.shields.io/badge/Version-0.9.0--beta-emerald.svg)](#roadmap)
+[![Version](https://img.shields.io/badge/Version-0.9.1-emerald.svg)](#roadmap)
 [![Changelog](https://img.shields.io/badge/Changelog-Docs%2FCHANGELOG.md-emerald.svg)](Docs/CHANGELOG.md)
 [![CI](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/ci.yml/badge.svg)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/ci.yml)
 [![Nightly (Release)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/nightly.yml/badge.svg)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/nightly.yml)
+[![Release](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/release.yml/badge.svg)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/release.yml)
+[![CodeQL](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/codeql.yml/badge.svg)](https://github.com/lelsliem/Living-Commonwealth-Engine-LCE/actions/workflows/codeql.yml)
 
 ---
 
@@ -128,9 +130,11 @@ co-save is a shadow) and LCE Studio, the observation window — a
 zero-dependency GUI (a localhost HTTP server and one embedded page;
 the browser is the window) watching the bus live: event feed, mind
 inspector, tuning cockpit. Consumer-only, zero core surface, the
-freeze untouched. **0.9.0 (current — public beta)**: the doors open —
+freeze untouched. **0.9.0 (public beta)**: the doors open —
 the API freeze in force, every suite green, and the engine released
-for anyone to embed.
+for anyone to embed. **0.9.1**: the release automation — push-time
+CI on four platforms in Debug and Release, code scanning, and
+version tags that publish packaged releases.
 
 **The ladder beyond:**
 
@@ -222,7 +226,8 @@ each adapter's own project, never in the core.
 | 0.8.7 | LCE Bench — the Scale numbers, measured | ✅ |
 | 0.8.8 | Packaging gate — both Embedding paths, end to end | ✅ |
 | 0.8.9 | Trust story + LCE Studio | ✅ |
-| 0.9.0 | Public Beta — the doors open (current) | ◐ |
+| 0.9.0 | Public Beta — the doors open | ◐ |
+| 0.9.1 | Release automation — CI Release legs, code scanning, tag-driven releases (current) | ◐ |
 | 1.0.0 | Release | ⬜ |
 
 ## License

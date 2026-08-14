@@ -5,12 +5,13 @@
 #
 #  SPDX-License-Identifier: MIT
 #
-#  0.9.0 — the release automation. Pushing a version tag (v0.9.0,
-#  v1.0.0, ...) builds the engine in Release on Windows and Linux,
-#  installs the SDK shape (headers, libs, the LCE package config the
-#  find_package path consumes), and publishes a GitHub Release with the
-#  per-platform archives and auto-generated notes. CI and the nightly
-#  already prove the tree — this is the shipping step.
+#  0.9.1 — the release automation. Pushing a version tag (v0.9.1,
+#  v1.0.0, ...) builds the engine in Release on Windows, Linux, and
+#  macOS, installs the SDK shape (headers, libs, the LCE package config
+#  the find_package path consumes), and publishes a GitHub Release with
+#  the per-platform archives and auto-generated notes — gated on the
+#  packaging gate running in Release mode. CI and the nightly already
+#  prove the tree — this is the shipping step.
 #
 #===============================================================================
 name: Release
@@ -32,6 +33,8 @@ jobs:
             os: windows-latest
           - name: ubuntu-gcc
             os: ubuntu-latest
+          - name: macos-clang
+            os: macos-latest
     steps:
       - uses: actions/checkout@v5
 
@@ -62,9 +65,21 @@ jobs:
           name: lce-${{ matrix.name }}
           path: lce-${{ matrix.name }}-${{ github.ref_name }}.tar.gz
 
+  # The same gate as push CI, but in Release — the configuration the
+  # archives ship in. Both Embedding paths against a Release install;
+  # a red gate holds the release.
+  release-gate:
+    name: packaging gate (Release)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Run the packaging gate in Release
+        shell: bash
+        run: bash Tools/scripts/consumer-test.sh "$PWD" Release
+
   release:
     name: publish GitHub release
-    needs: package
+    needs: [package, release-gate]
     runs-on: ubuntu-latest
     permissions:
       contents: write

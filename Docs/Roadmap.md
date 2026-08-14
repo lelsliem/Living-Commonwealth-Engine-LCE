@@ -12,9 +12,11 @@ Project Roadmap
 
 Status
 
-Current Version : 0.9.0-beta
+Current Version : 0.9.1
 
-Current Stage   : 0.9.0 — public beta. The freeze is in force; the doors are open.
+Current Stage   : 0.9.1 — release automation. The 0.9.0 beta is out;
+CI runs Debug + Release on four platforms, code scanning is live,
+and version tags publish packaged releases.
 
 Next Milestone  : 1.0.0 — the release, the promise made good
 
@@ -133,10 +135,18 @@ need zero new engine work and disease needs none either.
     API — the same shape as the bench and the adapter — so zero core
     surface and the freeze untouched. --selftest is CI's smoke.
     The full vision (in-game attach, the co-save browser, the
-    entity editor, the query workbench) stays post-1.0.
+    entity editor, the query workbench) stays post-1.0.[✓] 0.9.1 — the release automation, done (2026-08-14): push-time CI
+    runs Debug AND Release on four platforms (Windows MSVC, Ubuntu
+    GCC, Ubuntu Clang, macOS Clang); CodeQL scans on every push and
+    weekly; the nightly covers Release overnight; the Release
+    workflow packages and publishes the per-platform SDK archives
+    when a version tag is pushed, gated on the packaging gate in
+    Release mode; README badges, issue templates, a security policy,
+    and a local Linux+GCC container dev loop. Zero engine surface
+    change — the freeze untouched, 32/32 suites green.
 [ ] Public Beta — the doors open: the mod on Nexus, the engine via
-    GitHub; feedback through Nexus comments and GitHub issues.
-    Async, unsocial, by design.
+GitHub; feedback through Nexus comments and GitHub issues.
+Async, unsocial, by design.
 
 ═══════════════════════════════════════════════
 

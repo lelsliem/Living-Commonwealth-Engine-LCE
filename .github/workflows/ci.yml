@@ -11,7 +11,8 @@
 #  EVERY compiler, and the size guards on the ABI-stable co-save
 #  structs must hold cross-compiler — one toolchain accepting the code
 #  is not the contract until all three do. MSVC runs /W4 /WX (warnings
-#  are errors); GCC and Clang verify portability on the same suites.
+#  are errors); GCC, Clang, and macOS's Apple Clang verify portability
+#  on the same suites.
 #
 #  Each leg builds both Debug and Release: the optimized, NDEBUG shape
 #  that ships is checked on every push, not only in the nightly.
@@ -62,6 +63,14 @@ jobs:
             config: Debug
           - name: ubuntu-clang
             os: ubuntu-latest
+            cxx: clang++
+            config: Release
+          - name: macos-clang
+            os: macos-latest
+            cxx: clang++
+            config: Debug
+          - name: macos-clang
+            os: macos-latest
             cxx: clang++
             config: Release
     steps:

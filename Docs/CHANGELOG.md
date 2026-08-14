@@ -2,6 +2,22 @@
 
 All notable changes to the Living Commonwealth Engine (LCE).
 
+## [0.9.1] — 2026-08-14 — the release automation
+
+The engine surface is unchanged — this is the shipping infrastructure.
+Push-time CI now runs Debug AND Release on four platforms (Windows
+MSVC, Ubuntu GCC, Ubuntu Clang, macOS Clang), CodeQL scans every push
+and weekly, the nightly covers Release overnight, and the Release
+workflow builds, installs, and publishes the per-platform SDK archives
+when a version tag is pushed — gated on the packaging gate running in
+Release mode (consumer-test.sh takes the config as its second
+argument). The README carries CI/nightly/release/code-scan badges,
+issue templates and a security policy are in place, the doctor and
+Embedding.md pins moved to v0.9.1, and a local Linux+GCC container dev
+loop (Dockerfile + Tools/scripts/linux-gcc-loop.sh) reproduces the
+ubuntu-gcc leg before push. v0.9.1 shipped via the new Release
+workflow — the first release the automation made itself.
+
 ## [0.9.0] — 2026-08-13 — public beta: the doors open
 
 The API freeze is in force, every suite green (32/32), and the engine

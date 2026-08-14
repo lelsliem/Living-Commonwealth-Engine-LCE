@@ -5,9 +5,9 @@
 #
 #  SPDX-License-Identifier: MIT
 #
-#  0.9.0 — the nightly Release build. Push-time CI runs the Debug
-#  configuration; this runs Release (optimized, asserts off) on the same
-#  three toolchains, on a schedule and on demand. Release is the shape
+#  0.9.1 — the nightly Release build. Push-time CI runs Debug and
+#  Release; this re-covers Release (optimized, asserts off) on the same
+#  four platforms, on a schedule and on demand. Release is the shape
 #  the engine ships in, so NDEBUG-only bugs — logic hiding inside an
 #  assert, a read that Debug masks — surface here instead of in a
 #  consumer's build. Same wiring as CI: build, all suites through ctest,
@@ -35,6 +35,9 @@ jobs:
             os: ubuntu-latest
           - name: ubuntu-clang
             os: ubuntu-latest
+            cxx: clang++
+          - name: macos-clang
+            os: macos-latest
             cxx: clang++
     steps:
       - uses: actions/checkout@v5

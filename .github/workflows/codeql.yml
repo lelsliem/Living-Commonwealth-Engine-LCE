@@ -1,0 +1,55 @@
+#===============================================================================
+#
+#  Living Commonwealth Engine (LCE)
+#  Building living worlds through simulation.
+#
+#  SPDX-License-Identifier: MIT
+#
+#  0.9.1 — CodeQL code scanning. GitHub's static analysis for the
+#  engine's C++, run on every push to main, on pull requests, and
+#  weekly. LCE is a static library embedders link into a game adapter,
+#  so a flaw in the core is a flaw in every embedding — the scanner is
+#  another set of eyes on the same tree the three toolchains build.
+#
+#  The build mirrors the push-CI Release leg so the database covers the
+#  same surface the shipped archives contain.
+#
+#===============================================================================
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 5 * * 0'   # weekly, Sunday 05:00 UTC
+
+permissions:
+  security-events: write
+
+jobs:
+  analyze:
+    name: analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+          build-mode: manual
+
+      - name: Configure
+        shell: bash
+        run: |
+          cmake -S . -B Build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLCE_BUILD_TESTS=ON \
+            -DLCE_BUILD_SAMPLES=ON \
+            -DLCE_BUILD_TOOLS=ON
+
+      - name: Build
+        shell: bash
+        run: cmake --build Build --config Release --parallel
+
+      - uses: github/codeql-action/analyze@v3
