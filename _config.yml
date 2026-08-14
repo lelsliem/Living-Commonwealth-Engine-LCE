@@ -1,0 +1,35 @@
+# GitHub Pages configuration for the LCE docs site. Rendered by Jekyll
+# (see .github/workflows/pages.yml). The site mirrors the repository's
+# own doc structure — the same markdown, rendered.
+
+title: Living Commonwealth Engine (LCE)
+description: Building living worlds through simulation.
+baseurl: "/Living-Commonwealth-Engine-LCE"
+
+# The default GitHub Pages theme; its "default" layout wraps each page.
+theme: jekyll-theme-minima
+
+# GitHub Pages supports jekyll-relative-links: the repo's own relative
+# .md links (README → Docs/…) become working html links on the site.
+plugins:
+  - jekyll-relative-links
+
+# Every markdown file is a page, rendered through the default layout.
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+# The site is the docs, not the code — keep the artifact lean.
+exclude:
+  - Source
+  - Tests
+  - Samples
+  - Tools
+  - cmake
+  - .github
+  - .git
+  - Dockerfile
+  - Build
+  - build
