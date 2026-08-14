@@ -18,11 +18,12 @@
 #  numbers are the 0.9.0 gate, so they must at least RUN on every
 #  toolchain even though their timing is machine-dependent.
 #
-#  The GCC leg pins g++-14 rather than the image default: the
-#  runner's default g++ (13.3.0) fails building this tree on Linux
-#  — observed on both the matrix and packaging-gate legs, where
-#  g++-12, g++-14, Clang, and MSVC all pass. The compiler version is
-#  printed so the log says exactly what ran.
+#  The GCC leg used to fail on Linux where Clang and MSVC passed:
+#  GCC 13+ promotes -Wchanges-meaning to an error, and the frozen
+#  API names members after their types (IntentProducedEvent::Intent,
+#  OutcomeRecordedEvent::Outcome). CMakeLists silences that
+#  diagnostic on GCC; the compiler version is printed so the log
+#  says exactly what ran.
 #
 #===============================================================================
 name: CI
@@ -44,7 +45,6 @@ jobs:
             os: windows-latest
           - name: ubuntu-gcc
             os: ubuntu-latest
-            cxx: g++-14
           - name: ubuntu-clang
             os: ubuntu-latest
             cxx: clang++

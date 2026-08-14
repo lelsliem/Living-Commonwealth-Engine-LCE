@@ -26,10 +26,13 @@ empty path), the packaging gate sets a build type (CMake ≥ 4 only
 emits an install-export's per-config file when one is set; without
 it, `find_package(LCE)` consumers fail with "IMPORTED_LOCATION not
 set") and reads the version with sed instead of GNU-only
-`grep -oP`, and the GCC leg runs g++-14 (the runner's default
-g++-13.3.0 fails building this tree on Linux; g++-12, g++-14, Clang,
-and MSVC all pass). The repo's canonical URL dropped its trailing
-hyphen (Living-Commonwealth-Engine-LCE); every reference — Embedding
+`grep -oP`, and the GCC leg's build failure was GCC 13+'s -Wchanges-meaning,
+now an error by default: the frozen API names members after their
+types (`IntentProducedEvent::Intent`, `OutcomeRecordedEvent::Outcome`)
+— a pattern Clang and MSVC accept silently — so the diagnostic is
+silenced for GCC only and the API stays untouched. The repo's
+canonical URL dropped its trailing hyphen
+(Living-Commonwealth-Engine-LCE); every reference — Embedding
 recipe, doctor scaffold, git remote — points at the renamed repo.
 
 ## [0.8.9] — 2026-08-13 — the trust story and the Studio

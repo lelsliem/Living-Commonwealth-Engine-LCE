@@ -102,6 +102,16 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(spdlog)
 
+# GCC 13+ promotes -Wchanges-meaning to an error by default. The
+# frozen API deliberately names members after their types
+# (IntentProducedEvent::Intent, OutcomeRecordedEvent::Outcome) — a
+# pattern Clang and MSVC accept silently, and the freeze forbids
+# renaming. Silence the diagnostic on GCC only, placed after the
+# spdlog fetch so the third-party build keeps its own flags.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-Wno-changes-meaning)
+endif()
+
 #------------------------------------------------------------------------------
 # Build Targets
 #------------------------------------------------------------------------------
