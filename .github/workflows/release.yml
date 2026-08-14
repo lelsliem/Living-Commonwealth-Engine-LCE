@@ -60,7 +60,7 @@ jobs:
           tar -czf lce-${{ matrix.name }}-${{ github.ref_name }}.tar.gz -C dist .
 
       - name: Upload package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: lce-${{ matrix.name }}
           path: lce-${{ matrix.name }}-${{ github.ref_name }}.tar.gz
