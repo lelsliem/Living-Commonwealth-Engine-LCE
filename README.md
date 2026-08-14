@@ -134,7 +134,10 @@ freeze untouched. **0.9.0 (public beta)**: the doors open —
 the API freeze in force, every suite green, and the engine released
 for anyone to embed. **0.9.1**: the release automation — push-time
 CI on four platforms in Debug and Release, code scanning, and
-version tags that publish packaged releases.
+version tags that publish packaged releases. **Now — Public Beta**:
+the engine's doors are open; the remaining door is the adapter's
+in-game verification of 0.8.0 Scale and the Nexus upload, then
+1.0.0 releases alongside.
 
 **The ladder beyond:**
 
@@ -228,9 +231,9 @@ each adapter's own project, never in the core.
 | 0.8.7 | LCE Bench — the Scale numbers, measured | ✅ |
 | 0.8.8 | Packaging gate — both Embedding paths, end to end | ✅ |
 | 0.8.9 | Trust story + LCE Studio | ✅ |
-| 0.9.0 | Public Beta — the doors open | ◐ |
-| 0.9.1 | Release automation — CI Release legs, code scanning, tag-driven releases (current) | ◐ |
-| 1.0.0 | Release | ⬜ |
+| 0.9.0 | Public Beta — the doors open | ✅ |
+| 0.9.1 | Release automation — CI Release legs, code scanning, tag-driven releases | ✅ |
+| 1.0.0 | Release — the promise, made good (current: awaiting the adapter's in-game Scale verification + Nexus) | ◐ |
 
 ## License
 

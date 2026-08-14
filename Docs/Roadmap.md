@@ -14,9 +14,12 @@ Status
 
 Current Version : 0.9.1
 
-Current Stage   : 0.9.1 — release automation. The 0.9.0 beta is out;
-CI runs Debug + Release on four platforms, code scanning is live,
-and version tags publish packaged releases.
+Current Stage   : Public Beta — the doors open. The engine side is
+done: 0.9.1 shipped the release automation, the docs site is live,
+and every gate is green. The remaining door is the adapter — The
+Living Commonwealth, live in Fallout 4 — with its in-game
+verification of 0.8.0 Scale and the Nexus upload. Then 1.0.0
+releases alongside.
 
 Next Milestone  : 1.0.0 — the release, the promise made good
 
@@ -144,9 +147,11 @@ need zero new engine work and disease needs none either.
     Release mode; README badges, issue templates, a security policy,
     and a local Linux+GCC container dev loop. Zero engine surface
     change — the freeze untouched, 32/32 suites green.
-[ ] Public Beta — the doors open: the mod on Nexus, the engine via
-GitHub; feedback through Nexus comments and GitHub issues.
-Async, unsocial, by design.
+[~] Public Beta — the doors open: the mod on Nexus, the engine via
+GitHub; feedback through Nexus comments and GitHub issues. Async,
+unsocial, by design. Engine side done (0.9.1 — releases, docs site,
+scanning all live); the open half is the adapter's in-game
+verification of 0.8.0 Scale and the Nexus upload.
 
 ═══════════════════════════════════════════════
 
@@ -156,12 +161,17 @@ Async, unsocial, by design.
 
 The promise, made good.
 
-[ ] GitHub + Nexus Mods
-[ ] SDK, Documentation, Examples — final
-[ ] MIT Licensed
-[ ] The gate: API frozen and all seven mod types provably possible —
-    as patterns in the samples, and as The Living Commonwealth,
-    live in Fallout 4.
+[✓] GitHub — releases automation, packaged SDK archives, the docs
+    site, code scanning
+[ ] Nexus Mods — the adapter's upload, with the mod
+[~] SDK, Documentation, Examples — final (docs site live and the
+    SDK installs via the Release workflow; the last pass rides with
+    the adapter's release)
+[✓] MIT Licensed
+[ ] The gate: the API is frozen (in force) and all seven mod types
+    are provably possible as patterns in the samples — the remaining
+    proof is The Living Commonwealth, live in Fallout 4 (the
+    adapter's in-game verification of 0.8.0 Scale).
 
 Consciously Deferred — decisions, not oversights
 
