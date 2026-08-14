@@ -12,9 +12,11 @@
 #  links working on the site. The code folders are excluded: the site
 #  is the docs, not the source.
 #
-#  One-time setup: Settings → Pages → Source: "GitHub Actions".
-#  Until then the build succeeds and the deploy step reports the
-#  page is not enabled.
+#  One-time setup (manual, one click): Settings → Pages → Source:
+#  "GitHub Actions". Until then configure-pages reports the site is
+#  not enabled and the workflow stays red; a workflow token cannot
+#  enable Pages itself (configure-pages' enablement input requires a
+#  token other than GITHUB_TOKEN).
 #
 #===============================================================================
 name: Docs (GitHub Pages)
@@ -39,9 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - uses: actions/jekyll-build-pages@v1
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
 
   deploy:
     name: deploy
@@ -52,4 +54,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
