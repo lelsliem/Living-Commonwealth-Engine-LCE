@@ -6,6 +6,11 @@ CMakeUserPresets.json
 .freebuff/
 .reasonix/
 
+# --- Jekyll (docs site) ---
+/_site/
+/.jekyll-cache/
+.jekyll-metadata
+
 # --- Generic C++ (GitHub template) ---
 # Prerequisites
 *.d

@@ -5,12 +5,12 @@
 #
 #  SPDX-License-Identifier: MIT
 #
-#  0.8.6 — CI. Build + all suites on three toolchains, every push.
+#  0.9.1 — CI. Build + all suites on four toolchains, every push.
 #
 #  The freeze (SurfaceTest) is the point: a drifted API must fail on
 #  EVERY compiler, and the size guards on the ABI-stable co-save
 #  structs must hold cross-compiler — one toolchain accepting the code
-#  is not the contract until all three do. MSVC runs /W4 /WX (warnings
+#  is not the contract until all four do. MSVC runs /W4 /WX (warnings
 #  are errors); GCC, Clang, and macOS's Apple Clang verify portability
 #  on the same suites.
 #
@@ -108,7 +108,7 @@ jobs:
         shell: bash
         run: bash Tools/scripts/ci-tool-smokes.sh Build
 
-  # 0.8.8 — the packaging gate: both Embedding paths, proven end to end
+  # 0.9.1 — the packaging gate: both Embedding paths, proven end to end
   # (FetchContent via the doctor scaffold, find_package against the
   # installed prefix). A generated project that compiles and runs IS the
   # proof the recipe is real.

@@ -6,7 +6,7 @@
 #
 #  SPDX-License-Identifier: MIT
 #
-#  0.8.8 — the packaging gate. Builds and installs the engine, then proves
+#  0.9.1 — the packaging gate. Builds and installs the engine, then proves
 #  BOTH embedding paths from Docs/SDK/Embedding.md against the result:
 #
 #    Path 1 — FetchContent  (the primary path). The consumer is generated

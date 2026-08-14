@@ -9,7 +9,7 @@
 #  engine's C++, run on every push to main, on pull requests, and
 #  weekly. LCE is a static library embedders link into a game adapter,
 #  so a flaw in the core is a flaw in every embedding — the scanner is
-#  another set of eyes on the same tree the three toolchains build.
+#  another set of eyes on the same tree the four toolchains build.
 #
 #  The build mirrors the push-CI Release leg so the database covers the
 #  same surface the shipped archives contain.
