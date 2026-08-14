@@ -78,4 +78,4 @@ target_include_directories(LCE.Core.Tests
 target_compile_definitions(LCE.Core.Tests
     PRIVATE
         LCE_SOURCE_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/.."
-))
+)
